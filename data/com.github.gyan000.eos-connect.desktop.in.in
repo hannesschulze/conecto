@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=EOS Connect
+GenericName=EOS Connect
+Comment=KDE Connect client for Elementary OS.
+Categories=Utility;
+Exec=com.github.gyan000.eos-connect
+Icon=application-default-icon
+Terminal=false
+Type=Application
+X-GNOME-Gettext-Domain=eos-connect
+X-GNOME-UsesNotifications=true
+Keywords=KDE;connect;

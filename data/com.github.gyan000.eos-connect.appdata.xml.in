@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2018 gyan000 <gyan000@ijaz.fr> -->
+<component type="desktop">
+  <id>com.github.gyan000.eos-connect.desktop</id>
+  <metadata_license>CC0</metadata_license>
+  <name>EOS Connect</name>
+  <summary>KDE Connect client for Elementary OS.</summary>
+  <description>
+    <p>KDE Connect client for Elementary OS, based on MConnect.</p>
+  </description>
+</component>

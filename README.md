@@ -17,25 +17,25 @@ It's a Work In Progess, not intented for daily use.
 ![sms tab](https://raw.githubusercontent.com/gyan000/EOSConnect/master/screenshots/sms.png "SMS tab")
 
 ### Installation
-1. - On Ubuntu or elementary OS, install these dependencies:
+1. On Ubuntu or elementary OS, install these dependencies:
 ```bash
 sudo apt install  elementary-sdk libunity-dev libnotify-dev libghc-gnutls-dev libsqlite3-dev libedataserver1.2-dev libebook1.2-dev/ -y
 ```
-2. - Clone the repository.
-3. - Inside the project, compile with:
+2. Clone the repository.
+3. Inside the project, compile with:
 ```bash
 meson build && clear && ninja -C build && glib-compile-schemas ./data/
 ```
 4. Start application
-  1. - To start it from the build directory:
+  4.1. To start it from the build directory:
 ```bash
 GSETTINGS_SCHEMA_DIR=data ./build/src/com.github.gyan000.eos-connect 
 ```
-  2. - To start it, with complete debug output:
+  4.2 To start it, with complete debug output:
 ```bash
 GSETTINGS_SCHEMA_DIR=data ./build/src/com.github.gyan000.eos-connect -d
 ```
-5. - To install it:
+5. To install it:
 ```bash
 sudo ninja -C build install
 ```

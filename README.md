@@ -19,7 +19,7 @@ It's a Work In Progess, not intented for daily use.
 ### Installation
 * On Ubuntu or elementary OS, install these dependencies:
 ```bash
-sudo apt install  elementary-sdk libunity-dev libnotify-dev libghc-gnutls-dev libsqlite3-dev libedataserver1.2-dev libebook1.2-dev/ -y
+sudo apt install elementary-sdk libunity-dev libnotify-dev libghc-gnutls-dev libsqlite3-dev libedataserver1.2-dev libebook1.2-dev -y
 ```
 * Clone the repository.
 * Inside the project, compile with:
@@ -44,6 +44,8 @@ sudo ninja -C build install
 * When launching app, sometimes, configured device, not connected on local network, does not appears as "not connected".
 * When launching app, sometimes, need to unlock phone/tablet in order to see the device "connected".
 * Need to click on quicklist option "Send or view SMS" to display contact list in SMS tab.
+* When started for the first time from build directory, quicklist not available.
+* When there's no adressbook available, we can't yet send a SMS with just a phone number.
 
 ### Roadmap
 #### v0.1

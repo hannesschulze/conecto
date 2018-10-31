@@ -17,33 +17,35 @@ It's a Work In Progess, not intented for daily use.
 ![sms tab](https://raw.githubusercontent.com/gyan000/EOSConnect/master/screenshots/sms.png "SMS tab")
 
 ### Installation
-1. - On Ubuntu or elementary OS, install these dependencies:
+* On Ubuntu or elementary OS, install these dependencies:
 ```bash
-sudo apt install  elementary-sdk libunity-dev libnotify-dev libghc-gnutls-dev libsqlite3-dev libedataserver1.2-dev libebook1.2-dev/ -y
+sudo apt install elementary-sdk libunity-dev libnotify-dev libghc-gnutls-dev libsqlite3-dev libedataserver1.2-dev libebook1.2-dev -y
 ```
-2. - Clone the repository.
-3. - Inside the project, compile with:
+* Clone the repository.
+* Inside the project, compile with:
 ```bash
 meson build && clear && ninja -C build && glib-compile-schemas ./data/
 ```
-4. Start application
-  1. - To start it from the build directory:
-```bash
-GSETTINGS_SCHEMA_DIR=data ./build/src/com.github.gyan000.eos-connect 
-```
-  2. - To start it, with complete debug output:
-```bash
-GSETTINGS_SCHEMA_DIR=data ./build/src/com.github.gyan000.eos-connect -d
-```
-5. - To install it:
+* Start application
+  * Start from the build directory:
+  ```bash
+  GSETTINGS_SCHEMA_DIR=data ./build/src/com.github.gyan000.eos-connect 
+  ```
+  * Start with complete debug output:
+  ```bash
+  GSETTINGS_SCHEMA_DIR=data ./build/src/com.github.gyan000.eos-connect -d
+  ```
+* To install it:
 ```bash
 sudo ninja -C build install
-```
+  ```
 
 ### Known issues
 * When launching app, sometimes, configured device, not connected on local network, does not appears as "not connected".
 * When launching app, sometimes, need to unlock phone/tablet in order to see the device "connected".
 * Need to click on quicklist option "Send or view SMS" to display contact list in SMS tab.
+* When started for the first time from build directory, quicklist not available.
+* When there's no adressbook available, we can't yet send a SMS with just a phone number.
 
 ### Roadmap
 #### v0.1

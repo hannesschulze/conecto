@@ -90,7 +90,7 @@ namespace EOSConnect {
             body_builder.set_member_name ("phoneThumbnail");
             body_builder.add_string_value (phone_thumbnail);
             body_builder.set_member_name ("phoneNumber");
-            body_builder.add_string_value ("+33632769364");
+            body_builder.add_string_value ("+33102030405");
             body_builder.end_object ();
 
             var packet = new Packet (TelephonyHandler.TELEPHONY, body_builder.get_root ().get_object (), GLib.Random.next_int ());
@@ -114,13 +114,13 @@ namespace EOSConnect {
             body_builder.set_member_name ("event");
             body_builder.add_string_value ("sms");
             body_builder.set_member_name ("messageBody");
-            body_builder.add_string_value ("Coucou\ndésolé je t'ai un peu oublié :|\n bjldaunizeau@gmail.com\nglopiglopa987\nVoulu\nBiz");
+            body_builder.add_string_value ("Glop message z");
             body_builder.set_member_name ("contactName");
-            body_builder.add_string_value ("Bénédicte DAUNIZEAU");
+            body_builder.add_string_value ("John Doe");
             body_builder.set_member_name ("phoneThumbnail");
             body_builder.add_string_value (phone_thumbnail);
             body_builder.set_member_name ("phoneNumber");
-            body_builder.add_string_value ("+33633090940");
+            body_builder.add_string_value ("+33102030405");
             body_builder.end_object ();
 
             var packet = new Packet (TelephonyHandler.TELEPHONY, body_builder.get_root ().get_object (), GLib.Random.next_int ());

@@ -117,13 +117,11 @@ namespace EOSConnect {
 
         private async void init_sms_history_tab () {
 
-            SimpleAction simple_action = new SimpleAction ("telephony-open-sms-window-reply", null);
+            SimpleAction simple_action = new SimpleAction ("telephony-open-sms-tab", null);
             simple_action.activate.connect (() => {
-                // sms_history_view.open_sms_window_reply ();
-                // sms_history_view.show_all ();
                 main_window.main_stack.set_visible_child_name ("sms_history_view");
-                warning ("par ka");
             });
+
             this.add_action (simple_action);
 
             SMSStore.instance ().sms_handled.connect ( (sms) => {
@@ -139,9 +137,6 @@ namespace EOSConnect {
             });
 
             SMSStore.instance ().refresh_contact_list ();
-
-
-            // sms_history_view.show_all ();
 
             contacts_interface = new EContacts ();
             contacts_interface.load_contacts ();
@@ -174,8 +169,8 @@ namespace EOSConnect {
                 }
 
                 if (to_add == true) {
-                    launcher_entry.quicklist.child_append (new DeviceMenuitem.with_device (
-                        device_entry.value, sms_history_view));
+                    launcher_entry.quicklist.child_append (
+                        new DeviceMenuitem.with_device (device_entry.value, main_window));
                 }
 
                 // var device_menuitem = launcher_entry.quicklist.find_id (device_entry.value.device_num);

@@ -109,6 +109,8 @@ namespace EOSConnect.Plugin.Windows {
                 sms_contact_list_box.select_row (sms_contact_list_box.get_row_at_index (0));
                 latest_contact_selected = ((Widgets.SMSContactListBoxRow)sms_contact_list_box.get_row_at_index (0)).sms_contact.phone_number;
             }
+
+            show_all ();
         }
 
         public void update_message_ui_adding_sms (SMS sms) {
@@ -123,15 +125,6 @@ namespace EOSConnect.Plugin.Windows {
                 SMSMessagesView sms_view = (SMSMessagesView)entry;
                 sms_view.update_combo_box_devices ();
             });
-        }
-
-        public void open_sms_tab (Device device) {
-            show_all ();
-        }
-
-        public void open_sms_window_reply () {
-            print ("\n\nopen_sms_window_reply ()\n\n");
-            show_all ();
         }
 
         private void add_sms_history_message_view (SMSContact sms_contact) {

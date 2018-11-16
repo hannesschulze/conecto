@@ -108,8 +108,8 @@ namespace MConnect {
             notification.set_body (notif_body);
 
             if (event == "sms") {
-                // Action defined in EOSConnect._init_sms_history_window ()
-                notification.set_default_action ("app.telephony-open-sms-window-reply");
+                // Action defined in EOSConnect._init_sms_history_view ()
+                notification.set_default_action ("app.telephony-open-sms-tab");
             }
 
             if (set_notification_icon == true) {

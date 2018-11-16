@@ -22,17 +22,21 @@ namespace EOSConnect.Plugin.Widgets {
 
     public class SMSContactListBox : Gtk.ListBox {
 
-        private Gtk.Label _contacts_label;
+        private Gtk.Label contacts_label;
 
         construct {
 
             selection_mode = Gtk.SelectionMode.SINGLE;
             set_header_func (update_headers);
 
-            _contacts_label = new Gtk.Label (_("Contacts"));
-            _contacts_label.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
-            _contacts_label.halign = Gtk.Align.START;
+            contacts_label = new Gtk.Label (_("Contacts"));
+            contacts_label.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
+            contacts_label.halign = Gtk.Align.START;
             show_all ();
+
+            // this.row_activated.connect ( (list_box_row) => {
+            //     warning("par la");
+            // });
         }
 
         public void update_selected_list_box_row () {
@@ -43,7 +47,7 @@ namespace EOSConnect.Plugin.Widgets {
 
         private void update_headers (Gtk.ListBoxRow row, Gtk.ListBoxRow? before = null) {
             if(before == null) {
-                row.set_header (_contacts_label);
+                row.set_header (contacts_label);
             }
         }
     }

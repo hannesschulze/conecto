@@ -28,20 +28,20 @@ namespace EOSConnect.Widgets {
         private const int SUB_MENU_SHARE_ID = 300;
 
         private Device device;
-        private SMSHistory sms_history_window;
+        private MainWindow main_window;
         private Dbusmenu.Menuitem sub_menu_item_battery;
         private Dbusmenu.Menuitem sub_menu_item_telephony;
         private Dbusmenu.Menuitem sub_menu_item_share;
 
         construct { }
 
-        public DeviceMenuitem.with_device (Device device, SMSHistory sms_history_window) {
+        public DeviceMenuitem.with_device (Device device, MainWindow main_window) {
             Object (
                 id: device.device_num
             );
 
             this.device = device;
-            this.sms_history_window = sms_history_window;
+            this.main_window = main_window;
             property_set (Dbusmenu.MENUITEM_PROP_LABEL, device.custom_name);
             update_sub_menu_battery ();
             update_sub_menu_telephony ();
@@ -81,8 +81,7 @@ namespace EOSConnect.Widgets {
                 if (sub_menu_item_telephony == null) {
                     sub_menu_item_telephony = new Dbusmenu.Menuitem.with_id (id + SUB_MENU_TELEPHONY_ID);
                     sub_menu_item_telephony.item_activated.connect (() => {
-
-                        sms_history_window.open_sms_tab (device);
+                        main_window.main_stack.set_visible_child_name ("sms_history_view");
                     });
                     child_append (sub_menu_item_telephony);
                 }

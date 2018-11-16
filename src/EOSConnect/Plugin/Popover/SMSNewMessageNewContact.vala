@@ -140,7 +140,7 @@ namespace EOSConnect.Plugin.Popover {
 
                 search_entry.set_completion(entry_completion);
 
-                entry_completion.match_selected.connect( (model, iter) => {
+                entry_completion.match_selected.connect ( (model, iter) => {
                     GLib.Value name;
                     GLib.Value contact;
                     list_store.get_value (iter, 0, out name);
@@ -158,8 +158,24 @@ namespace EOSConnect.Plugin.Popover {
 
                     if (insert == true) {
                         list_box.insert (new ContactListBoxRow ((Contact)contact), -1);
+                        search_entry.text = "";
                     }
+
                     return true;
+                });
+
+
+                search_entry.activate.connect ( () => {
+
+                    // TODO - validate phone phone number
+                    var default_contact = new Contact (
+                        search_entry.get_text (),
+                        search_entry.get_text (),
+                        ""
+                    );
+
+                    list_box.insert (new ContactListBoxRow (default_contact), -1);
+                    search_entry.text = "";
                 });
 
                 // left, top, width, height

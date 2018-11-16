@@ -73,7 +73,7 @@ namespace EOSConnect {
             });
 
             init_sms_store.begin (() => {
-                init_sms_history_window.begin ();
+                init_sms_history_tab.begin ();
             });
 
 
@@ -115,11 +115,14 @@ namespace EOSConnect {
             SMSStore.instance (main_settings);
         }
 
-        private async void init_sms_history_window () {
+        private async void init_sms_history_tab () {
 
             SimpleAction simple_action = new SimpleAction ("telephony-open-sms-window-reply", null);
             simple_action.activate.connect (() => {
-                sms_history_view.open_sms_window_reply ();
+                // sms_history_view.open_sms_window_reply ();
+                // sms_history_view.show_all ();
+                main_window.main_stack.set_visible_child_name ("sms_history_view");
+                warning ("par ka");
             });
             this.add_action (simple_action);
 
@@ -157,6 +160,10 @@ namespace EOSConnect {
 
             foreach (var device_entry in devices_map.entries) {
                 bool to_add = true;
+
+                if (device_entry.value.is_paired == false) {
+                    to_add = false;
+                }
 
                 foreach (var device_menuitem in launcher_entry.quicklist.get_children ()) {
 

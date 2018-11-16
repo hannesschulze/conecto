@@ -28,6 +28,7 @@ namespace EOSConnect {
 
         public GLib.Settings main_settings { get; construct; }
         public SMSHistory sms_history_view { get; construct; }
+        public Gtk.Stack main_stack { get; construct; }
 
         private Views.DevicesView devices_view;
         // private Gtk.InfoBar infobar_error;
@@ -79,7 +80,7 @@ namespace EOSConnect {
             devices_view = new Views.DevicesView (this);
             var main_settings_view = new Views.MainSettingsView (this, main_settings);
 
-            var main_stack = new Gtk.Stack ();
+            main_stack = new Gtk.Stack ();
             main_stack.expand = true;
             main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
             main_stack.add_titled (devices_view, "devices_view", _("Devices"));

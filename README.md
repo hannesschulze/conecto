@@ -43,9 +43,7 @@ sudo ninja -C build install
 ### Known issues
 * When launching app, sometimes, configured device, not connected on local network, does not appears as "not connected".
 * When launching app, sometimes, need to unlock phone/tablet in order to see the device "connected".
-* Need to click on quicklist option "Send or view SMS" to display contact list in SMS tab.
 * When started for the first time from build directory, quicklist not available.
-* When there's no adressbook available, we can't yet send a SMS with just a phone number.
 
 ### Roadmap
 #### v0.1

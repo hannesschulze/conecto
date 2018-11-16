@@ -39,26 +39,9 @@ namespace EOSConnect.Plugin.Windows {
                 main_settings: main_settings,
                 devices_map: devices_map
             );
-
-            // set_size_request (800, 700);
-            // set_default_size (600, 600);
         }
 
         construct {
-            // title = "SMS";
-
-            // var new_sms_button = new Gtk.Button.from_icon_name ("mail-message-new");
-            // new_sms_button.tooltip_text = _("Send a new SMS");
-            // new_sms_button.valign = Gtk.Align.CENTER;
-
-            // var headerbar = new Gtk.HeaderBar ();
-            // headerbar.get_style_context ().add_class ("default-decoration");
-            // headerbar.show_close_button = true;
-            // headerbar.pack_start (new_sms_button);
-            // headerbar.title = "SMS";
-
-            // set_titlebar (headerbar);
-            // window_position = Gtk.WindowPosition.CENTER;
 
             var scrolled_window = new Gtk.ScrolledWindow (null, null);
             scrolled_window.expand = true;
@@ -79,13 +62,13 @@ namespace EOSConnect.Plugin.Windows {
             paned.pack1 (sidebar_grid, true, false);
             paned.pack2 (stack, true, false);
 
+            margin = 12;
             add (paned);
 
             sms_contact_list_box.row_selected.connect (sms_contact_list_box_selected);
 
             sms_contact_list_box.show_all ();
             scrolled_window.show_all ();
-            // show_all ();
         }
 
         public void update_list_box_ui (SMSContact sms_contact) {
@@ -144,13 +127,11 @@ namespace EOSConnect.Plugin.Windows {
 
         public void open_sms_tab (Device device) {
             show_all ();
-            // present ();
         }
 
         public void open_sms_window_reply () {
             print ("\n\nopen_sms_window_reply ()\n\n");
             show_all ();
-            // present ();
         }
 
         private void add_sms_history_message_view (SMSContact sms_contact) {

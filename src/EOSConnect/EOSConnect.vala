@@ -65,6 +65,9 @@ namespace EOSConnect {
             main_window.delete_event.connect ((event) => {
                 // When from launcher menu is clicked.
                 if (event.send_event == (int8)0) {
+                    foreach (var device_entry in devices_map.entries) {
+                        Contractor.destroy_contract (device_entry.value);
+                    }
                     main_window.destroy ();
                 } else { // When close button from the main window is clicked.
                     main_window.iconify ();
@@ -106,6 +109,8 @@ namespace EOSConnect {
             if (!Thread.supported ()) {
                 error ("Cannot run without thread support.\n");
             }
+
+             message ("Report any issues/bugs you might find to https://github.com/gyan000/EOSConnect/issues");
 
             var application = new App ();
             return application.run (args);

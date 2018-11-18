@@ -105,6 +105,7 @@ namespace EOSConnect.Widgets {
                         ((Share)device.get_plugin (ShareHandler.SHARE_PKT)).send_files (device);
                     });
                     child_append (sub_menu_item_share);
+                    EOSConnect.Contractor.create_contract (device);
                 }
 
                 sub_menu_item_share.property_set (Dbusmenu.MENUITEM_PROP_ICON_NAME, "send-to");
@@ -113,6 +114,7 @@ namespace EOSConnect.Widgets {
                 if (sub_menu_item_share != null) {
                     child_delete (sub_menu_item_share);
                     sub_menu_item_share = null;
+                    EOSConnect.Contractor.destroy_contract (device);
                 }
             }
         }

@@ -2,6 +2,7 @@ all_files = files(
     'EOSConnect/Config.vala',
     'EOSConnect/Contact.vala',
     'EOSConnect/ContactsInterface.vala',
+    'EOSConnect/Contractor.vala',
     'EOSConnect/EContacts.vala',
     'EOSConnect/EOSConnect.vala',
     'EOSConnect/DebugToolbar.vala',

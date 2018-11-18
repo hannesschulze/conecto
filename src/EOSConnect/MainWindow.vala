@@ -46,7 +46,6 @@ namespace EOSConnect {
             set_default_size (900, 600);
             set_size_request (750, 500);
         }
-
         construct {
 
             var theme_button = new Gtk.Button.from_icon_name ("object-inverse");

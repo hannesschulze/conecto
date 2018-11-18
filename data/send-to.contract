@@ -1,0 +1,5 @@
+[Contractor Entry]
+Name=Send to {DEVICE_NAME}
+Description=Send this file to {DEVICE_NAME}
+MimeType=!inode;
+Exec=dbus-send

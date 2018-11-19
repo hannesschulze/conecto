@@ -102,7 +102,7 @@ namespace EOSConnect.Widgets {
                 if (sub_menu_item_share == null) {
                     sub_menu_item_share = new Dbusmenu.Menuitem.with_id (id + SUB_MENU_SHARE_ID);
                     sub_menu_item_share.item_activated.connect (() => {
-                        ((Share)device.get_plugin (ShareHandler.SHARE_PKT)).send_files (device);
+                        ((Share)device.get_plugin (ShareHandler.SHARE_PKT)).select_files (device);
                     });
                     child_append (sub_menu_item_share);
                     EOSConnect.Contractor.create_contract (device);

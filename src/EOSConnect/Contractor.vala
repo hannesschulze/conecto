@@ -38,15 +38,24 @@ namespace EOSConnect {
 
             debug ("Creating contract : %s", contract_file);
             File file = File.new_for_path (contract_file);
+            if (file.query_exists () == true) {
+                file.delete ();
+            }
+
         	try {
         		FileOutputStream os = file.create (FileCreateFlags.PRIVATE);
                 string str_name="Name=Send to " + device.custom_name + "\n";
                 string str_desc="Description=Send this file to  " + device.custom_name + "\n";
+                // TOCHEK find out why without --print-reply it's not working.
+                string str_command  ="Exec=dbus-send --print-reply --dest=com.github.gyan000.eos-connect ";
+                       str_command += "/com/github/gyan000/eosconnect/share ";
+                       str_command += "com.github.gyan000.eosconnect.Share.Files ";
+                       str_command += "string:'" + device.id + "' string:'%F'\n";
         		os.write ("[Contractor Entry]\n".data);
                 os.write (str_name.data);
                 os.write (str_desc.data);
                 os.write ("MimeType=!inode;\n".data);
-                os.write ("Exec=dbus-send\n".data);
+                os.write (str_command.data);
         	} catch (Error e) {
         		warning ("Unable to create contract file: %s\n", e.message);
         	}

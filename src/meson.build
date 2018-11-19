@@ -65,6 +65,7 @@ all_files = files(
     'MConnect/PacketHandlers.vala',
     'MConnect/PingHandler.vala',
     'MConnect/ShareHandler.vala',
+    'MConnect/ShareHandlerProxy.vala',
     'MConnect/TelephonyHandler.vala',
     'MConnect/TransferInterface.vala',
     'MConnect/TransferManager.vala',

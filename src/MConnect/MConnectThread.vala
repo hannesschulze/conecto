@@ -91,12 +91,27 @@ namespace MConnect {
 
                 discovery.listen ();
 
+                Bus.own_name (BusType.SESSION, "com.github.gyan000.eos-connect", BusNameOwnerFlags.NONE,
+                  on_bus_aquired,
+                  () => {},
+                  () => stderr.printf ("Could not aquire name\n"));
+
+
                 loop.run ();
             } catch (Error e) {
                 warning ("Error: %s\n", e.message);
             }
 
             return 0;
+        }
+
+        public void on_bus_aquired (DBusConnection conn) {
+            try {
+                // Share service.
+                conn.register_object ("/com/github/gyan000/eosconnect/share", new ShareHandlerProxy ());
+            } catch (IOError e) {
+                warning ("Could not register service.\n");
+            }
         }
 
         public void shutdown () {

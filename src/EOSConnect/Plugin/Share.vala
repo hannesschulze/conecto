@@ -47,7 +47,7 @@ namespace EOSConnect.Plugin {
             }
         }
 
-        public void send_files (Device device) {
+        public void select_files (Device device) {
             Gtk.FileChooserDialog chooser = new Gtk.FileChooserDialog (
                 "Select your favorite file", parent_window, Gtk.FileChooserAction.OPEN,
                 "_Cancel", Gtk.ResponseType.CANCEL,
@@ -57,30 +57,34 @@ namespace EOSConnect.Plugin {
 
             if (chooser.run () == Gtk.ResponseType.ACCEPT) {
 
-                SList<string> uris = chooser.get_uris ();
-                ShareFileInfoProgress file_info_progress =  new ShareFileInfoProgress (uris, parent_window);
-                file_info_progress.show_all ();
-
-                int current_file_num = 0;
-                foreach (unowned string uri in uris) {
-                    try {
-                        UploadTransfer upload_transfer;
-
-                        ((ShareHandler)device.get_path_capability_handler (ShareHandler.SHARE))
-                            .share_file (device, uri, ++current_file_num, out upload_transfer);
-
-                        // TOCHECK - potential memory leak here ?
-                        upload_transfer.progress.connect ((progress_percentage, file_num, file_uri) => {
-                            file_info_progress.update_progress (--file_num, progress_percentage);
-                        });
-                    } catch (Error e) {
-                        file_info_progress.destroy ();
-                        warning ("Error: %s", e.message);
-                    }
-                }
+                send_files (device, chooser.get_uris ());
             }
 
             chooser.close ();
+        }
+
+        public void send_files (Device device, SList<string> uris) {
+
+            ShareFileInfoProgress file_info_progress =  new ShareFileInfoProgress (uris, parent_window);
+            file_info_progress.show_all ();
+
+            int current_file_num = 0;
+            foreach (unowned string uri in uris) {
+                try {
+                    UploadTransfer upload_transfer;
+
+                    ((ShareHandler)device.get_path_capability_handler (ShareHandler.SHARE))
+                        .share_file (device, uri, ++current_file_num, out upload_transfer);
+
+                    // TOCHECK - potential memory leak here ?
+                    upload_transfer.progress.connect ((progress_percentage, file_num, file_uri) => {
+                        file_info_progress.update_progress (--file_num, progress_percentage);
+                    });
+                } catch (Error e) {
+                    file_info_progress.destroy ();
+                    warning ("Error: %s", e.message);
+                }
+            }
         }
     }
 }

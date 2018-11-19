@@ -160,20 +160,27 @@ namespace EOSConnect {
 
             foreach (var device_entry in devices_map.entries) {
                 bool to_add = true;
+                bool to_remove = false;
 
-                if (device_entry.value.is_paired == false) {
-                    to_add = false;
+                if (device_entry.value.is_paired == false || device_entry.value.is_active == false) {
+                    to_remove = true;
                 }
+
 
                 foreach (var device_menuitem in launcher_entry.quicklist.get_children ()) {
 
                     if (((DeviceMenuitem)device_menuitem).id == device_entry.value.device_num) {
                         ((DeviceMenuitem)device_menuitem).update_ui ();
                         to_add = false;
+
+                        if (to_remove == true) {
+                            launcher_entry.quicklist.child_delete (device_menuitem);
+                            Contractor.destroy_contract (device_entry.value);
+                        }
                     }
                 }
 
-                if (to_add == true) {
+                if (to_add == true && to_remove == false) {
                     launcher_entry.quicklist.child_append (
                         new DeviceMenuitem.with_device (device_entry.value, main_window));
                 }

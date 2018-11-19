@@ -16,6 +16,23 @@ It's a Work In Progess, not intented for daily use.
 #### SMS tab
 ![sms tab](https://raw.githubusercontent.com/gyan000/EOSConnect/master/screenshots/sms.png "SMS tab")
 
+#### Send a SMS without using SMS tab
+
+It's searching in available adressbooks, or you can use a custom phone number.
+
+![sms tab](https://raw.githubusercontent.com/gyan000/EOSConnect/master/screenshots/quick_send_sms.png "Send SMS 1")
+![sms tab](https://raw.githubusercontent.com/gyan000/EOSConnect/master/screenshots/quick_send_sms2.png "Send SMS 2")
+
+#### Send file(s) to device
+
+You can send files to device from Files's context menu. (or from the Dock's quick list.)
+
+![sms tab](https://raw.githubusercontent.com/gyan000/EOSConnect/master/screenshots/send_file_from_files.png "Send file(s)")
+
+#### Dock integration
+![sms tab](https://raw.githubusercontent.com/gyan000/EOSConnect/master/screenshots/dock_integration.png "Dock integration")
+
+
 ### Installation
 * On Ubuntu or elementary OS, install these dependencies:
 ```bash
@@ -73,6 +90,7 @@ sudo ninja -C build install
 - [x] Send one or more files, with popup with file advancement.
 - [x] Receive files, with advancement using launcher api to display progress bar on the icon in the dock.
 - [x] Share plugin configuration. (option to setup default save folder)
+- [x] Add option to Files's context menu to send file(s) to a device.
 
 #### v0.5 - SMS
 - [x] Send / receive SMS, with SMS notification.

@@ -50,6 +50,7 @@ namespace EOSConnect {
 
         public override void activate ()
         {
+            Contractor.clean_contractor_directory.begin ();
             MConnectThread mconnect_thread = new MConnectThread (this, devices_map, main_settings);
 
             launcher_entry = LauncherEntry.get_for_desktop_id (GSETTINGS_SCHEMA_ID + ".desktop");

@@ -176,28 +176,28 @@ namespace MConnect {
         }
 
         private void on_local_notification_closed (Notification notification) {
-            try {
+            //try {
 
-                print ("\n>>%S\n", notification.id);
+            //    print ("\n>>%S\n", notification.id);
 
-                // var notification = new Notification.from_message (message, id);
-                // Core.instance ().application.withdraw_notification (notification_id);
+            //    // var notification = new Notification.from_message (message, id);
+            //    // Core.instance ().application.withdraw_notification (notification_id);
 
-                // if (!notification.get_is_valid () || notification.app_name in Notification.EXCEPTIONS) {
-                //     return;
-                // }
-                //
-                // foreach (Device device in Core.instance ().devices_map.values) {
-                //     if (device.has_capability_handler (NotificationHandler.NOTIFICATION)) {
-                //         NotificationHandler notification_handler = (NotificationHandler)device.get_path_capability_handler(
-                //             NotificationHandler.NOTIFICATION);
-                //
-                //         notification_handler.send_notification (device, message, id);
-                //     }
-                // }
-            } catch (Error e) {
-                warning ("Error: %s", e.message);
-            }
+            //    // if (!notification.get_is_valid () || notification.app_name in Notification.EXCEPTIONS) {
+            //    //     return;
+            //    // }
+            //    //
+            //    // foreach (Device device in Core.instance ().devices_map.values) {
+            //    //     if (device.has_capability_handler (NotificationHandler.NOTIFICATION)) {
+            //    //         NotificationHandler notification_handler = (NotificationHandler)device.get_path_capability_handler(
+            //    //             NotificationHandler.NOTIFICATION);
+            //    //
+            //    //         notification_handler.send_notification (device, message, id);
+            //    //     }
+            //    // }
+            //} catch (Error e) {
+            //    warning ("Error: %s", e.message);
+            //}
         }
 
         /**

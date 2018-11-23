@@ -30,22 +30,23 @@ class ShareHandlerProxy : Object {
     // }
 
     public void files (string device_id, string pathnames) throws IOError {
+        try {
+            foreach (var entry in Core.instance ().devices_map.entries) {
 
-        bool device_available = false;
+                if (entry.value.id == device_id &&
+                    entry.value.is_active == true) {
+                    SList<string> files_to_send = new SList<string> ();
 
-        foreach (var entry in Core.instance ().devices_map.entries) {
+                    debug ("Device ID: %s (%s)", device_id, entry.value.custom_name);
+                	foreach (unowned string pathname in pathnames.split (" ")) {
+                        files_to_send.append (File.new_for_path (pathname).get_uri ());
+                	}
 
-            if (entry.value.id == device_id &&
-                entry.value.is_active == true) {
-                SList<string> files_to_send = new SList<string> ();
-
-                debug ("Device ID: %s (%s)", device_id, entry.value.custom_name);
-            	foreach (unowned string pathname in pathnames.split (" ")) {
-                    files_to_send.append (File.new_for_path (pathname).get_uri ());
-            	}
-
-                ((Share)entry.value.get_plugin (ShareHandler.SHARE_PKT)).send_files (entry.value, files_to_send);
+                    ((Share)entry.value.get_plugin (ShareHandler.SHARE_PKT)).send_files (entry.value, files_to_send);
+                }
             }
+        } catch (Error e) {
+            warning ("Error: %s", e.message);
         }
     }
 }

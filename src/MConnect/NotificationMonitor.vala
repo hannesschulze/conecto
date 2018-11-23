@@ -121,7 +121,7 @@ namespace MConnect {
                         return message;
                     }
 
-                    uint32 id = child.get_uint32 ();
+                    //uint32 id = child.get_uint32 ();
                     Idle.add (() => {
                         return false;
                     });

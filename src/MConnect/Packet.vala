@@ -40,6 +40,7 @@ namespace MConnect {
             public uint64 size;
             public uint port;
         }
+
         public string pkt_type {
             get; private set; default = "";
         }
@@ -49,9 +50,7 @@ namespace MConnect {
         public Json.Object body {
             get; private set; default = null;
         }
-        public Packet.Payload ? payload {
-            get; set; default = null;
-        }
+        public Packet.Payload ? payload;
 
         public Packet (string type, Json.Object body, int64 id = 0) {
             this.pkt_type = type;

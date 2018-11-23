@@ -43,8 +43,6 @@ namespace EOSConnect.Plugin.Popover {
 
             var file_chooser = new Gtk.FileChooserButton (_("Select default download directory"),
                                                           Gtk.FileChooserAction.SELECT_FOLDER);
-            file_chooser.margin_right = 10;
-
             var directory = device.settings.get_string ("kdeconnect-share-directory");
             if (directory.length > 5) {
                 file_chooser.set_uri (directory);

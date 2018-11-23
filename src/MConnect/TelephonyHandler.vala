@@ -158,22 +158,22 @@ namespace MConnect {
             // }
         }
 
-        public void handle_sms_notification (Device device, Packet pkt) {
-            debug ("Handling missed SMS from notifiation.");
-            // TOCHECK There's' a "time" field, but, does not seems to be a unix timestamp. And no mention in kdeconnect.
-            //DateTime glop = new DateTime.from_unix_local (pkt.body.get_string_member ("time").to_int());
-            //print (">> %s -> %s", pkt.body.get_string_member ("time").to_string (), glop.to_string ());
-            //return;
-            SMSStore.instance ().handle_missed_sms (
-                device,
-                new SMS (
-                    pkt.body.get_string_member ("text"),
-                    SMS.FROM_CONTACT,
-                    SMS.FROM_TYPE_NOTIFICATION,
-                    new DateTime.now_utc ()
-                ),
-                pkt.body.get_string_member ("title"));
-        }
+        //public void handle_sms_notification (Device device, Packet pkt) {
+        //    debug ("Handling missed SMS from notifiation.");
+        //    // TOCHECK There's' a "time" field, but, does not seems to be a unix timestamp. And no mention in kdeconnect.
+        //    //DateTime glop = new DateTime.from_unix_local (pkt.body.get_string_member ("time").to_int());
+        //    //print (">> %s -> %s", pkt.body.get_string_member ("time").to_string (), glop.to_string ());
+        //    //return;
+        //    SMSStore.instance ().handle_missed_sms (
+        //        device,
+        //        new SMS (
+        //            pkt.body.get_string_member ("text"),
+        //            SMS.FROM_CONTACT,
+        //            SMS.FROM_TYPE_NOTIFICATION,
+        //            new DateTime.now_utc ()
+        //        ),
+        //        pkt.body.get_string_member ("title"));
+        //}
 
         /**
          * make_sms_packet:

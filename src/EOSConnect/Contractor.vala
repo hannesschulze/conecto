@@ -33,16 +33,33 @@ namespace EOSConnect {
             return Contractor.get_contract_dir ();
         }
 
+        public async static void clean_contractor_directory () {
+            try {
+                File directory = File.new_for_path (get_contract_dir ());
+                FileEnumerator enumerator = directory.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+                FileInfo file_info, iterated_file_info;
+                File iterated_file;
+                while ((file_info = enumerator.next_file ()) != null) {
+                    enumerator.iterate (out iterated_file_info, out iterated_file);
+                    debug ("Deleting %s", iterated_file_info.get_name ());
+                    iterated_file.delete ();
+                }
+            } catch (Error e) {
+        		warning ("Error: %s\n", e.message);
+        	}
+        }
+
         public static void create_contract(Device device) {
-            var contract_file = Path.build_filename (Contractor.create_if_not_exists_contract_dir (), device.id + ".contract");
+            try {
+                var contract_file = Path.build_filename (Contractor.create_if_not_exists_contract_dir (), device.id + ".contract");
 
-            debug ("Creating contract : %s", contract_file);
-            File file = File.new_for_path (contract_file);
-            if (file.query_exists () == true) {
-                file.delete ();
-            }
+                debug ("Creating contract : %s", contract_file);
+                File file = File.new_for_path (contract_file);
+                if (file.query_exists () == true) {
+                    file.delete ();
+                }
 
-        	try {
+
         		FileOutputStream os = file.create (FileCreateFlags.PRIVATE);
                 string str_name="Name=Send to " + device.custom_name + "\n";
                 string str_desc="Description=Send this file to  " + device.custom_name + "\n";
@@ -57,17 +74,21 @@ namespace EOSConnect {
                 os.write ("MimeType=!inode;\n".data);
                 os.write (str_command.data);
         	} catch (Error e) {
-        		warning ("Unable to create contract file: %s\n", e.message);
+        		warning ("Error: %s\n", e.message);
         	}
         }
 
         public static void destroy_contract(Device device) {
-            var contract_file = Path.build_filename (Contractor.create_if_not_exists_contract_dir (), device.id + ".contract");
-            File file = File.new_for_path (contract_file);
-            if (file.query_exists ()) {
-                debug ("Deleting contract : %s", contract_file);
-                file.delete ();
-            }
+            try {
+                var contract_file = Path.build_filename (Contractor.create_if_not_exists_contract_dir (), device.id + ".contract");
+                File file = File.new_for_path (contract_file);
+                if (file.query_exists ()) {
+                    debug ("Deleting contract : %s", contract_file);
+                    file.delete ();
+                }
+            } catch (Error e) {
+        		warning ("Error: %s\n", e.message);
+        	}
         }
     }
 }

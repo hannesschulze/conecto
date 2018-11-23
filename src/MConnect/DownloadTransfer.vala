@@ -77,7 +77,8 @@ namespace MConnect {
                                                             Utils.TlsConnectionMode.CLIENT);
 
                 debug ("Attempt TLS handshake.");
-                var tls_res = yield this.tls_connection.handshake_async ();
+                //var tls_res = yield this.tls_connection.handshake_async ();
+                yield this.tls_connection.handshake_async ();
 
                 debug ("TLS handshake complete.");
             } catch (Error e) {

@@ -241,6 +241,10 @@ namespace MConnect {
             }
         }
 
+        public void pair_device () {
+            pair.begin ();
+        }
+
         /**
          * maybe_pair:
          *
@@ -248,8 +252,8 @@ namespace MConnect {
          */
         public void maybe_pair () {
             if (is_paired == false) {
-                if (_pair_in_progress == false)
-                    pair.begin ();
+                //if (_pair_in_progress == false)
+                    //pair.begin ();
             } else {
                 // We are already paired.
                 handle_pair (true);
@@ -369,7 +373,7 @@ namespace MConnect {
                 capability_removed (c);
                 // Remove capability handlers
                 unregister_capability_handler (c);
-                // update_capabilities_status_available (c, false);
+                // Update_capabilities_status_available (c, false);
             }
 
             if (host != null && host.to_string () != other_dev.host.to_string ()) {
@@ -383,7 +387,7 @@ namespace MConnect {
         }
 
         public void send (Packet pkt) {
-            // @TODO: queue messages
+            // TODO: queue messages
             if (_channel != null) {
                 _channel.send.begin (pkt);
             } else {

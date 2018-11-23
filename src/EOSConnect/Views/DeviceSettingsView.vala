@@ -82,8 +82,10 @@ namespace EOSConnect.Views {
             status_switch.notify["active"].connect (() => {
                 if (status_switch.active) {
                     // ClientIface.get_instance ().allow_device.begin (device.id);
+                        device.pair_device ();
                 } else {
                     // ClientIface.get_instance ().disallow_device.begin (device.id);
+
                 }
             });
 
@@ -97,6 +99,8 @@ namespace EOSConnect.Views {
         public void update_ui () {
             if(device.is_paired) {
                 status_switch.active = true;
+            } else {
+                status_switch.active = false;
             }
         }
     }

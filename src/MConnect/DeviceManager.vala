@@ -104,7 +104,7 @@ namespace MConnect {
                 if (is_new) {
                     // Make sure that this happens before we update device data so that
                     // all subscribeds of found_new_device() signal have a chance to
-                    // setup eveything they need
+                    // setup eveything they need.
                     this.found_new_device (dev);
                     dev.capability_added.connect (this.device_capability_added_cb);
                     dev.capability_removed.connect (this.device_capability_removed_cb);

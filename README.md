@@ -1,3 +1,8 @@
+## Important note
+
+2019-01-04 - Since I don't own anymore an android device, I'm not able to develop it... so, developpement is stopped so far.
+
+
 ## EOSConnect
 
 It's a KDEConnect client using GTK+ written in Vala, based on [mconnect](https://github.com/kevinselvaprasanna/mconnect).

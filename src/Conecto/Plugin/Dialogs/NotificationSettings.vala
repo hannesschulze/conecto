@@ -15,10 +15,10 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect;
+using Conecto;
 using MConnect;
 
-namespace EOSConnect.Plugin.Dialogs {
+namespace Conecto.Plugin.Dialogs {
 
     public class NotificationSettings : Gtk.Dialog {
 

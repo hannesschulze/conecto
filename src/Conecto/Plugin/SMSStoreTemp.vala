@@ -18,7 +18,7 @@
 using MConnect;
 using Sqlite;
 
-namespace EOSConnect.Plugin {
+namespace Conecto.Plugin {
 
     public class SMSStoreTemp : SMSStoreInterface {
 

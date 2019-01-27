@@ -15,13 +15,13 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect;
-using EOSConnect.Plugin;
-using EOSConnect.Plugin.Widgets;
+using Conecto;
+using Conecto.Plugin;
+using Conecto.Plugin.Widgets;
 using Gee;
 using MConnect;
 
-namespace EOSConnect.Plugin.Views {
+namespace Conecto.Plugin.Views {
 
     public class SMSMessagesView : Gtk.Grid {
 
@@ -173,7 +173,7 @@ namespace EOSConnect.Plugin.Views {
             SMS sms = new SMS (
                 message,
                 SMS.FROM_ME,
-                SMS.FROM_TYPE_EOSCONNECT,
+                SMS.FROM_TYPE_CONECTO,
                 new DateTime.now_utc ());
 
             if (device.has_capability_handler (TelephonyHandler.TELEPHONY) ) {

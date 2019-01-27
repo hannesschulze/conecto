@@ -16,13 +16,13 @@
  * gyan000 <gyan000 (at] ijaz.fr>
  */
 using Gee;
-using EOSConnect;
-using EOSConnect.Widgets;
-using EOSConnect.Plugin;
-using EOSConnect.Plugin.Popover;
+using Conecto;
+using Conecto.Widgets;
+using Conecto.Plugin;
+using Conecto.Plugin.Popover;
 using MConnect;
 
-namespace EOSConnect.Plugin {
+namespace Conecto.Plugin {
 
     public class Telephony : PluginInterface {
 

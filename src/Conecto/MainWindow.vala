@@ -15,14 +15,14 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect.Plugin;
-using EOSConnect.Plugin.Windows;
-using EOSConnect.Widgets;
+using Conecto.Plugin;
+using Conecto.Plugin.Windows;
+using Conecto.Widgets;
 using Gee;
 using Granite.Widgets;
 using MConnect;
 
-namespace EOSConnect {
+namespace Conecto {
 
     public class MainWindow : Gtk.ApplicationWindow {
 

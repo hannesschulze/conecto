@@ -15,7 +15,7 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-namespace EOSConnect.Plugin {
+namespace Conecto.Plugin {
 
     public class SMSStore : GLib.Object {
 

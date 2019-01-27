@@ -15,7 +15,7 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-namespace EOSConnect {
+namespace Conecto {
 
     public class EContacts : ContactsInterface {
 

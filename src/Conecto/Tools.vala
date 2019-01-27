@@ -17,7 +17,7 @@
  */
 using MConnect;
 
-namespace EOSConnect {
+namespace Conecto {
 
     public class Tools {
 

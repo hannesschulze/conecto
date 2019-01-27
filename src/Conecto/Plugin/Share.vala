@@ -15,13 +15,13 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect.Plugin.Popover;
-using EOSConnect.Plugin.Dialogs;
-using EOSConnect.Widgets;
+using Conecto.Plugin.Popover;
+using Conecto.Plugin.Dialogs;
+using Conecto.Widgets;
 using Gee;
 using MConnect;
 
-namespace EOSConnect.Plugin {
+namespace Conecto.Plugin {
 
     public class Share : PluginInterface {
 

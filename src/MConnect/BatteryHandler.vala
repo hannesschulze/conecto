@@ -16,7 +16,7 @@
  * Maciek Borzecki <maciek.borzecki (at] gmail.com>
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect;
+using Conecto;
 
 namespace MConnect {
 

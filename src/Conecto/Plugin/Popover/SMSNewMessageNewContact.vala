@@ -15,12 +15,12 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect;
-using EOSConnect.Plugin.Widgets;
+using Conecto;
+using Conecto.Plugin.Widgets;
 using Gee;
 using MConnect;
 
-namespace EOSConnect.Plugin.Popover {
+namespace Conecto.Plugin.Popover {
 
     public class SMSNewMessageNewContact : Gtk.Popover {
 
@@ -83,7 +83,7 @@ namespace EOSConnect.Plugin.Popover {
             SMS sms = new SMS (
                 message,
                 SMS.FROM_ME,
-                SMS.FROM_TYPE_EOSCONNECT,
+                SMS.FROM_TYPE_CONECTO,
                 new DateTime.now_utc ());
 
             if (device.has_capability_handler (TelephonyHandler.TELEPHONY) ) {

@@ -15,10 +15,10 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect.Widgets;
+using Conecto.Widgets;
 using MConnect;
 
-namespace EOSConnect.Plugin {
+namespace Conecto.Plugin {
 
     public abstract class PluginInterface : GLib.Object {
 

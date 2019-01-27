@@ -17,7 +17,7 @@
  * gyan000 <gyan000 (at] ijaz.fr>
  */
 using Gee;
-using EOSConnect;
+using Conecto;
 
 namespace MConnect {
 

@@ -15,10 +15,10 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect.Plugin;
+using Conecto.Plugin;
 using MConnect;
 
-namespace EOSConnect.Widgets {
+namespace Conecto.Widgets {
     public class PluginListBoxRow : Gtk.ListBoxRow {
 
         public weak PluginInterface plugin_interface { get; construct; }

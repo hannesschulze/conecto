@@ -19,7 +19,7 @@ using Gee;
 using Granite.Widgets;
 using MConnect;
 
-namespace EOSConnect.Views {
+namespace Conecto.Views {
 
     public class DevicesView : Gtk.Frame {
 

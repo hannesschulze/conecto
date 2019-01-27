@@ -15,13 +15,13 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
- namespace EOSConnect.Plugin {
+ namespace Conecto.Plugin {
 
      public class SMS : Object {
 
          public const int FROM_TYPE_TELEPHONY = 1;
          public const int FROM_TYPE_NOTIFICATION = 2;
-         public const int FROM_TYPE_EOSCONNECT = 3;
+         public const int FROM_TYPE_CONECTO = 3;
 
          public const int FROM_CONTACT = 1;
          public const int FROM_ME = 2;

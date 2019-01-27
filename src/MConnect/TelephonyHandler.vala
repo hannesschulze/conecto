@@ -16,8 +16,8 @@
  * Maciek Borzecki <maciek.borzecki (at] gmail.com>
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect;
-using EOSConnect.Plugin;
+using Conecto;
+using Conecto.Plugin;
 
 namespace MConnect {
 
@@ -108,7 +108,7 @@ namespace MConnect {
             notification.set_body (notif_body);
 
             if (event == "sms") {
-                // Action defined in EOSConnect._init_sms_history_view ()
+                // Action defined in Conecto._init_sms_history_view ()
                 notification.set_default_action ("app.telephony-open-sms-tab");
             }
 

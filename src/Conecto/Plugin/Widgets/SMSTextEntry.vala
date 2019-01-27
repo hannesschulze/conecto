@@ -16,12 +16,12 @@
  * gyan000 <gyan000 (at] ijaz.fr>
  */
 
- using EOSConnect;
- using EOSConnect.Plugin;
+ using Conecto;
+ using Conecto.Plugin;
  using Gee;
  using MConnect;
 
- namespace EOSConnect.Plugin.Widgets {
+ namespace Conecto.Plugin.Widgets {
 
      public class SMSTextEntry : Gtk.Box {
 

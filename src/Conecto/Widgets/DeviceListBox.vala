@@ -17,7 +17,7 @@
  */
 using MConnect;
 
-namespace EOSConnect.Widgets {
+namespace Conecto.Widgets {
 
     public class DeviceListBox : Gtk.ListBox {
 

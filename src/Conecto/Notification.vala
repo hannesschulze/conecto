@@ -15,7 +15,7 @@
  * AUTHORS
  * gyan000 <gyan000(at] ijaz.fr>
  */
- namespace EOSConnect {
+ namespace Conecto {
      public class Notification : Object {
         public string id { get; private set; }
         public string app_name { get; private set; }

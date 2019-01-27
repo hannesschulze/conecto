@@ -15,11 +15,11 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect.Widgets;
-using EOSConnect.Plugin;
+using Conecto.Widgets;
+using Conecto.Plugin;
 using MConnect;
 
-namespace EOSConnect.Plugin {
+namespace Conecto.Plugin {
 
     public class Ping : PluginInterface {
 

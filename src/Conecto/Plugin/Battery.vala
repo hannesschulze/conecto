@@ -15,12 +15,12 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect.Plugin.Popover;
-using EOSConnect.Widgets;
+using Conecto.Plugin.Popover;
+using Conecto.Widgets;
 using Gee;
 using MConnect;
 
-namespace EOSConnect.Plugin {
+namespace Conecto.Plugin {
 
     public class Battery : PluginInterface {
 

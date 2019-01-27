@@ -16,12 +16,12 @@
  * gyan000 <gyan000 (at] ijaz.fr>
  */
 using Gee;
-using EOSConnect;
-using EOSConnect.Plugin;
-using EOSConnect.Plugin.Views;
+using Conecto;
+using Conecto.Plugin;
+using Conecto.Plugin.Views;
 using MConnect;
 
-namespace EOSConnect.Plugin.Windows {
+namespace Conecto.Plugin.Windows {
 
     public class SMSHistory : Gtk.Stack {
 

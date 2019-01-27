@@ -16,9 +16,9 @@
  * gyan000 <gyan000 (at] ijaz.fr>
  */
 using MConnect;
-using EOSConnect.Plugin;
+using Conecto.Plugin;
 
-namespace EOSConnect.Widgets {
+namespace Conecto.Widgets {
 
     public class PluginListBox : Gtk.ListBox {
 

@@ -18,7 +18,7 @@
 using Gee;
 using MConnect;
 
-namespace EOSConnect.Plugin {
+namespace Conecto.Plugin {
 
     public abstract class SMSStoreInterface : Object {
 

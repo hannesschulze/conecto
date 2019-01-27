@@ -15,11 +15,11 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect.Plugin.Dialogs;
+using Conecto.Plugin.Dialogs;
 using Gee;
 using MConnect;
 
-namespace EOSConnect.Plugin {
+namespace Conecto.Plugin {
 
     public class @Notification : PluginInterface {
 

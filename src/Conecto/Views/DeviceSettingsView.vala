@@ -17,7 +17,7 @@
  */
 using MConnect;
 
-namespace EOSConnect.Views {
+namespace Conecto.Views {
 
     public class DeviceSettingsView : Granite.SimpleSettingsPage {
 

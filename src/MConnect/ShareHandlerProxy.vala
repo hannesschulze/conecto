@@ -16,7 +16,7 @@
  * gyan000 <gyan000 (at] ijaz.fr>
  */
 
-using EOSConnect.Plugin;
+using Conecto.Plugin;
 using Gee;
 using MConnect;
 

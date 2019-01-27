@@ -17,7 +17,7 @@
  */
 using MConnect;
 
-namespace EOSConnect {
+namespace Conecto {
 
     public class Contractor {
 
@@ -65,8 +65,8 @@ namespace EOSConnect {
                 string str_desc="Description=Send this file to  " + device.custom_name + "\n";
                 // TOCHEK find out why without --print-reply it's not working.
                 string str_command  ="Exec=dbus-send --print-reply --dest=com.github.hannesschulze.conecto ";
-                       str_command += "/com/github/gyan000/eosconnect/share ";
-                       str_command += "com.github.gyan000.eosconnect.Share.Files ";
+                       str_command += "/com/github/hannesschulze/conecto/share ";
+                       str_command += "com.github.hannesschulze.conecto.Share.Files ";
                        str_command += "string:'" + device.id + "' string:'%F'\n";
         		os.write ("[Contractor Entry]\n".data);
                 os.write (str_name.data);

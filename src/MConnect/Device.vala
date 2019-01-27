@@ -17,8 +17,8 @@
  * gyan000 <gyan000 (at] ijaz.fr>
  */
 using Gee;
-using EOSConnect;
-using EOSConnect.Plugin;
+using Conecto;
+using Conecto.Plugin;
 
 namespace MConnect {
 
@@ -397,13 +397,13 @@ namespace MConnect {
 
         public void setup_plugins () {
             var schema = SettingsSchemaSource.get_default ().lookup (
-                EOSConnect.App.GSETTINGS_SCHEMA_ID + ".settings.device",
+                Conecto.App.GSETTINGS_SCHEMA_ID + ".settings.device",
                 false);
             if (schema != null) {
                 debug ("Getting config for device ID: " + id);
                 settings = new GLib.Settings.full (schema,
                     null,
-                    EOSConnect.App.GSETTINGS_SCHEMA_PATH + "/settings/devices/%s/".printf (id));
+                    Conecto.App.GSETTINGS_SCHEMA_PATH + "/settings/devices/%s/".printf (id));
 
                 if (settings.get_string ("custom-name").length > 1) {
                     custom_name =  settings.get_string ("custom-name");

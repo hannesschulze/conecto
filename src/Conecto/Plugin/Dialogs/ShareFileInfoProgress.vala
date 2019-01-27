@@ -15,9 +15,9 @@
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
  */
-using EOSConnect;
+using Conecto;
 
-namespace EOSConnect.Plugin.Dialogs {
+namespace Conecto.Plugin.Dialogs {
 
     public class ShareFileInfoProgress : Gtk.Dialog {
 

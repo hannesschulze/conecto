@@ -16,10 +16,10 @@
  * gyan000 <gyan000 (at] ijaz.fr>
  */
 using MConnect;
-using EOSConnect.Plugin;
-using EOSConnect.Plugin.Windows;
+using Conecto.Plugin;
+using Conecto.Plugin.Windows;
 
-namespace EOSConnect.Widgets {
+namespace Conecto.Widgets {
 
     public class DeviceMenuitem : Dbusmenu.Menuitem {
 
@@ -105,7 +105,7 @@ namespace EOSConnect.Widgets {
                         ((Share)device.get_plugin (ShareHandler.SHARE_PKT)).select_files (device);
                     });
                     child_append (sub_menu_item_share);
-                    EOSConnect.Contractor.create_contract (device);
+                    Conecto.Contractor.create_contract (device);
                 }
 
                 sub_menu_item_share.property_set (Dbusmenu.MENUITEM_PROP_ICON_NAME, "send-to");
@@ -114,7 +114,7 @@ namespace EOSConnect.Widgets {
                 if (sub_menu_item_share != null) {
                     child_delete (sub_menu_item_share);
                     sub_menu_item_share = null;
-                    EOSConnect.Contractor.destroy_contract (device);
+                    Conecto.Contractor.destroy_contract (device);
                 }
             }
         }

@@ -16,14 +16,14 @@
  * gyan000 <gyan000 (at] ijaz.fr>
  * Hannes Schulze <haschu0103 (at) gmail.com>
  */
-using EOSConnect.Plugin;
-using EOSConnect.Plugin.Windows;
-using EOSConnect.Widgets;
+using Conecto.Plugin;
+using Conecto.Plugin.Windows;
+using Conecto.Widgets;
 using Gee;
 using MConnect;
 using Unity;
 
-namespace EOSConnect {
+namespace Conecto {
 
     public class App : Granite.Application {
 

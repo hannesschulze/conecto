@@ -1,11 +1,11 @@
-# French translations for com.github.gyan000.eos-connect package.
-# Copyright (C) 2018 THE com.github.gyan000.eos-connect'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the com.github.gyan000.eos-connect package.
+# French translations for com.github.hannesschulze.conecto package.
+# Copyright (C) 2018 THE  com.github.hannesschulze.conecto'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the  com.github.hannesschulze.conecto package.
 # Automatically generated, 2018.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: com.github.gyan000.eos-connect\n"
+"Project-Id-Version: com.github.hannesschulze.conecto\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-03 18:05+0200\n"
 "PO-Revision-Date: 2018-06-03 16:22+0200\n"

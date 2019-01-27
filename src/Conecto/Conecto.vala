@@ -14,6 +14,7 @@
  *
  * AUTHORS
  * gyan000 <gyan000 (at] ijaz.fr>
+ * Hannes Schulze <haschu0103 (at) gmail.com>
  */
 using EOSConnect.Plugin;
 using EOSConnect.Plugin.Windows;
@@ -26,9 +27,9 @@ namespace EOSConnect {
 
     public class App : Granite.Application {
 
-        public const string APP_NAME="eos-connect";
-        public const string GSETTINGS_SCHEMA_ID="com.github.gyan000.eos-connect";
-        public const string GSETTINGS_SCHEMA_PATH="/com/github/gyan000/eos-connect";
+        public const string APP_NAME="conecto";
+        public const string GSETTINGS_SCHEMA_ID="com.github.hannesschulze.conecto";
+        public const string GSETTINGS_SCHEMA_PATH="/com/github/hannesschulze/conecto";
         public HashMap<string, Device> devices_map;
         public ContactsInterface contacts_interface;
         private GLib.Settings main_settings;
@@ -44,8 +45,8 @@ namespace EOSConnect {
         construct {
             application_id = App.GSETTINGS_SCHEMA_ID;
             flags = ApplicationFlags.FLAGS_NONE;
-            program_name = "EOS Connect";
-            build_version = "0.5";
+            program_name = "Conecto";
+            build_version = "0.1";
         }
 
         public override void activate ()
@@ -111,7 +112,7 @@ namespace EOSConnect {
                 error ("Cannot run without thread support.\n");
             }
 
-             message ("Report any issues/bugs you might find to https://github.com/gyan000/EOSConnect/issues");
+             message ("Report any issues/bugs you might find to https://github.com/hannesschulze/conecto/issues");
 
             var application = new App ();
             return application.run (args);

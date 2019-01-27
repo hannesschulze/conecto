@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema id="com.github.gyan000.eos-connect" path="/com/github/gyan000/eos-connect/">
+  <schema id="com.github.hannesschulze.conecto" path="/com/github/hannesschulze/conecto/">
     <key type="b" name="use-dark-theme">
       <default>false</default>
       <summary>Use dark theme.</summary>
@@ -14,7 +14,7 @@
       <summary>Activate / Deactivate the storage of SMS for all devices.</summary>
     </key>
   </schema>
-  <schema id="com.github.gyan000.eos-connect.settings.device">
+  <schema id="com.github.hannesschulze.conecto.settings.device">
     <key type="s" name="custom-name">
       <default>""</default>
       <summary>Custom name for the device.</summary>

@@ -1,73 +1,42 @@
-# Daemon Desktop file (for GNOME Session autostart)
-#configure_file(
-#    input: meson.project_name() + '-daemon.desktop.in',
-#    output: '@BASENAME@',
-#    configuration: conf_data,
-#    install_dir: join_paths(get_option('datadir'), 'applications')
-#)
-
-# D-Bus Service
-#configure_file(
-#    input: meson.project_name() + '.service.in',
-#    output: '@BASENAME@',
-#    configuration: conf_data,
-#    install_dir: dbus.get_pkgconfig_variable('session_bus_services_dir')
-#)
-
-# GNOME Shell Search Provider
-#configure_file(
-#    input: meson.project_name() + '.search-provider.ini.in',
-#    output: '@BASENAME@',
-#    configuration: conf_data,
-#    install_dir: join_paths(get_option('datadir'), 'gnome-shell', 'search-providers')
-#)
-
-# AppData file
-i18n.merge_file(
-    input: meson.project_name() + '.appdata.xml.in',
-    output: '@BASENAME@',
-    po_dir: join_paths(meson.source_root (), 'po', 'extra'),
-    type: 'xml',
-    install_dir: join_paths(get_option('datadir'), 'metainfo'),
-    install: true
+desktop_file = i18n.merge_file(
+  input: 'com.github.hannesschulze.conecto.desktop.in',
+  output: 'com.github.hannesschulze.conecto.desktop',
+  type: 'desktop',
+  po_dir: '../po',
+  install: true,
+  install_dir: join_paths(get_option('datadir'), 'applications')
 )
 
-# Desktop File
-desktop_in = configure_file(
-    input: meson.project_name() + '.desktop.in.in',
-    output: '@BASENAME@',
-    configuration: conf_data
+desktop_utils = find_program('desktop-file-validate', required: false)
+if desktop_utils.found()
+  test('Validate desktop file', desktop_utils,
+    args: [desktop_file]
+  )
+endif
+
+appstream_file = i18n.merge_file(
+  input: 'com.github.hannesschulze.conecto.appdata.xml.in',
+  output: 'com.github.hannesschulze.conecto.appdata.xml',
+  po_dir: '../po',
+  install: true,
+  install_dir: join_paths(get_option('datadir'), 'appdata')
 )
 
-i18n.merge_file(
-    input: desktop_in,
-    output: meson.project_name() + '.desktop',
-    po_dir: join_paths(meson.source_root (), 'po'),
-    type: 'desktop',
-    install_dir: join_paths(get_option('datadir'), 'applications'),
-    install: true
+appstream_util = find_program('appstream-util', required: false)
+if appstream_util.found()
+  test('Validate appstream file', appstream_util,
+    args: ['validate', appstream_file]
+  )
+endif
+
+
+install_data('com.github.hannesschulze.conecto.gschema.xml',
+  install_dir: join_paths(get_option('datadir'), 'glib-2.0/schemas')
 )
 
-# Blacklist file
-#install_data(
-#    'appcenter.blacklist',
-#    install_dir: config_dir,
-#)
-
-# Install GSettings schemas
-install_data(
-    meson.project_name() + '.gschema.xml',
-    install_dir: join_paths(get_option('datadir'), 'glib-2.0', 'schemas')
-)
-
-# Use GResource
-#css_gresource = gnome.compile_resources(
-#    'gresource_css',
-#    meson.project_name() + '.gresource.xml'
-#)
-
-#icons_gresource = gnome.compile_resources(
-#    'gresource_icons',
-#    'icons/categories.gresource.xml',
-#    source_dir: 'icons'
-#)
+compile_schemas = find_program('glib-compile-schemas', required: false)
+if compile_schemas.found()
+  test('Validate schema file', compile_schemas,
+    args: ['--strict', '--dry-run', meson.current_source_dir()]
+  )
+endif

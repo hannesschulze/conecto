@@ -37,7 +37,7 @@ namespace MConnect {
             if (ShareHandler.DOWNLOADS == null) {
 
                 ShareHandler.DOWNLOADS = Path.build_filename (
-                    Environment.get_user_special_dir (UserDirectory.DOWNLOAD), "EOSConnect");
+                    Environment.get_user_special_dir (UserDirectory.DOWNLOAD), "Conecto");
 
                 if (DirUtils.create_with_parents (ShareHandler.DOWNLOADS, 0700) == -1) {
                     warning ("Failed to create downloads directory: %s", Posix.strerror (Posix.errno));

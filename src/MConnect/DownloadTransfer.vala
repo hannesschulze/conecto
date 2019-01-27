@@ -35,7 +35,7 @@ namespace MConnect {
         public string destination = "";
 
         public DownloadTransfer (Device device, InetSocketAddress isa, uint64 size, string destination) {
-            this.launcher_entry = Unity.LauncherEntry.get_for_desktop_id (EOSConnect.App.GSETTINGS_SCHEMA_ID + ".desktop");
+            this.launcher_entry = Unity.LauncherEntry.get_for_desktop_id (Conecto.App.GSETTINGS_SCHEMA_ID + ".desktop");
             this.isa = isa;
             this.cancellable = new Cancellable ();
             this.destination = destination;

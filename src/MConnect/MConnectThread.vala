@@ -91,7 +91,7 @@ namespace MConnect {
 
                 discovery.listen ();
 
-                Bus.own_name (BusType.SESSION, "com.github.gyan000.eos-connect", BusNameOwnerFlags.NONE,
+                Bus.own_name (BusType.SESSION, "com.github.hannesschulze.conecto", BusNameOwnerFlags.NONE,
                   on_bus_aquired,
                   () => {},
                   () => stderr.printf ("Could not aquire name\n"));
@@ -108,7 +108,7 @@ namespace MConnect {
         public void on_bus_aquired (DBusConnection conn) {
             try {
                 // Share service.
-                conn.register_object ("/com/github/gyan000/eosconnect/share", new ShareHandlerProxy ());
+                conn.register_object ("/com/github/hannesschulze/conecto/share", new ShareHandlerProxy ());
             } catch (IOError e) {
                 warning ("Could not register service.\n");
             }

@@ -16,11 +16,11 @@
  * gyan000 <gyan000 (at] ijaz.fr>
  */
 
-using EOSConnect.Plugin;
+using Conecto.Plugin;
 using Gee;
 using MConnect;
 
-[DBus (name = "com.github.gyan000.eosconnect.Share")]
+[DBus (name = "com.github.hannesschulze.conecto.Share")]
 class ShareHandlerProxy : Object {
 
     // private HashMap<string, Device> devices_map;
@@ -51,7 +51,7 @@ class ShareHandlerProxy : Object {
     }
 }
 
-[DBus (name = "com.github.gyan000.eosconnect.ShareError")]
+[DBus (name = "com.github.hannesschulze.conecto.ShareError")]
 public errordomain ShareError {
     SOME_ERROR
 }

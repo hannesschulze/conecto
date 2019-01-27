@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Conecto
+GenericName=Conecto
+Comment=Integrate your Android-phone with your PC - a GTK client for KDEConnect.
+Categories=Utility;
+Exec=com.github.hannesschulze.conecto
+Icon=phone
+Terminal=false
+Type=Application
+X-GNOME-Gettext-Domain=conecto
+X-GNOME-UsesNotifications=true
+Keywords=KDE;connect;

@@ -43,7 +43,7 @@ namespace MConnect {
             int file_num = 1,
             string file_uri = ""
         ) {
-            this.launcher_entry = Unity.LauncherEntry.get_for_desktop_id (EOSConnect.App.GSETTINGS_SCHEMA_ID + ".desktop");
+            this.launcher_entry = Unity.LauncherEntry.get_for_desktop_id (Conecto.App.GSETTINGS_SCHEMA_ID + ".desktop");
             this.socket_service = socket_service;
             this.cancellable = new Cancellable ();
             this.device = device;

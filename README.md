@@ -15,6 +15,7 @@
 </p>
 
 <p align="center">
+    <img  src="screenshots/devices.png" alt="Screenshot"><br>
     <a href="https://github.com/hannesschulze/conecto/issues/new">Report a problem!</a>
 </p>
 

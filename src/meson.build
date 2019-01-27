@@ -1,4 +1,4 @@
-all_files = files(
+conecto_sources = files(
     'EOSConnect/Config.vala',
     'EOSConnect/Contact.vala',
     'EOSConnect/ContactsInterface.vala',
@@ -71,14 +71,4 @@ all_files = files(
     'MConnect/TransferManager.vala',
     'MConnect/UploadTransfer.vala',
     'MConnect/Utils.vala',
-)
-
-executable(
-    meson.project_name(),
-    all_files,
-    #css_gresource,
-    #icons_gresource,
-    dependencies: dependencies,
-    #vala_args: args,
-    install: true
 )

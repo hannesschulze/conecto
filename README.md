@@ -42,14 +42,15 @@ sudo apt install elementary-sdk libunity-dev libnotify-dev libghc-gnutls-dev lib
 ### Building
 ```
 git clone https://github.com/hannesschulze/conecto.git && cd conecto
-meson build
-ninja -C build
-glib-compile-schemas ./data/
+meson build --prefix=/usr
+cd build
+ninja
 ```
 
-To install, use `ninja install`:
+To install, use `ninja install`, then execute with com.github.hannesschulze.conecto:
 ```shell
-sudo ninja -C build install
+sudo ninja install
+com.github.hannesschulze.conecto
 ```
 
 ## About this project

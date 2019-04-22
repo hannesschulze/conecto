@@ -41,7 +41,7 @@ namespace MConnect {
             HashMap<string, PacketHandlerInterface> hnd = new HashMap<string, PacketHandlerInterface>();
 
             var battery = BatteryHandler.instance ();
-            // var clipboard = ClipboardHandler.instance ();
+            var clipboard = ClipboardHandler.instance ();
             // var mousepad = MousepadHandler.instance ();
             // var mpris = MprisHandler.instance ();
             var notification = NotificationHandler.instance ();
@@ -50,7 +50,7 @@ namespace MConnect {
             var telephony = TelephonyHandler.instance ();
 
             hnd.@set (battery.get_pkt_type (), battery);
-            // hnd.@set (clipboard.get_pkt_type (), clipboard);
+            hnd.@set (clipboard.get_pkt_type (), clipboard);
             // hnd.@set (mousepad.get_pkt_type (), mousepad);
             // hnd.@set (mpris.get_pkt_type (), mpris);
             hnd.@set (notification.get_pkt_type (), notification);

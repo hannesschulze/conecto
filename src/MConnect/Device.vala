@@ -494,6 +494,16 @@ namespace MConnect {
                         }
                     break;
 
+                    case ClipboardHandler.CLIPBOARD:
+                        if (!plugins_map.has_key (ClipboardHandler.CLIPBOARD)) {
+                            var clipboard_plugin = new Clipboard ();
+                            clipboard_plugin.is_active = settings.get_boolean (clipboard_plugin.settings_key_is_active);
+                            clipboard_plugin.application = Core.instance ().application;
+                            clipboard_plugin.init ();
+                            plugins_map.@set (ClipboardHandler.CLIPBOARD, clipboard_plugin);
+                        }
+                    break;
+
                     default:
                         // info ("Unable to find a plugin for this %s capability: %s", plugin_type, capability_name);
                     break;

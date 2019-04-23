@@ -29,6 +29,7 @@ namespace MConnect {
 
         private string local_buffer { get; set; default = ""; }
         private string remote_buffer { get; set; default = ""; }
+        public bool enabled { get; set; default = true; }
 
         public string get_pkt_type () {
             return CLIPBOARD;
@@ -39,9 +40,7 @@ namespace MConnect {
             clipboard = Gtk.Clipboard.get_default (display);
         }
         
-        public ClipboardHandler () { 
-            debug ("CliboardHandler constructed");
-        }
+        public ClipboardHandler () { }
 
         public static ClipboardHandler instance () {
             return new ClipboardHandler ();
@@ -51,10 +50,13 @@ namespace MConnect {
             debug ("Use device %s for clipboard.", device.to_string ());
             device.message.connect (message);
             callback_id = clipboard.owner_change.connect ((clipboard, event) => {
-                clipboard.request_text ((cp, text) => {
-                    local_buffer = text;
-                    push_clipboard (device);
-                });
+                Plugin.Clipboard plugin_clipboard = (Plugin.Clipboard) device.get_plugin (CLIPBOARD);
+                if (plugin_clipboard.is_active) {
+                    clipboard.request_text ((cp, text) => {
+                        local_buffer = text;
+                        push_clipboard (device);
+                    });
+                }
             });
         }
 
@@ -71,10 +73,13 @@ namespace MConnect {
             }
 
             debug ("Got clipboard packet.");   
-    
-            string text = pkt.body.get_string_member ("content");
-            remote_buffer = text;
-            pull_clipboard ();
+            
+            Plugin.Clipboard plugin_clipboard = (Plugin.Clipboard) device.get_plugin (CLIPBOARD);
+            if (plugin_clipboard.is_active) {
+                string text = pkt.body.get_string_member ("content");
+                remote_buffer = text;
+                pull_clipboard ();
+            }
         }
 
         private void push_clipboard (Device device) {

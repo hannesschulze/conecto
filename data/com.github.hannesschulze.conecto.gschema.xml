@@ -31,6 +31,10 @@
       <default>5</default>
       <summary>Battery level treshold to send a notification to user.</summary>
     </key>
+    <key type="b" name="kdeconnect-clipboard-active">
+      <default>true</default>
+      <summary>Synchronize clipboard between phone and computer.</summary>
+    </key>
     <key type="b" name="kdeconnect-notification-active">
       <default>true</default>
       <summary>Receive or send notifications between devices.</summary>

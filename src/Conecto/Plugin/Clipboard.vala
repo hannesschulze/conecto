@@ -25,10 +25,11 @@ namespace Conecto.Plugin {
 
         construct {
             name  = _("Clipboard");
-            icon_name = ""; // TODO clipboard icon
+            icon_name = "edit-copy"; // TODO clipboard icon
             capability_name = ClipboardHandler.CLIPBOARD;
             description = _("Share clipboard");
             settings_key_is_active = "kdeconnect-clipboard-active";
+            show_configure_button = false;
         }
     }
 }

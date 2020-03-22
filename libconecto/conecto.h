@@ -25,3 +25,4 @@
 #include "backend.h"
 #include "discovery.h"
 #include "device.h"
+#include "network-packet.h"

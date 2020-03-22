@@ -13,6 +13,7 @@ libconecto_sources = files(
   'backend.cpp',
   'device.cpp',
   'discovery.cpp',
+  'network-packet.cpp',
 )
 
 libconecto_headers = files(
@@ -21,6 +22,7 @@ libconecto_headers = files(
   'device.h',
   'discovery.h',
   'exceptions.h',
+  'network-packet.h',
 )
 libconecto_headers += config_header
 

@@ -45,4 +45,15 @@ class BindSocketException : public Exception {
     std::string m_message;
 };
 
+class MalformedPacketException : public Exception {
+  public:
+    MalformedPacketException (const std::string& message)
+        : m_message (message) {}
+    ~MalformedPacketException () {}
+    const char* what () const throw () override { return m_message.c_str (); }
+
+  private:
+    std::string m_message;
+};
+
 }

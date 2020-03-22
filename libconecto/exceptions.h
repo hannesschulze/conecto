@@ -1,4 +1,4 @@
-/* conecto.h
+/* exceptions.h
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -20,8 +20,29 @@
 
 #pragma once
 
-#include "config.h"
-#include "exceptions.h"
-#include "backend.h"
-#include "discovery.h"
-#include "device.h"
+#include <exception>
+#include <giomm/error.h>
+
+namespace Conecto {
+
+/**
+ * Base class for all exceptions thrown in libconecto
+ */
+class Exception : public std::exception {
+};
+
+class BindSocketException : public Exception {
+  public:
+    BindSocketException (Gio::Error::Code code, const std::string& message)
+        : m_code (code)
+        , m_message (message) {}
+    ~BindSocketException () {}
+    const char* what () const throw () override { return m_message.c_str (); }
+    Gio::Error::Code get_code () { return m_code; }
+
+  private:
+    Gio::Error::Code m_code;
+    std::string m_message;
+};
+
+}

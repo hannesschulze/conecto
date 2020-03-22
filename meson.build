@@ -7,7 +7,8 @@ project(
 
 libconecto_deps = [
   dependency('jsoncpp'),
-  dependency('sigc++-2.0')
+  dependency('sigc++-2.0'),
+  dependency('giomm-2.4'),
 ]
 
 pkgconfig = import('pkgconfig')

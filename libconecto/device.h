@@ -1,4 +1,4 @@
-/* conecto.h
+/* device.h
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -20,8 +20,15 @@
 
 #pragma once
 
-#include "config.h"
-#include "exceptions.h"
-#include "backend.h"
-#include "discovery.h"
-#include "device.h"
+namespace Conecto {
+
+class Device {
+  public:
+    Device ();
+    ~Device () {}
+
+    Device (const Device&) = delete;
+    Device& operator= (const Device&) = delete;
+};
+
+} // namespace Conecto

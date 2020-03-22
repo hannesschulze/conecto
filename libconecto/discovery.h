@@ -1,4 +1,4 @@
-/* config.h.in
+/* discovery.h
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -20,13 +20,37 @@
 
 #pragma once
 
-#include <string>
+#include "device.h"
+#include <sigc++/sigc++.h>
+#include <giomm/socket.h>
 
 namespace Conecto {
-namespace Config {
 
-static const std::string PROJECT_NAME = @NAME@;
-static const std::string PROJECT_VERSION = @VERSION@;
+class Discovery {
+  public:
+    Discovery ();
+    ~Discovery ();
 
-} // namespace Config
+    /**
+     * Start listening for new devices
+     * 
+     * @throw BindSocketException
+     */
+    void listen ();
+
+    using type_signal_device_found = sigc::signal<void, const Device&>;
+    type_signal_device_found signal_device_found () { return m_signal_device_found; }
+
+    Discovery (const Discovery&) = delete;
+    Discovery& operator= (const Discovery&) = delete;
+
+  private:
+    bool on_packet (Glib::IOCondition condition);
+    void parse_packet (std::string&& data, const Glib::RefPtr<Gio::InetAddress>& host);
+
+    type_signal_device_found m_signal_device_found;
+
+    Glib::RefPtr<Gio::Socket> m_socket;
+};
+
 } // namespace Conecto

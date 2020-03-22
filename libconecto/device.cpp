@@ -1,4 +1,4 @@
-/* conecto.h
+/* device.cpp
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -18,10 +18,10 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#pragma once
-
-#include "config.h"
-#include "exceptions.h"
-#include "backend.h"
-#include "discovery.h"
 #include "device.h"
+
+using namespace Conecto;
+
+Device::Device ()
+{
+}

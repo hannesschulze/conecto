@@ -10,10 +10,17 @@ config_header = configure_file(
 conf_inc = include_directories('.')
 
 libconecto_sources = files(
+  'backend.cpp',
+  'device.cpp',
+  'discovery.cpp',
 )
 
 libconecto_headers = files(
   'conecto.h',
+  'backend.h',
+  'device.h',
+  'discovery.h',
+  'exceptions.h',
 )
 libconecto_headers += config_header
 

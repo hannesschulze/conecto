@@ -1,4 +1,4 @@
-/* conecto.h
+/* backend.h
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -20,8 +20,37 @@
 
 #pragma once
 
-#include "config.h"
-#include "exceptions.h"
-#include "backend.h"
 #include "discovery.h"
-#include "device.h"
+#include <map>
+#include <string>
+
+namespace Conecto {
+
+// forward declarations
+class Device;
+
+class Backend {
+  public:
+    static Backend& get_instance();
+    ~Backend () {}
+
+    /**
+     * Start listening for new devices
+     * 
+     * @throw BindSocketException
+     */
+    void listen ();
+
+    Backend (const Backend&) = delete;
+    Backend& operator= (const Backend&) = delete;
+
+  protected:
+    Backend ();
+
+  private:
+    std::map<std::string, Device> m_devices;
+
+    Discovery m_discovery;
+};
+
+} // namespace Conecto

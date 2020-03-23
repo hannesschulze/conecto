@@ -19,8 +19,16 @@
  */
 
 #include "backend.h"
+#include <glibmm/miscutils.h>
+#include <giomm/file.h>
 
 using namespace Conecto;
+
+namespace {
+
+constexpr char APP_NAME[] = "conecto";
+
+} // namespace
 
 Backend&
 Backend::get_instance ()
@@ -31,10 +39,30 @@ Backend::get_instance ()
 
 Backend::Backend ()
 {
+    auto key_file  = Gio::File::create_for_path (Glib::build_filename (get_storage_dir (), "private.pem"));
+    auto cert_file = Gio::File::create_for_path (Glib::build_filename (get_storage_dir (), "certificate.pem"));
+
+    if (!key_file->query_exists () || !cert_file->query_exists ()) {
+        std::string host_name = Glib::get_host_name ();
+        std::string user = Glib::get_user_name ();
+        // TODO
+    }
 }
 
 void
 Backend::listen ()
 {
     m_discovery.listen ();
+}
+
+Glib::RefPtr<Gio::TlsCertificate>
+Backend::get_certificate () const noexcept
+{
+    return m_certificate;
+}
+
+std::string
+Backend::get_storage_dir () noexcept
+{
+    return Glib::build_filename (Glib::get_user_data_dir (), APP_NAME);
 }

@@ -26,6 +26,9 @@
 
 namespace Conecto {
 
+// forward declarations
+class Device;
+
 class Discovery {
   public:
     Discovery ();
@@ -38,7 +41,7 @@ class Discovery {
      */
     void listen ();
 
-    using type_signal_device_found = sigc::signal<void, const Device&>;
+    using type_signal_device_found = sigc::signal<void, const std::shared_ptr<Device>&>;
     type_signal_device_found signal_device_found () { return m_signal_device_found; }
 
     Discovery (const Discovery&) = delete;

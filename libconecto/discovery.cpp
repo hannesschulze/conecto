@@ -20,6 +20,7 @@
 
 #include "discovery.h"
 #include "exceptions.h"
+#include "network-packet.h"
 #include <giomm/inetsocketaddress.h>
 #include <giomm/socketsource.h>
 #include <gio/gio.h>
@@ -86,5 +87,20 @@ Discovery::on_packet (Glib::IOCondition condition)
 void
 Discovery::parse_packet (std::string&& data, const Glib::RefPtr<Gio::InetAddress>& host)
 {
-    // TODO
+    try {
+        NetworkPacket packet (data);
+
+        // Expecting an identity packet
+        if (packet.get_type () != Constants::TYPE_IDENTITY) {
+            g_warning ("Unexpected packet type %s from device %s", packet.get_type ().c_str (), host->to_string ().c_str ());
+            return;
+        }
+
+        auto device = std::make_shared<Device> (packet, host);
+        m_signal_device_found.emit (device);
+    } catch (MalformedPacketException& err) {
+        g_warning ("Malformed packet: %s", err.what ());
+    } catch (MalformedIdentityException& err) {
+        g_warning ("Malformed identity packet: %s", err.what ());
+    }
 }

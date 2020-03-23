@@ -23,6 +23,7 @@
 #include "discovery.h"
 #include <map>
 #include <string>
+#include <giomm/tlscertificate.h>
 
 namespace Conecto {
 
@@ -41,6 +42,10 @@ class Backend {
      */
     void listen ();
 
+    Glib::RefPtr<Gio::TlsCertificate> get_certificate () const noexcept;
+
+    static std::string get_storage_dir () noexcept;
+
     Backend (const Backend&) = delete;
     Backend& operator= (const Backend&) = delete;
 
@@ -51,6 +56,7 @@ class Backend {
     std::map<std::string, Device> m_devices;
 
     Discovery m_discovery;
+    Glib::RefPtr<Gio::TlsCertificate> m_certificate;
 };
 
 } // namespace Conecto

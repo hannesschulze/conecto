@@ -95,12 +95,14 @@ NetworkPacket::create_identity (const std::string& name, const std::string& devi
     body["deviceName"] = name;
     body["deviceId"] = device_id;
     body["deviceType"] = device_type;
-    std::stringstream stream;
-    std::copy (in_interfaces.begin (), in_interfaces.end (), std::ostream_iterator<std::string> (stream, ","));
-    body["SupportedIncomingInterfaces"] = stream.str ();
-    stream = std::stringstream ();
-    std::copy (out_interfaces.begin (), out_interfaces.end (), std::ostream_iterator<std::string> (stream, ","));
-    body["SupportedOutgoingInterfaces"] = stream.str ();
+    Json::Value in_array (Json::arrayValue);
+    for (const auto& interface : in_interfaces)
+        in_array.append (interface);
+    body["SupportedIncomingInterfaces"] = std::move (in_array);
+    Json::Value out_array (Json::arrayValue);
+    for (const auto& interface : out_interfaces)
+        out_array.append (interface);
+    body["SupportedOutgoingInterfaces"] = std::move (out_array);
     body["protocolVersion"] = PROTOCOL_VERSION;
 
     return std::make_shared<NetworkPacket> (Constants::TYPE_IDENTITY, body);

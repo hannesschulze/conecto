@@ -56,4 +56,15 @@ class MalformedPacketException : public Exception {
     std::string m_message;
 };
 
+class MalformedIdentityException : public Exception {
+  public:
+    MalformedIdentityException (const std::string& message)
+        : m_message (message) {}
+    ~MalformedIdentityException () {}
+    const char* what () const throw () override { return m_message.c_str (); }
+
+  private:
+    std::string m_message;
+};
+
 }

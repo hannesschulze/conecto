@@ -43,6 +43,7 @@ class Backend {
     void listen ();
 
     Glib::RefPtr<Gio::TlsCertificate> get_certificate () const noexcept;
+    std::list<std::string> get_handler_interfaces () const noexcept;
 
     static std::string get_storage_dir () noexcept;
 

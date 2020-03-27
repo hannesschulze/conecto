@@ -21,7 +21,6 @@
 #include "communication-channel.h"
 #include "exceptions.h"
 #include "backend.h"
-#include <giomm/socketsource.h>
 #include <giomm/socketclient.h>
 #include <giomm/unixinputstream.h>
 #include <giomm/unixoutputstream.h>
@@ -41,7 +40,6 @@ CommunicationChannel::CommunicationChannel (const Glib::RefPtr<Gio::InetAddress>
 bool
 CommunicationChannel::receive ()
 {
-    size_t line_len;
     std::string data;
 
     g_assert (m_data_in);
@@ -186,7 +184,7 @@ CommunicationChannel::handle_packet (const NetworkPacket& packet)
                    "such packets are no longer supported, dropping..");
     else
         // Signal that we got a packet
-        m_signal_packet_received.connect (packet);
+        m_signal_packet_received.emit (packet);
 }
 
 void
@@ -208,7 +206,7 @@ void
 CommunicationChannel::open (std::function<void(bool)> cb)
 {
     g_assert (m_socket_addr);
-    g_debug ("Connecting to %s:%u", m_socket_addr->get_address ()->to_string (), m_socket_addr->get_port ());
+    g_debug ("Connecting to %s:%u", m_socket_addr->get_address ()->to_string ().c_str (), m_socket_addr->get_port ());
 
     auto client = Gio::SocketClient::create ();
     client->connect_async (m_socket_addr, [this, cb, client](Glib::RefPtr<Gio::AsyncResult>& res) {
@@ -259,13 +257,13 @@ CommunicationChannel::secure (const Glib::RefPtr<Gio::TlsCertificate>& expected_
     tls_server->signal_accept_certificate ().connect ([this, expected_peer](const Glib::RefPtr<const Gio::TlsCertificate>& peer_cert,
                                                                             Gio::TlsCertificateFlags errors) {
         g_info ("Accept certificate, flags: 0x%x", errors);
-        g_info ("Certificate:\n%s\n---", peer_cert->property_certificate_pem ().get_value ());
+        g_info ("Certificate:\n%s\n---", peer_cert->property_certificate_pem ().get_value ().c_str ());
         if (expected_peer) {
             if (expected_peer->is_same (peer_cert)) {
                 return true;
             } else {
                 g_warning ("Rejecting handshake, peer certificate mismatch, got:\n%s\n---",
-                           peer_cert->property_certificate_pem ().get_value ());
+                           peer_cert->property_certificate_pem ().get_value ().c_str ());
                 return false;
             }
         }

@@ -20,8 +20,18 @@
 
 #include "device.h"
 #include "exceptions.h"
+#include "backend.h"
+#include "communication-channel.h"
+#include <glibmm/miscutils.h>
+#include <glibmm/main.h>
 
 using namespace Conecto;
+
+namespace {
+
+constexpr int PAIR_TIMEOUT = 30;
+
+} // namespace
 
 Device::Device ()
     : m_device_id ("")
@@ -34,7 +44,6 @@ Device::Device ()
     , m_is_active (false)
     , m_certificate_fingerprint ("")
     , m_pair_in_progress (false)
-    , m_pair_timeout_source (0)
 {
 }
 
@@ -176,4 +185,228 @@ Device::to_unique_string () const noexcept
     std::string dev = to_string ();
     std::replace (dev.begin (), dev.end (), '-', ' ');
     return dev;
+}
+
+void
+Device::greet (std::function<void ()> cb) noexcept
+{
+    std::string host_name = Glib::get_host_name ();
+    std::string user = Glib::get_user_name ();
+    auto packet = NetworkPacket::create_identity (user + "@" + host_name, host_name,
+                                                  Backend::get_instance ().get_handler_interfaces (),
+                                                  Backend::get_instance ().get_handler_interfaces ());
+    m_channel->send (*packet);
+
+    // Switch to secure channel
+    m_channel->secure (m_certificate, [this, cb](bool success) {
+        g_info ("Secure: %s", success ? "true" : "false");
+        if (success) {
+            update_certificate (m_channel->get_peer_certificate ());
+            maybe_pair ();
+        } else {
+            g_warning ("Failed to enable secure channel");
+            close_and_cleanup ();
+        }
+    });
+}
+
+void
+Device::pair (bool expect_response) noexcept
+{
+    if (!m_host) return;
+    g_debug ("Start pairing");
+
+    if (expect_response == true) {
+        m_pair_in_progress = true;
+        // Pairing timeout
+        m_pair_timeout_connection = Glib::signal_timeout ().connect_seconds
+            (sigc::mem_fun (*this, &Device::on_pair_timeout), PAIR_TIMEOUT);
+    }
+
+    // Send request
+    m_channel->send (*NetworkPacket::create_pair ());
+}
+
+bool
+Device::on_pair_timeout ()
+{
+    g_warning ("Pair request timeout");
+    m_pair_timeout_connection = sigc::connection ();
+
+    // Handle failed pairing
+    handle_pair (false);
+
+    // Remove timeout source
+    return false;
+}
+
+void
+Device::maybe_pair () noexcept
+{
+    if (!m_is_paired) {
+        if (!m_pair_in_progress)
+            pair (true);
+    } else {
+        // We are already paired
+        handle_pair (true);
+    }
+}
+
+void
+Device::activate () noexcept
+{
+    if (m_channel)
+        g_debug ("Device %s is already active", to_string ().c_str ());
+    
+    m_channel = std::make_unique<CommunicationChannel> (m_host, static_cast<uint16_t> (m_tcp_port));
+    m_channel->signal_disconnected ().connect ([this]() {
+        // Channel got disconnected
+        g_debug ("Channel disconnected");
+        close_and_cleanup ();
+    });
+    m_channel->signal_packet_received ().connect (sigc::mem_fun (*this, &Device::on_packet_received));
+    m_channel->open ([this](bool success) {
+        g_debug ("Channel opened: %s", success ? "true" : "false");
+        m_signal_connected.emit ();
+
+        if (success)
+            greet ([]() {});
+        else
+            // Failed to open channel
+            channel_closed_cleanup ();
+    });
+    m_is_active = true;
+}
+
+void
+Device::deactivate () noexcept
+{
+    if (m_channel)
+        close_and_cleanup ();
+}
+
+void
+Device::on_packet_received (const NetworkPacket& packet)
+{
+    g_debug ("Got packet");
+    if (packet.get_type () == Constants::TYPE_PAIR) {
+        // Pairing
+        bool pair = packet.get_body ()["pair"].asBool ();
+        handle_pair (pair);
+    } else {
+        if (!m_is_paired) {
+            // We sent a pair request, but got another packet, supposedly meaning we're alredy paired since the
+            // device is sending us data
+            g_warning ("Not paired but got a packet, assuming device is paired");
+            handle_pair (true);
+        }
+
+        // Emit signal
+        m_signal_message.emit (packet);
+    }
+}
+
+void
+Device::handle_pair (bool pair) noexcept
+{
+    if (!m_pair_timeout_connection.empty ()) {
+        m_pair_timeout_connection.disconnect ();
+        m_pair_timeout_connection = sigc::connection ();
+    }
+
+    g_debug ("Paired: %s", pair ? "true" : "false");
+    if (m_pair_in_progress) {
+        // Respond if host initiated pairing
+        if (pair) {
+            g_debug ("Device paired, pairing complete");
+            m_is_paired = true;
+        } else {
+            g_warning ("Pairing rejected by device");
+            m_is_paired = false;
+        }
+        // Pair complete
+        m_pair_in_progress = false;
+    } else {
+        g_debug ("Unsolicited pair change from device");
+        if (pair)  {
+            // Pair was not initiated by us, but we were called with information that we are paired,
+            // assume we are paired and send a pair packet, but not expecting a response this time
+            this->pair (false);
+            m_is_paired = true;
+        } else {
+            // Unpair from device
+            m_is_paired = false;
+        }
+    }
+
+    m_signal_paired.emit (m_is_paired);
+}
+
+void
+Device::close_and_cleanup () noexcept
+{
+    m_channel->close ();
+    channel_closed_cleanup ();
+}
+
+void
+Device::channel_closed_cleanup () noexcept
+{
+    g_debug ("Device cleanup");
+    m_channel.reset ();
+
+    m_is_active = false;
+
+    // Emit signal
+    m_signal_disconnected.emit ();
+}
+
+void
+Device::merge_capabilities (std::vector<std::string>& added, std::vector<std::string>& removed) noexcept
+{
+    std::list<std::string> capabilities;
+    for (const auto& cap : m_outgoing_capabilities)
+        capabilities.push_back (cap);
+    for (const auto& cap : m_incoming_capabilities)
+        capabilities.push_back (cap);
+
+    added.clear ();
+    added.reserve (capabilities.size ());
+    for (const auto& cap : capabilities)
+        added.push_back (cap);
+    
+    // TODO: Simplify capability names by removing .request suffix
+    for (const auto& cap : m_capabilities) {
+        auto it = std::find (added.begin (), added.end (), cap);
+        if (it != added.end ())
+            added.erase (it);
+    }
+
+    removed.clear ();
+    removed.reserve (m_capabilities.size ());
+    for (const auto& cap : m_capabilities)
+        removed.push_back (cap);
+    for (const auto& cap : capabilities) {
+        auto it = std::find (removed.begin (), removed.end (), cap);
+        if (it != removed.end ())
+            removed.erase (it);
+    }
+
+    m_capabilities = capabilities;
+}
+
+void
+Device::update_certificate (const Glib::RefPtr<Gio::TlsCertificate>& certificate) noexcept
+{
+    m_certificate = certificate;
+
+    // TODO
+}
+
+void
+Device::send (const NetworkPacket& packet) noexcept
+{
+    // TODO: Queue messages
+    if (m_channel)
+        m_channel->send (packet);
 }

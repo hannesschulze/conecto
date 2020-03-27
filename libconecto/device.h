@@ -21,13 +21,11 @@
 #pragma once
 
 #include "network-packet.h"
+#include "communication-channel.h"
 #include <giomm/inetaddress.h>
 #include <giomm/tlscertificate.h>
 
 namespace Conecto {
-
-// forward declarations
-class CommunicationChannel;
 
 class Device {
   public:
@@ -66,6 +64,29 @@ class Device {
     std::string to_string () const noexcept;
     std::string to_unique_string () const noexcept;
 
+    /**
+     * Internally changes pair requests state tracking.
+     *
+     * @param expect_response set to true if expecting a response
+     */
+    void pair (bool expect_response) noexcept;
+    /**
+     * Trigger pairing or call @p handle_pair if already paired.
+     */
+    void maybe_pair () noexcept;
+    /**
+     * Activate device. Emits @p signal_connected after successfuly opening a connection.
+     */
+    void activate () noexcept;
+    /**
+     * Deactivate device
+     */
+    void deactivate () noexcept;
+    /**
+     * Send a packet
+     */
+    void send (const NetworkPacket& packet) noexcept;
+
     using type_signal_paired = sigc::signal<void, bool /* pair */>;
     using type_signal_connected = sigc::signal<void>;
     using type_signal_disconnected = sigc::signal<void>;
@@ -83,6 +104,22 @@ class Device {
     Device& operator= (const Device&) = delete;
 
   private:
+    void greet (std::function<void ()> cb) noexcept;
+    bool on_pair_timeout ();
+    void on_packet_received (const NetworkPacket& packet);
+    void handle_pair (bool pair) noexcept;
+    void close_and_cleanup () noexcept;
+    void channel_closed_cleanup () noexcept;
+    /**
+     * Merge and update existing outgoing_capabilities and incoming_capabilities.
+     * Returns lists of added and removed capabilities.
+     * 
+     * @param added [out] Capabilities that were added
+     * @param removed [out] Capabilities that were removed
+     */
+    void merge_capabilities (std::vector<std::string>& added, std::vector<std::string>& removed) noexcept;
+    void update_certificate (const Glib::RefPtr<Gio::TlsCertificate>& certificate) noexcept;
+
     type_signal_paired m_signal_paired;
     type_signal_connected m_signal_connected;
     type_signal_disconnected m_signal_disconnected;
@@ -101,11 +138,11 @@ class Device {
     bool m_is_active;
     std::list<std::string> m_outgoing_capabilities;
     std::list<std::string> m_incoming_capabilities;
-    std::vector<std::string> m_capabilities;
+    std::list<std::string> m_capabilities;
     Glib::RefPtr<Gio::TlsCertificate> m_certificate;
     std::string m_certificate_fingerprint;
     bool m_pair_in_progress; // set to true if pair request was sent
-    bool m_pair_timeout_source;
+    sigc::connection m_pair_timeout_connection;
     std::unique_ptr<CommunicationChannel> m_channel;
 };
 

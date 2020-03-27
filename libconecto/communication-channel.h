@@ -29,6 +29,7 @@
 #include <giomm/datainputstream.h>
 #include <giomm/socket.h>
 #include <giomm/tlscertificate.h>
+#include <giomm/socketsource.h>
 
 namespace Conecto {
 
@@ -69,6 +70,7 @@ class CommunicationChannel {
      * @param expected_peer the peer certificate we are expecting to see
      */
     void secure (const Glib::RefPtr<Gio::TlsCertificate>& expected_peer, std::function<void(bool /* success */)> cb);
+    Glib::RefPtr<Gio::TlsCertificate> get_peer_certificate () { return m_peer_certificate; }
 
     using type_signal_disconnected = sigc::signal<void>;
     using type_signal_packet_received = sigc::signal<void, const NetworkPacket& /* packet */>;

@@ -61,6 +61,13 @@ Backend::get_certificate () const noexcept
     return m_certificate;
 }
 
+std::list<std::string>
+Backend::get_handler_interfaces () const noexcept
+{
+    // TODO
+    return {};
+}
+
 std::string
 Backend::get_storage_dir () noexcept
 {

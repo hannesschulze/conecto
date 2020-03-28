@@ -15,6 +15,7 @@ libconecto_sources = files(
   'discovery.cpp',
   'network-packet.cpp',
   'communication-channel.cpp',
+  'crypt.cpp',
 )
 
 libconecto_headers = files(
@@ -25,6 +26,7 @@ libconecto_headers = files(
   'exceptions.h',
   'network-packet.h',
   'communication-channel.h',
+  'crypt.h',
 )
 libconecto_headers += config_header
 

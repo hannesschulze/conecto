@@ -27,3 +27,4 @@
 #include "device.h"
 #include "network-packet.h"
 #include "communication-channel.h"
+#include "crypt.h"

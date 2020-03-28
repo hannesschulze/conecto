@@ -67,4 +67,26 @@ class MalformedIdentityException : public Exception {
     std::string m_message;
 };
 
+class GnuTLSInitializationError : public Exception {
+  public:
+    GnuTLSInitializationError (const std::string& message)
+        : m_message (message) {}
+    ~GnuTLSInitializationError () {}
+    const char* what () const throw () override { return m_message.c_str (); }
+
+  private:
+    std::string m_message;
+};
+
+class PEMWriteError : public Exception {
+  public:
+    PEMWriteError (const std::string& message)
+        : m_message (message) {}
+    ~PEMWriteError () {}
+    const char* what () const throw () override { return m_message.c_str (); }
+
+  private:
+    std::string m_message;
+};
+
 }

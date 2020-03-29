@@ -49,7 +49,7 @@ class Crypt {
      * @return SHA1 fingerprint as bytes
      * @throw GnuTLSInitializationError
      */
-    static std::string fingerprint_certificate (const std::string& certificate_pem);
+    static std::vector<uint8_t> fingerprint_certificate (const std::string& certificate_pem);
 
   private:
     struct DNSetting {

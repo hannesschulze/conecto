@@ -32,6 +32,9 @@ class Device;
 
 class Backend {
   public:
+    /**
+     * @throw (on first call) GnuTLSInitializationError, PEMWriteError, InvalidCertificateException
+     */
     static Backend& get_instance();
     ~Backend () {}
 
@@ -46,6 +49,8 @@ class Backend {
     std::list<std::string> get_handler_interfaces () const noexcept;
 
     static std::string get_storage_dir () noexcept;
+    static std::string get_config_dir () noexcept;
+    static void init_user_dirs ();
 
     Backend (const Backend&) = delete;
     Backend& operator= (const Backend&) = delete;

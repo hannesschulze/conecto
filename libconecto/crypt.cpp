@@ -134,7 +134,7 @@ Crypt::cert_from_pem (const std::string& certificate_pem)
 {
     gnutls_datum_t datum {
         .data = (unsigned char*) certificate_pem.c_str (),
-        .size = certificate_pem.size ()
+        .size = (unsigned int) certificate_pem.size ()
     };
     GnuTLSX509Certificate* cert_raw = nullptr;
     if (gnutls_x509_crt_init (&cert_raw) != 0)
@@ -146,7 +146,7 @@ Crypt::cert_from_pem (const std::string& certificate_pem)
     return cert;
 }
 
-std::string
+std::vector<uint8_t>
 Crypt::fingerprint_certificate (const std::string& certificate_pem)
 {
     auto cert = cert_from_pem (certificate_pem);
@@ -159,5 +159,8 @@ Crypt::fingerprint_certificate (const std::string& certificate_pem)
     g_assert (err == GNUTLS_E_SUCCESS);
     g_assert (size == data.size ());
 
-    return std::string ((char*) data.data (), size);
+    std::vector<uint8_t> res;
+    for (size_t i = 0; i < size; i++)
+        res.push_back (data[i]);
+    return res;
 }

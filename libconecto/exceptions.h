@@ -89,4 +89,15 @@ class PEMWriteError : public Exception {
     std::string m_message;
 };
 
+class InvalidCertificateException : public Exception {
+  public:
+    InvalidCertificateException (const std::string& message)
+        : m_message (message) {}
+    ~InvalidCertificateException () {}
+    const char* what () const throw () override { return m_message.c_str (); }
+
+  private:
+    std::string m_message;
+};
+
 }

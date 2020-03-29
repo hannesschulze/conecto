@@ -21,9 +21,11 @@
 #include "device.h"
 #include "exceptions.h"
 #include "backend.h"
+#include "crypt.h"
 #include "communication-channel.h"
 #include <glibmm/miscutils.h>
 #include <glibmm/main.h>
+#include <iomanip>
 
 using namespace Conecto;
 
@@ -400,7 +402,13 @@ Device::update_certificate (const Glib::RefPtr<Gio::TlsCertificate>& certificate
 {
     m_certificate = certificate;
 
-    // TODO
+    // Prepare fingerprint
+    std::stringstream stream;
+    stream << "sha1:";
+    auto fingerprint = Crypt::fingerprint_certificate (certificate->property_certificate_pem ().get_value ());
+    for (const auto& b : fingerprint)
+        stream << std::setfill ('0') << std::setw (2) << std::hex << b;
+    m_certificate_fingerprint = stream.str ();
 }
 
 void

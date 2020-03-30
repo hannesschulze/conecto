@@ -21,14 +21,13 @@
 #pragma once
 
 #include "discovery.h"
+#include "device.h"
+#include "config-file.h"
 #include <map>
 #include <string>
 #include <giomm/tlscertificate.h>
 
 namespace Conecto {
-
-// forward declarations
-class Device;
 
 class Backend {
   public:
@@ -45,12 +44,21 @@ class Backend {
      */
     void listen ();
 
+    ConfigFile& get_config () noexcept;
+    const ConfigFile& get_config () const noexcept;
+
     Glib::RefPtr<Gio::TlsCertificate> get_certificate () const noexcept;
     std::list<std::string> get_handler_interfaces () const noexcept;
 
     static std::string get_storage_dir () noexcept;
     static std::string get_config_dir () noexcept;
     static void init_user_dirs ();
+
+    using type_signal_found_new_device = sigc::signal<void, const Device& /* device */>;
+    using type_signal_device_capability_added = sigc::signal<void, const Device& /* device */,
+                                                             const std::string& /* capability */>;
+    type_signal_found_new_device signal_found_new_device () { return m_signal_found_new_device; }
+    type_signal_device_capability_added signal_device_capability_added () { return m_signal_device_capability_added; }
 
     Backend (const Backend&) = delete;
     Backend& operator= (const Backend&) = delete;
@@ -59,10 +67,20 @@ class Backend {
     Backend ();
 
   private:
-    std::map<std::string, Device> m_devices;
+    void on_new_device (std::shared_ptr<Device> device);
+    void on_capability_added (const std::string& cap, const std::shared_ptr<Device>& device);
+    void on_capability_removed (const std::string& cap, const std::shared_ptr<Device>& device);
+    bool get_allowed_in_config (const Device& device) const;
+    void activate_device (Device& device);
 
-    Discovery m_discovery;
+    std::map<std::string, std::shared_ptr<Device>> m_devices;
+
+    Discovery                         m_discovery;
+    std::unique_ptr<ConfigFile>       m_config;
     Glib::RefPtr<Gio::TlsCertificate> m_certificate;
+
+    type_signal_found_new_device m_signal_found_new_device;
+    type_signal_device_capability_added m_signal_device_capability_added;
 };
 
 } // namespace Conecto

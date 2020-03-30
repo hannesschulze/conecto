@@ -1,4 +1,4 @@
-/* conecto.h
+/* config-file.h
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -20,12 +20,30 @@
 
 #pragma once
 
-#include "config.h"
-#include "exceptions.h"
-#include "backend.h"
-#include "discovery.h"
-#include "device.h"
-#include "network-packet.h"
-#include "communication-channel.h"
-#include "crypt.h"
-#include "config-file.h"
+#include <string>
+#include <vector>
+#include <glibmm/keyfile.h>
+
+namespace Conecto {
+
+class ConfigFile {
+  public:
+    ConfigFile (const std::string& base_config_dir);
+    ~ConfigFile () {}
+
+    const std::string& get_path () const noexcept;
+    static std::string get_file_name () noexcept;
+    void dump_to_file (const std::string& path);
+    bool get_device_allowed (const std::string& name, const std::string& type);
+
+    static std::vector<std::string> get_search_dirs (const std::string& primary_dir) noexcept;
+
+    ConfigFile (const ConfigFile&) = delete;
+    ConfigFile& operator= (const ConfigFile&) = delete;
+
+  private:
+    Glib::KeyFile m_keyfile;
+    std::string   m_path;
+};
+
+} // namespace Conecto

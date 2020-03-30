@@ -22,6 +22,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 #include <gnutls/gnutls.h>
 
 namespace Conecto {

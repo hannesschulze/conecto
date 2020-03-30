@@ -59,6 +59,29 @@ Backend::Backend ()
         g_error_free (err);
         throw InvalidCertificateException ("Failed to load certificate or key");
     }
+
+    // Set up config
+    std::string user_config_path = get_config_dir () + "/" + ConfigFile::get_file_name ();
+    m_config = std::make_unique<ConfigFile> (user_config_path);
+
+    // Write configuration to user config file if not present
+    if (m_config->get_path () != user_config_path)
+        m_config->dump_to_file (user_config_path);
+
+    // Listen to new devices
+    m_discovery.signal_device_found ().connect (sigc::mem_fun (+this, &Backend::on_new_device));
+}
+
+ConfigFile&
+Backend::get_config () noexcept
+{
+    return *m_config;
+}
+
+const ConfigFile&
+Backend::get_config () const noexcept
+{
+    return *m_config;
 }
 
 void
@@ -97,4 +120,84 @@ Backend::init_user_dirs ()
 {
     g_mkdir_with_parents (get_storage_dir ().c_str (), 0700);
     g_mkdir_with_parents (get_config_dir ().c_str (), 0700);
+}
+
+void
+Backend::on_new_device (std::shared_ptr<Device> device)
+{
+    bool is_new = false;
+    std::string unique = device->to_unique_string ();
+
+    if (m_devices.find (unique) == m_devices.end ()) {
+        g_debug ("Adding new device with key: %s", unique.c_str ());
+        m_devices.insert ({ unique, device });
+        is_new = true;
+    } else {
+        g_debug ("Device %s already present", unique.c_str ());
+        m_devices.at (unique).swap (device);
+    }
+
+    device = m_devices.at (unique);
+
+    // Notify everyone that a new device appeared
+    if (is_new) {
+        m_signal_found_new_device.emit (*device);
+
+        device->signal_capability_added ().connect (sigc::bind (sigc::mem_fun (*this, &Backend::on_capability_added), device));
+        device->signal_capability_removed ().connect (sigc::bind (sigc::mem_fun (*this, &Backend::on_capability_removed), device));
+    }
+
+    g_debug ("Allowed? %s", device->get_allowed () ? "true" : "false");
+
+    // Check if the device is whitelisted in configuration
+    if (!device->get_allowed () && get_allowed_in_config (*device))
+        device->set_allowed (true);
+    
+    // Update device cache
+    // TODO: update_cache ();
+
+    if (device->get_allowed ())
+        // Device is allowed
+        activate_device (*device);
+    else
+        g_warning ("Skipping device %s activation, not allowed", device->to_string ().c_str ());
+}
+
+bool
+Backend::get_allowed_in_config (const Device& device) const
+{
+    if (device.get_allowed ())
+        return true;
+
+    return m_config->get_device_allowed (device.get_device_name (), device.get_device_type ());
+}
+
+void
+Backend::activate_device (Device& device)
+{
+    g_info ("Activating device %s", device.to_string ().c_str ());
+
+    if (!device.get_is_active ()) {
+        sigc::connection conn = device.signal_paired ().connect ([this, &device](bool success) {
+            // TODO: update_cache ()
+            if (!success)
+                // Deactivate if needed
+                device.deactivate ();
+        });
+        device.signal_disconnected ().connect ([this, &device, conn]() {
+            g_debug ("Device %s got disconnected", device.to_string ().c_str ());
+        });
+    }
+}
+
+void
+Backend::on_capability_added (const std::string& cap, const std::shared_ptr<Device>& device)
+{
+    // TODO
+}
+
+void
+Backend::on_capability_removed (const std::string& cap, const std::shared_ptr<Device>& device)
+{
+    // TODO
 }

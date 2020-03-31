@@ -133,21 +133,21 @@ Backend::init_user_dirs ()
 }
 
 void
-Backend::on_new_device (std::shared_ptr<Device> device)
+Backend::on_new_device (std::shared_ptr<Device> new_device)
 {
     bool is_new = false;
-    std::string unique = device->to_unique_string ();
+    std::string unique = new_device->to_unique_string ();
 
     if (m_devices.find (unique) == m_devices.end ()) {
         g_debug ("Adding new device with key: %s", unique.c_str ());
-        m_devices.insert ({ unique, device });
+        m_devices.insert ({ unique, std::make_shared<DeviceEntry> (new_device) });
         is_new = true;
     } else {
         g_debug ("Device %s already present", unique.c_str ());
-        m_devices.at (unique).swap (device);
     }
 
-    device = m_devices.at (unique);
+    auto entry = m_devices.at (unique);
+    auto device = entry->device;
 
     // Notify everyone that a new device appeared
     if (is_new) {
@@ -156,6 +156,8 @@ Backend::on_new_device (std::shared_ptr<Device> device)
         device->signal_capability_added ().connect (sigc::bind (sigc::mem_fun (*this, &Backend::on_capability_added), device));
         device->signal_capability_removed ().connect (sigc::bind (sigc::mem_fun (*this, &Backend::on_capability_removed), device));
     }
+
+    device->update (*new_device);
 
     g_debug ("Allowed? %s", device->get_allowed () ? "true" : "false");
 
@@ -168,7 +170,7 @@ Backend::on_new_device (std::shared_ptr<Device> device)
 
     if (device->get_allowed ())
         // Device is allowed
-        activate_device (*device);
+        activate_device (entry);
     else
         g_warning ("Skipping device %s activation, not allowed", device->to_string ().c_str ());
 }
@@ -183,33 +185,52 @@ Backend::get_allowed_in_config (const Device& device) const
 }
 
 void
-Backend::activate_device (Device& device)
+Backend::activate_device (const std::shared_ptr<DeviceEntry>& device)
 {
-    g_info ("Activating device %s", device.to_string ().c_str ());
+    g_info ("Activating device %s", device->device->to_string ().c_str ());
 
-    if (!device.get_is_active ()) {
-        sigc::connection conn = device.signal_paired ().connect ([this, &device](bool success) {
+    if (!device->device->get_is_active ()) {
+        device->paired_conn = device->device->signal_paired ().connect ([this, device](bool success) {
             update_cache ();
-            if (!success)
+            if (!success) {
+                // Stop listening for this signal
+                device->paired_conn.disconnect ();
+
                 // Deactivate if needed
-                device.deactivate ();
+                device->device->deactivate ();
+            }
         });
-        device.signal_disconnected ().connect ([this, &device, conn]() {
-            g_debug ("Device %s got disconnected", device.to_string ().c_str ());
+        device->disconnected_conn = device->device->signal_disconnected ().connect ([this, device]() {
+            g_debug ("Device %s got disconnected", device->device->to_string ().c_str ());
+
+            device->paired_conn.disconnect ();
+            device->disconnected_conn.disconnect ();
         });
+        device->device->activate ();
     }
 }
 
 void
 Backend::on_capability_added (const std::string& cap, const std::shared_ptr<Device>& device)
 {
-    // TODO
+    g_info ("Capability %s added to device %s", cap.c_str (), device->to_string ().c_str ());
+
+    if (device->has_capability_handler (cap))
+        return;
+
+    if (m_plugins.find (cap) != m_plugins.end ()) {
+        auto handler = m_plugins.at (cap);
+        device->register_capability_handler (cap, handler);
+        m_signal_device_capability_added.emit (device, cap, handler);
+    } else {
+        g_warning ("No handler for capability %s", cap.c_str ());
+    }
 }
 
 void
 Backend::on_capability_removed (const std::string& cap, const std::shared_ptr<Device>& device)
 {
-    // TODO
+    g_info ("Capability %s removed from device %s", cap.c_str (), device->to_string ().c_str ());
 }
 
 std::string
@@ -257,7 +278,7 @@ Backend::update_cache () noexcept
     Glib::KeyFile kf;
 
     for (const auto& dev : m_devices)
-        dev.second->to_cache (kf, dev.second->get_device_name ());
+        dev.second->device->to_cache (kf, dev.second->device->get_device_name ());
     
     try {
         g_debug ("Saving cache file");
@@ -265,4 +286,47 @@ Backend::update_cache () noexcept
     } catch (Glib::FileError& err) {
         g_warning ("Failed to save cache file: %s", err.what ().c_str ());
     }
+}
+
+void
+Backend::allow_device (const std::shared_ptr<Device>& device)
+{
+    for (const auto& entry : m_devices) {
+        if (entry.second->device != device) continue;
+
+        device->set_allowed (true);
+        update_cache ();
+        activate_device (entry.second);
+        return;
+    }
+
+    throw DeviceNotFoundException (device->to_string ());
+}
+
+void
+Backend::disallow_device (const std::shared_ptr<Device>& device)
+{
+    for (const auto& entry : m_devices) {
+        if (entry.second->device != device) continue;
+
+        device->set_allowed (false);
+        update_cache ();
+        return;
+    }
+
+    throw DeviceNotFoundException (device->to_string ());
+}
+
+void
+Backend::register_plugin (const std::string& capability, const std::shared_ptr<AbstractPacketHandler>& handler) noexcept
+{
+    m_plugins[capability] = handler;
+}
+
+std::shared_ptr<AbstractPacketHandler>
+Backend::get_plugin (const std::string& capability) const noexcept
+{
+    if (m_plugins.find (capability) != m_plugins.end ())
+        return m_plugins.at (capability);
+    return std::shared_ptr<AbstractPacketHandler> ();
 }

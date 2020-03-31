@@ -22,13 +22,14 @@
 
 #include "network-packet.h"
 #include "communication-channel.h"
+#include "abstract-packet-handler.h"
 #include <giomm/inetaddress.h>
 #include <giomm/tlscertificate.h>
 #include <glibmm/keyfile.h>
 
 namespace Conecto {
 
-class Device {
+class Device : public std::enable_shared_from_this<Device> {
   public:
     /**
      * Default constructor
@@ -59,6 +60,18 @@ class Device {
      * @param name Group name
      */
     void to_cache (Glib::KeyFile& cache, const std::string& name) const noexcept;
+    /**
+     * Update information/state of this device using data from @other_dev. This
+     * may happen in case when a discovery packet was received, or a device got
+     * connected. In such case, a this device (which was likely created from
+     * cached data) needs to be updated.
+     *
+     * As a side effect, updating capabilities will emit @signal_capability_added
+     * and @signal_capability_removed
+     * 
+     * @param device The other device
+     */
+    void update (const Device& device) noexcept;
 
     const std::string& get_device_id () const noexcept;
     const std::string& get_device_name () const noexcept;
@@ -103,6 +116,29 @@ class Device {
      * Send a packet
      */
     void send (const NetworkPacket& packet) noexcept;
+
+    /**
+     * Returns true if there is a handler of capability @cap registed for this device.
+     * 
+     * @param capability The capability name, e.g. kdeconnect.notification
+     * @return true if there is a handler of capability @cap registed for this device
+     */
+    bool has_capability_handler (const std::string& capability) const noexcept;
+    /**
+     * Register this device in the capability handler and add it to the handlers-list
+     * 
+     * @param capability Capability, e.g. kdeconnect.notification
+     * @param handler Packet handler
+     * @throw PacketHandlerAlreadyRegisteredException
+     */
+    void register_capability_handler (const std::string& capability, const std::shared_ptr<AbstractPacketHandler>& handler);
+    /**
+     * Unregister this device from the capability handler and remove it from the handlers-list
+     * 
+     * @param capability Capability, e.g. kdeconnect.notification
+     * @throw PacketHandlerNotRegisteredException
+     */
+    void unregister_capability_handler (const std::string& capability);
 
     using type_signal_paired = sigc::signal<void, bool /* pair */>;
     using type_signal_connected = sigc::signal<void>;
@@ -161,6 +197,8 @@ class Device {
     bool m_pair_in_progress; // set to true if pair request was sent
     sigc::connection m_pair_timeout_connection;
     std::unique_ptr<CommunicationChannel> m_channel;
+
+    std::map<std::string, std::shared_ptr<AbstractPacketHandler>> m_handlers;
 };
 
 } // namespace Conecto

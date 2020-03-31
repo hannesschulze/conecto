@@ -467,3 +467,59 @@ Device::send (const NetworkPacket& packet) noexcept
     if (m_channel)
         m_channel->send (packet);
 }
+
+bool
+Device::has_capability_handler (const std::string& capability) const noexcept
+{
+    return m_handlers.find (capability) != m_handlers.end ();
+}
+
+void
+Device::register_capability_handler (const std::string& capability, const std::shared_ptr<AbstractPacketHandler>& handler)
+{
+    if (has_capability_handler (capability))
+        throw PacketHandlerAlreadyRegisteredException (capability);
+
+    m_handlers.insert ({ capability, handler });
+    handler->register_device (shared_from_this ());
+}
+
+void
+Device::unregister_capability_handler (const std::string& capability)
+{
+    if (!has_capability_handler (capability))
+        throw PacketHandlerNotRegisteredException (capability);
+    
+    m_handlers.at (capability)->unregister_device (shared_from_this ());
+    m_handlers.erase (capability);
+}
+
+void
+Device::update (const Device& device) noexcept
+{
+    m_outgoing_capabilities = device.m_outgoing_capabilities;
+    m_incoming_capabilities = device.m_incoming_capabilities;
+
+    std::vector<std::string> added;
+    std::vector<std::string> removed;
+    merge_capabilities (added, removed);
+
+    for (const auto& cap : added) {
+        g_debug ("Added: %s", cap.c_str ());
+        m_signal_capability_added.emit (cap);
+    }
+
+    for (const auto& cap : removed) {
+        g_debug ("Removed: %s", cap.c_str ());
+        m_signal_capability_removed.emit (cap);
+        unregister_capability_handler (cap);
+    }
+
+    if (m_host && m_host->to_string () != device.m_host->to_string ()) {
+        g_debug ("Host address changed from %s to %s", m_host->to_string ().c_str (), device.m_host->to_string ().c_str ());
+        deactivate ();
+
+        m_host = device.m_host;
+        m_tcp_port = device.m_tcp_port;
+    }
+}

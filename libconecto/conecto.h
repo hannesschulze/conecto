@@ -29,3 +29,4 @@
 #include "communication-channel.h"
 #include "crypt.h"
 #include "config-file.h"
+#include "abstract-packet-handler.h"

@@ -111,4 +111,37 @@ class InvalidIpAddressException : public Exception {
     std::string m_message;
 };
 
+class DeviceNotFoundException : public Exception {
+  public:
+    DeviceNotFoundException (const std::string& dev)
+        : m_message ("Device not found in list: " + dev) {}
+    ~DeviceNotFoundException () {}
+    const char* what () const throw () override { return m_message.c_str (); }
+
+  private:
+    std::string m_message;
+};
+
+class PacketHandlerAlreadyRegisteredException : public Exception {
+  public:
+    PacketHandlerAlreadyRegisteredException (const std::string& cap)
+        : m_message ("Packet handler already registered: " + cap) {}
+    ~PacketHandlerAlreadyRegisteredException () {}
+    const char* what () const throw () override { return m_message.c_str (); }
+
+  private:
+    std::string m_message;
+};
+
+class PacketHandlerNotRegisteredException : public Exception {
+  public:
+    PacketHandlerNotRegisteredException (const std::string& cap)
+        : m_message ("Packet handler not registered: " + cap) {}
+    ~PacketHandlerNotRegisteredException () {}
+    const char* what () const throw () override { return m_message.c_str (); }
+
+  private:
+    std::string m_message;
+};
+
 }

@@ -29,6 +29,7 @@ libconecto_headers = files(
   'communication-channel.h',
   'crypt.h',
   'config-file.h',
+  'abstract-packet-handler.h',
 )
 libconecto_headers += config_header
 

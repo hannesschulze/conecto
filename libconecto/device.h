@@ -24,6 +24,7 @@
 #include "communication-channel.h"
 #include <giomm/inetaddress.h>
 #include <giomm/tlscertificate.h>
+#include <glibmm/keyfile.h>
 
 namespace Conecto {
 
@@ -41,7 +42,23 @@ class Device {
      * @throw MalformedPacketException
      */
     Device (const NetworkPacket& packet, const Glib::RefPtr<Gio::InetAddress>& host);
+    /**
+     * Constructs a new Device wrapper based on data read from device cache file.
+     *
+     * @param cache device cache file
+     * @param name device name
+     * @throw Glib::KeyFileError, InvalidIPAddressException
+     */
+    Device (Glib::KeyFile& cache, const std::string& name);
     ~Device () {}
+
+    /**
+     * Dump device information to cache
+     * 
+     * @param cache [ref] Device cache
+     * @param name Group name
+     */
+    void to_cache (Glib::KeyFile& cache, const std::string& name) const noexcept;
 
     const std::string& get_device_id () const noexcept;
     const std::string& get_device_name () const noexcept;

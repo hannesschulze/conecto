@@ -52,6 +52,7 @@ class Backend {
 
     static std::string get_storage_dir () noexcept;
     static std::string get_config_dir () noexcept;
+    static std::string get_cache_dir () noexcept;
     static void init_user_dirs ();
 
     using type_signal_found_new_device = sigc::signal<void, const Device& /* device */>;
@@ -72,6 +73,9 @@ class Backend {
     void on_capability_removed (const std::string& cap, const std::shared_ptr<Device>& device);
     bool get_allowed_in_config (const Device& device) const;
     void activate_device (Device& device);
+    std::string get_cache_file () const; // Path to devices cache file
+    void load_from_cache () noexcept;
+    void update_cache () noexcept;
 
     std::map<std::string, std::shared_ptr<Device>> m_devices;
 

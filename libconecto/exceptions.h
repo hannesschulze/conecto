@@ -100,4 +100,15 @@ class InvalidCertificateException : public Exception {
     std::string m_message;
 };
 
+class InvalidIpAddressException : public Exception {
+  public:
+    InvalidIpAddressException (const std::string& ip)
+        : m_message ("Invalid ip address: " + ip) {}
+    ~InvalidIpAddressException () {}
+    const char* what () const throw () override { return m_message.c_str (); }
+
+  private:
+    std::string m_message;
+};
+
 }

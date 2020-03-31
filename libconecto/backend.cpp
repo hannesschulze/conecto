@@ -30,6 +30,7 @@ using namespace Conecto;
 namespace {
 
 constexpr char APP_NAME[] = "conecto";
+constexpr char DEVICES_CACHE_FILE[] = "devices";
 
 } // namespace
 
@@ -70,6 +71,9 @@ Backend::Backend ()
 
     // Listen to new devices
     m_discovery.signal_device_found ().connect (sigc::mem_fun (+this, &Backend::on_new_device));
+
+    // Load devices from cache
+    load_from_cache ();
 }
 
 ConfigFile&
@@ -115,6 +119,12 @@ Backend::get_config_dir () noexcept
     return Glib::build_filename (Glib::get_user_config_dir (), APP_NAME);
 }
 
+std::string
+Backend::get_cache_dir () noexcept
+{
+    return Glib::build_filename (Glib::get_user_cache_dir (), APP_NAME);
+}
+
 void
 Backend::init_user_dirs ()
 {
@@ -154,7 +164,7 @@ Backend::on_new_device (std::shared_ptr<Device> device)
         device->set_allowed (true);
     
     // Update device cache
-    // TODO: update_cache ();
+    update_cache ();
 
     if (device->get_allowed ())
         // Device is allowed
@@ -179,7 +189,7 @@ Backend::activate_device (Device& device)
 
     if (!device.get_is_active ()) {
         sigc::connection conn = device.signal_paired ().connect ([this, &device](bool success) {
-            // TODO: update_cache ()
+            update_cache ();
             if (!success)
                 // Deactivate if needed
                 device.deactivate ();
@@ -200,4 +210,59 @@ void
 Backend::on_capability_removed (const std::string& cap, const std::shared_ptr<Device>& device)
 {
     // TODO
+}
+
+std::string
+Backend::get_cache_file () const
+{
+    std::string cache_file = Glib::build_filename (get_cache_dir (), DEVICES_CACHE_FILE);
+    g_debug ("Cache file: %s", cache_file.c_str ());
+
+    // Make sure that the cache dir exists
+    g_mkdir_with_parents (get_cache_dir ().c_str (), 0700);
+
+    return cache_file;
+}
+
+void
+Backend::load_from_cache () noexcept
+{
+    std::string cache_file = get_cache_file ();
+
+    g_debug ("Trying to load devices from cache");
+
+    Glib::KeyFile keyfile;
+    try {
+        keyfile.load_from_file (cache_file);
+
+        std::vector<std::string> groups = keyfile.get_groups ();
+        for (const auto& group : groups) {
+            try {
+                on_new_device (std::make_shared<Device> (keyfile, group));
+            } catch (...) {
+                // ignore
+            }
+        }
+    } catch (Glib::Error& err) {
+        g_debug ("Couldn't load cache file: %s", err.what ().c_str ());
+    }
+}
+
+void
+Backend::update_cache () noexcept
+{
+    if (m_devices.empty ())
+        return;
+
+    Glib::KeyFile kf;
+
+    for (const auto& dev : m_devices)
+        dev.second->to_cache (kf, dev.second->get_device_name ());
+    
+    try {
+        g_debug ("Saving cache file");
+        Glib::file_set_contents (get_cache_file (), kf.to_data ());
+    } catch (Glib::FileError& err) {
+        g_warning ("Failed to save cache file: %s", err.what ().c_str ());
+    }
 }

@@ -75,6 +75,55 @@ Device::Device (const NetworkPacket& packet, const Glib::RefPtr<Gio::InetAddress
     g_debug ("New device: %s", to_string ().c_str ());
 }
 
+Device::Device (Glib::KeyFile& cache, const std::string& name)
+    : Device ()
+{
+    m_device_id = cache.get_string (name, "deviceId");
+    m_device_name = cache.get_string (name, "deviceName");
+    m_device_type = cache.get_string (name, "deviceType");
+    m_protocol_version = cache.get_integer (name, "protocolVersion");
+    m_tcp_port = (uint) cache.get_integer (name, "tcpPort");
+    std::string last_ip_str = cache.get_string (name, "lastIPAddress");
+    g_debug ("Last known address: %s:%u", last_ip_str.c_str (), m_tcp_port);
+    m_allowed = cache.get_boolean (name, "allowed");
+    m_is_paired = cache.get_boolean (name, "paired");
+    try {
+        std::string cached_certificate = cache.get_string (name, "certificate");
+        if (cached_certificate != std::string ()) {
+            auto cert = Gio::TlsCertificate::create_from_pem (cached_certificate);
+            update_certificate (cert);
+        }
+    } catch (Glib::KeyFileError& err) {
+        if (err.domain () == G_KEY_FILE_ERROR_KEY_NOT_FOUND)
+            g_warning ("Device %s using older cache format", m_device_id.c_str ());
+        else
+            throw err;
+    }
+    m_outgoing_capabilities = cache.get_string_list (name, "outgoing_capabilities");
+    m_incoming_capabilities = cache.get_string_list (name, "incoming_capabilities");
+    m_host = Gio::InetAddress::create (last_ip_str);
+    if (!m_host) {
+        g_debug ("Failed to parse last known IP address (%s) for device %s", last_ip_str.c_str (), name.c_str ());
+        throw InvalidIpAddressException (last_ip_str);
+    }
+}
+
+void
+Device::to_cache (Glib::KeyFile& cache, const std::string& name) const noexcept
+{
+    cache.set_string (name, "deviceId", get_device_id ());
+    cache.set_string (name, "deviceName", get_device_name ());
+    cache.set_string (name, "deviceType", get_device_type ());
+    cache.set_integer (name, "protocolVersion", (int) get_protocol_version ());
+    cache.set_integer (name, "tcpPort", (int) get_tcp_port ());
+    cache.set_string (name, "lastIPAddress", get_host ()->to_string ());
+    cache.set_boolean (name, "allowed", get_allowed ());
+    cache.set_boolean (name, "paired", get_is_paired ());
+    cache.set_string (name, "certificate", get_certificate_pem ());
+    cache.set_string_list (name, "outgoing_capabilities", get_outgoing_capabilities ());
+    cache.set_string_list (name, "incoming_capabilities", get_incoming_capabilities ());
+}
+
 const std::string&
 Device::get_device_id () const noexcept
 {

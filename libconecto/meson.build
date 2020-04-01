@@ -17,6 +17,8 @@ libconecto_sources = files(
   'communication-channel.cpp',
   'crypt.cpp',
   'config-file.cpp',
+
+  'plugins/ping.cpp',
 )
 
 libconecto_headers = files(
@@ -30,10 +32,13 @@ libconecto_headers = files(
   'crypt.h',
   'config-file.h',
   'abstract-packet-handler.h',
+
+  'plugins/ping.h',
 )
 libconecto_headers += config_header
 
 include_directories = [
   conf_inc,
   include_directories('.'),
+  include_directories('./plugins'),
 ]

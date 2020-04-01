@@ -26,16 +26,50 @@
 
 namespace Conecto {
 
+/**
+ * @brief A config file stores a list of devices and their options (e.g. whether they are allowed)
+ */
 class ConfigFile {
   public:
+    /**
+     * Read the config file from @p get_search_dirs
+     *
+     * @param base_config_dir The preferred config dir
+     */
     ConfigFile (const std::string& base_config_dir);
     ~ConfigFile () {}
 
+    /**
+     * Get the actual path the config has been read from
+     *
+     * @return The path
+     */
     const std::string& get_path () const noexcept;
+    /**
+     * Get the filename to use for the config file
+     *
+     * @return A constant
+     */
     static std::string get_file_name () noexcept;
-    void               dump_to_file (const std::string& path);
-    bool               get_device_allowed (const std::string& name, const std::string& type);
+    /**
+     * Dump the configuration to a file
+     *
+     * @param path The path where the config should be saved
+     */
+    void dump_to_file (const std::string& path);
+    /**
+     * Check if a device is specified as allowed in the configuration
+     *
+     * @param name The device's name
+     * @param type The device's type
+     */
+    bool get_device_allowed (const std::string& name, const std::string& type);
 
+    /**
+     * Get a list of search dirs
+     *
+     * @param primary_dir The preferred search path (will be put in index 0)
+     */
     static std::vector<std::string> get_search_dirs (const std::string& primary_dir) noexcept;
 
     ConfigFile (const ConfigFile&) = delete;

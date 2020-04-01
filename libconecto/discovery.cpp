@@ -91,7 +91,7 @@ Discovery::parse_packet (std::string&& data, const Glib::RefPtr<Gio::InetAddress
         NetworkPacket packet (data);
 
         // Expecting an identity packet
-        if (packet.get_type () != Constants::TYPE_IDENTITY) {
+        if (packet.get_type () != PacketTypes::TYPE_IDENTITY) {
             g_warning ("Unexpected packet type %s from device %s", packet.get_type ().c_str (),
                        host->to_string ().c_str ());
             return;

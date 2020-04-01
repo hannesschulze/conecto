@@ -54,6 +54,17 @@ sudo ninja install
 com.github.hannesschulze.conecto
 ```
 
+### Generating documentation
+
+Documentation can be generated using doxygen. Once you have cloned the repository and are in the `build` directory, run:
+
+```
+meson configure -Ddocs=true
+ninja
+```
+
+You will find the generated documentation in `build/docs/libconecto`
+
 ## About this project
 
 This project aims to provide a KDEConnect client designed for elementary OS, based on [mconnect](https://github.com/kevinselvaprasanna/mconnect).

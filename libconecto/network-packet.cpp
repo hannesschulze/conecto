@@ -58,7 +58,7 @@ NetworkPacket::NetworkPacket (const std::string& data)
     m_body = val["body"];
 
     // Ignore payload info for encrypted packets
-    if (m_type == Constants::TYPE_ENCRYPTED) return;
+    if (m_type == PacketTypes::TYPE_ENCRYPTED) return;
 
     if (val["payloadSize"].isInt () && val["payloadTransferInfo"].isObject ()) {
         int         size = val["payloadSize"].asInt ();
@@ -79,7 +79,7 @@ NetworkPacket::create_pair (bool pair)
     Json::Value body (Json::objectValue);
     body["pair"] = pair;
 
-    return std::make_shared<NetworkPacket> (Constants::TYPE_PAIR, body);
+    return std::make_shared<NetworkPacket> (PacketTypes::TYPE_PAIR, body);
 }
 
 std::shared_ptr<NetworkPacket>
@@ -99,7 +99,7 @@ NetworkPacket::create_identity (const std::string& name, const std::string& devi
     body["SupportedOutgoingInterfaces"] = std::move (out_array);
     body["protocolVersion"] = PROTOCOL_VERSION;
 
-    return std::make_shared<NetworkPacket> (Constants::TYPE_IDENTITY, body);
+    return std::make_shared<NetworkPacket> (PacketTypes::TYPE_IDENTITY, body);
 }
 
 const std::string&

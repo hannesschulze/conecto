@@ -29,6 +29,9 @@
 
 namespace Conecto {
 
+/**
+ * @brief A class representing a device, managing its communication channel and capabilities
+ */
 class Device : public std::enable_shared_from_this<Device> {
   public:
     /**
@@ -73,25 +76,47 @@ class Device : public std::enable_shared_from_this<Device> {
      */
     void update (const Device& device) noexcept;
 
-    const std::string&                get_device_id () const noexcept;
-    const std::string&                get_device_name () const noexcept;
-    const std::string&                get_device_type () const noexcept;
-    const uint&                       get_protocol_version () const noexcept;
-    const uint&                       get_tcp_port () const noexcept;
-    Glib::RefPtr<Gio::InetAddress>    get_host () const noexcept;
-    const bool&                       get_is_paired () const noexcept;
-    const bool&                       get_allowed () const noexcept;
-    const bool&                       get_is_active () const noexcept;
-    const std::list<std::string>&     get_outgoing_capabilities () const noexcept;
-    const std::list<std::string>&     get_incoming_capabilities () const noexcept;
+    /** @brief Get the device's id */
+    const std::string& get_device_id () const noexcept;
+    /** @brief Get the device's name */
+    const std::string& get_device_name () const noexcept;
+    /** @brief Get the device's type */
+    const std::string& get_device_type () const noexcept;
+    /** @brief Get the protocol version used with the device */
+    const uint& get_protocol_version () const noexcept;
+    /** @brief Get the port used for communicating with the device */
+    const uint& get_tcp_port () const noexcept;
+    /** @brief Get the address used for communicating with the device */
+    Glib::RefPtr<Gio::InetAddress> get_host () const noexcept;
+    /** @brief true if the device is currently paired */
+    const bool& get_is_paired () const noexcept;
+    /** @brief A flag used for checking if a specific device is allowed */
+    const bool& get_allowed () const noexcept;
+    /** @brief true if the device is currently active */
+    const bool& get_is_active () const noexcept;
+    /** @brief Get a list of outgoing capabilities */
+    const std::list<std::string>& get_outgoing_capabilities () const noexcept;
+    /** @brief Get a list of incoming capabilities */
+    const std::list<std::string>& get_incoming_capabilities () const noexcept;
+    /** @brief Get the certificate used for encryption */
     Glib::RefPtr<Gio::TlsCertificate> get_certificate () const noexcept;
-    std::string                       get_certificate_pem () const noexcept;
-    const std::string&                get_certificate_fingerprint () const noexcept;
+    /** @brief Get the PEM encoded certificate used for encryption */
+    std::string get_certificate_pem () const noexcept;
+    /** @brief Get the certificate's SHA1 encoded fingerprint */
+    const std::string& get_certificate_fingerprint () const noexcept;
 
+    /** @brief A flag used for checking if a specific device is allowed */
     void set_allowed (bool allowed) noexcept;
+    /** @brief Update the certificate used for encryption */
     void set_certificate (Glib::RefPtr<Gio::TlsCertificate> certificate) noexcept;
 
+    /**
+     * Get a short string representing this device
+     */
     std::string to_string () const noexcept;
+    /**
+     * Get a short string representing this device
+     */
     std::string to_unique_string () const noexcept;
 
     /**
@@ -141,17 +166,47 @@ class Device : public std::enable_shared_from_this<Device> {
      */
     void unregister_capability_handler (const std::string& capability);
 
+    /**
+     * @param pair true if the device was successfully paired
+     */
     using type_signal_paired = sigc::signal<void, bool /* pair */>;
     using type_signal_connected = sigc::signal<void>;
     using type_signal_disconnected = sigc::signal<void>;
+    /**
+     * @param message The packet received
+     */
     using type_signal_message = sigc::signal<void, const NetworkPacket& /* message */>;
+    /**
+     * @param capability The new capability's name
+     */
     using type_signal_capability_added = sigc::signal<void, const std::string& /* capability */>;
+    /**
+     * @param capability The removed capability's name
+     */
     using type_signal_capability_removed = sigc::signal<void, const std::string& /* capability */>;
-    type_signal_paired             signal_paired () { return m_signal_paired; }
-    type_signal_connected          signal_connected () { return m_signal_connected; }
-    type_signal_disconnected       signal_disconnected () { return m_signal_disconnected; }
-    type_signal_message            signal_message () { return m_signal_message; }
-    type_signal_capability_added   signal_capability_added () { return m_signal_capability_added; }
+    /**
+     * Emitted when the device has been paired
+     */
+    type_signal_paired signal_paired () { return m_signal_paired; }
+    /**
+     * Emitted when we are connected to the device
+     */
+    type_signal_connected signal_connected () { return m_signal_connected; }
+    /**
+     * Emitted when we are disconnected from the device
+     */
+    type_signal_disconnected signal_disconnected () { return m_signal_disconnected; }
+    /**
+     * Emitted when we received a new packet from the device
+     */
+    type_signal_message signal_message () { return m_signal_message; }
+    /**
+     * Emitted when a capability has been added to this device (most likely read from the cache)
+     */
+    type_signal_capability_added signal_capability_added () { return m_signal_capability_added; }
+    /**
+     * Emitted when a capability has been removed from this device (most likely on @p update call)
+     */
     type_signal_capability_removed signal_capability_removed () { return m_signal_capability_removed; }
 
     Device (const Device&) = delete;

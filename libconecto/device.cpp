@@ -335,7 +335,7 @@ void
 Device::on_packet_received (const NetworkPacket& packet)
 {
     g_debug ("Got packet");
-    if (packet.get_type () == Constants::TYPE_PAIR) {
+    if (packet.get_type () == PacketTypes::TYPE_PAIR) {
         // Pairing
         bool pair = packet.get_body ()["pair"].asBool ();
         handle_pair (pair);

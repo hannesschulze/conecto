@@ -29,6 +29,9 @@
 
 namespace Conecto {
 
+/**
+ * @brief The main singleton used for managing available devices, discovering new devices and managing plugins
+ */
 class Backend {
   public:
     /**
@@ -60,16 +63,49 @@ class Backend {
      */
     std::shared_ptr<AbstractPacketHandler> get_plugin (const std::string& capability) const noexcept;
 
-    ConfigFile&       get_config () noexcept;
+    /**
+     * Get a reference to the @p ConfigFile that is automatically loaded by the backend
+     *
+     * @return A reference to the @p ConfigFile in use
+     */
+    ConfigFile& get_config () noexcept;
+    /**
+     * Get a reference to the @p ConfigFile that is automatically loaded by the backend
+     *
+     * @return A const reference to the @p ConfigFile in use
+     */
     const ConfigFile& get_config () const noexcept;
 
+    /**
+     * Get the certificate used for encryption
+     *
+     * @return The certificate
+     * @see Crypt
+     */
     Glib::RefPtr<Gio::TlsCertificate> get_certificate () const noexcept;
-    std::list<std::string>            get_handler_interfaces () const noexcept;
+    /**
+     * Get a list of packet handler interface names available from plugins
+     *
+     * @return A doubly linked list containing the available interface names
+     */
+    std::list<std::string> get_handler_interfaces () const noexcept;
 
+    /**
+     * Get the storage location (used for storing the key and certificate)
+     */
     static std::string get_storage_dir () noexcept;
+    /**
+     * Get the config location (used as a base path for loading the @p ConfigFile)
+     */
     static std::string get_config_dir () noexcept;
+    /**
+     * Get the cache location (used for caching devices over multiple sessions)
+     */
     static std::string get_cache_dir () noexcept;
-    static void        init_user_dirs ();
+    /**
+     * Create user dirs if they don't already exist
+     */
+    static void init_user_dirs ();
 
     /**
      * Allow given device
@@ -86,11 +122,25 @@ class Backend {
      */
     void disallow_device (const std::shared_ptr<Device>& device);
 
+    /**
+     * @param device The new device
+     */
     using type_signal_found_new_device = sigc::signal<void, const Device& /* device */>;
+    /**
+     * @param device The device the capability was added to
+     * @param capability The new capability's name
+     * @param handler The new capability's handler interface
+     */
     using type_signal_device_capability_added =
             sigc::signal<void, const std::shared_ptr<Device>& /* device */, const std::string& /* capability */,
                          const std::shared_ptr<AbstractPacketHandler>& /* handler */>;
-    type_signal_found_new_device        signal_found_new_device () { return m_signal_found_new_device; }
+    /**
+     * Called when a new device was found (not called if the device was already in the cache)
+     */
+    type_signal_found_new_device signal_found_new_device () { return m_signal_found_new_device; }
+    /**
+     * Called when a new capability has been added to a device (most likely read from the cache)
+     */
     type_signal_device_capability_added signal_device_capability_added () { return m_signal_device_capability_added; }
 
     Backend (const Backend&) = delete;

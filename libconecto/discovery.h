@@ -29,8 +29,14 @@ namespace Conecto {
 // forward declarations
 class Device;
 
+/**
+ * @brief Discovers new devices in the network using sockets
+ */
 class Discovery {
   public:
+    /**
+     * Create a new @p Discovery object (which does not start listening for new devices automatically)
+     */
     Discovery ();
     ~Discovery ();
 
@@ -41,7 +47,13 @@ class Discovery {
      */
     void listen ();
 
-    using type_signal_device_found = sigc::signal<void, const std::shared_ptr<Device>&>;
+    /**
+     * @param device The new device
+     */
+    using type_signal_device_found = sigc::signal<void, const std::shared_ptr<Device>& /* device */>;
+    /**
+     * Emitted when a new device has been found
+     */
     type_signal_device_found signal_device_found () { return m_signal_device_found; }
 
     Discovery (const Discovery&) = delete;

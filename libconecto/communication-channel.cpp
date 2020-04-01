@@ -178,7 +178,7 @@ CommunicationChannel::on_io_ready (Glib::IOCondition cond)
 void
 CommunicationChannel::handle_packet (const NetworkPacket& packet)
 {
-    if (packet.get_type () == Constants::TYPE_ENCRYPTED)
+    if (packet.get_type () == PacketTypes::TYPE_ENCRYPTED)
         g_warning (
                 "Received packet with explicit encryption, this usually indicates a protocol version < 6 type packet, "
                 "such packets are no longer supported, dropping..");

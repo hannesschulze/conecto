@@ -102,8 +102,9 @@ Backend::get_certificate () const noexcept
 std::list<std::string>
 Backend::get_handler_interfaces () const noexcept
 {
-    // TODO
-    return {};
+    std::list<std::string> res;
+    for (const auto& plugin : m_plugins) res.push_back (plugin.first);
+    return res;
 }
 
 std::string

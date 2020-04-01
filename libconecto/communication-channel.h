@@ -34,12 +34,18 @@
 namespace Conecto {
 
 /**
- * Device communication channel
+ * @brief Device communication channel
  *
  * Automatically handle channel encoding.
  */
 class CommunicationChannel {
   public:
+    /**
+     * Create a new communication channel for a device
+     *
+     * @param host The IP address
+     * @param port The communication port
+     */
     CommunicationChannel (const Glib::RefPtr<Gio::InetAddress>& host, uint16_t port);
     ~CommunicationChannel () {}
 
@@ -55,7 +61,15 @@ class CommunicationChannel {
      * @param packet instance of Packet
      */
     void send (const NetworkPacket& packet);
+    /**
+     * Close the communication channel
+     */
     void close ();
+    /**
+     * (Asynchronously) open the communication channel
+     *
+     * @param cb The callback, where connected is set to true on success
+     */
     void open (std::function<void (bool /* connected */)> cb);
     /**
      * Switch channel to TLS mode
@@ -70,11 +84,23 @@ class CommunicationChannel {
      * @param expected_peer the peer certificate we are expecting to see
      */
     void secure (const Glib::RefPtr<Gio::TlsCertificate>& expected_peer, std::function<void (bool /* success */)> cb);
+    /**
+     * Get the peer certificate
+     */
     Glib::RefPtr<Gio::TlsCertificate> get_peer_certificate () { return m_peer_certificate; }
 
     using type_signal_disconnected = sigc::signal<void>;
+    /**
+     * @param packet The packet received
+     */
     using type_signal_packet_received = sigc::signal<void, const NetworkPacket& /* packet */>;
-    type_signal_disconnected    signal_disconnected () { return m_signal_disconnected; }
+    /**
+     * Called when we have been disconnected
+     */
+    type_signal_disconnected signal_disconnected () { return m_signal_disconnected; }
+    /**
+     * Called when a new packet has been received through this channel
+     */
     type_signal_packet_received signal_packet_received () { return m_signal_packet_received; }
 
     CommunicationChannel (const CommunicationChannel&) = delete;

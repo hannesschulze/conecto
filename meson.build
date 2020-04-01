@@ -43,4 +43,8 @@ libconecto_pc = pkgconfig.generate(
   url: 'https://github.com/hannesschulze/conecto'
 )
 
+if get_option('docs')
+  subdir('docs')
+endif
+
 subdir('tests')

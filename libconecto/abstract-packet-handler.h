@@ -29,7 +29,7 @@ namespace Conecto {
 class Device;
 
 /**
- * Abstract base class for all packet handlers
+ * @brief Abstract base class for all packet handlers
  */
 class AbstractPacketHandler {
   public:

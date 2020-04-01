@@ -31,7 +31,7 @@ typedef struct gnutls_x509_crt_int     GnuTLSX509Certificate;
 typedef struct gnutls_x509_privkey_int GnuTLSX509PrivateKey;
 
 /**
- * Encryption helpers
+ * @brief Encryption helpers
  */
 class Crypt {
   public:

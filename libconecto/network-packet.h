@@ -26,12 +26,15 @@
 
 namespace Conecto {
 
-namespace Constants {
+namespace PacketTypes {
 static const std::string TYPE_IDENTITY = "kdeconnect.identity";
 static const std::string TYPE_PAIR = "kdeconnect.pair";
 static const std::string TYPE_ENCRYPTED = "kdeconnect.encrypted";
-} // namespace Constants
+} // namespace PacketTypes
 
+/**
+ * @brief A class representing a packet sent over the network
+ */
 class NetworkPacket {
   public:
     /**
@@ -75,12 +78,22 @@ class NetworkPacket {
         uint     port;
     };
 
-    const std::string&             get_type () const noexcept;
-    const int64_t&                 get_id () const noexcept;
-    const Json::Value&             get_body () const noexcept;
+    /** @brief The packet's type (see @p Types) */
+    const std::string& get_type () const noexcept;
+    /** @brief The packet's unique id */
+    const int64_t& get_id () const noexcept;
+    /** @brief The packet's JSON-encoded body */
+    const Json::Value& get_body () const noexcept;
+    /** @brief The payload (may be empty) */
     std::shared_ptr<const Payload> get_payload () const noexcept;
-    void                           set_payload (const std::shared_ptr<Payload>& payload) noexcept;
+    /** @brief Update the packet's payload */
+    void set_payload (const std::shared_ptr<Payload>& payload) noexcept;
 
+    /**
+     * Get a JSON-encoded packet body ready for being sent to a device
+     *
+     * This is usually done by the @p CommunicationChannel
+     */
     std::string serialize () const noexcept;
 
     NetworkPacket (const NetworkPacket&) = delete;

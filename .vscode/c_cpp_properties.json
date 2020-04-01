@@ -4,6 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/libconecto/plugins",
                 "/usr/include/sigc++-2.0",
                 "/usr/lib64/sigc++-2.0/include",
                 "/usr/include/giomm-2.4",

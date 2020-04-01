@@ -89,8 +89,10 @@ Device::Device (Glib::KeyFile& cache, const std::string& name)
     try {
         std::string cached_certificate = cache.get_string (name, "certificate");
         if (cached_certificate != std::string ()) {
-            auto cert = Gio::TlsCertificate::create_from_pem (cached_certificate);
-            update_certificate (cert);
+            GError* err = nullptr;
+            GTlsCertificate* cert = g_tls_certificate_new_from_pem (cached_certificate.c_str (), cached_certificate.size (), &err);
+            g_assert (err == nullptr);
+            update_certificate (Glib::wrap (cert));
         }
     } catch (Glib::KeyFileError& err) {
         if (err.domain () == G_KEY_FILE_ERROR_KEY_NOT_FOUND)
@@ -251,7 +253,9 @@ Device::greet (std::function<void ()> cb) noexcept
         g_info ("Secure: %s", success ? "true" : "false");
         if (success) {
             update_certificate (m_channel->get_peer_certificate ());
-            maybe_pair ();
+            Glib::signal_timeout ().connect_seconds_once ([this]() {
+                maybe_pair ();
+            }, 1);
         } else {
             g_warning ("Failed to enable secure channel");
             close_and_cleanup ();
@@ -444,7 +448,7 @@ Device::update_certificate (const Glib::RefPtr<Gio::TlsCertificate>& certificate
     std::stringstream stream;
     stream << "sha1:";
     auto fingerprint = Crypt::fingerprint_certificate (certificate->property_certificate_pem ().get_value ());
-    for (const auto& b : fingerprint) stream << std::setfill ('0') << std::setw (2) << std::hex << b;
+    for (const auto& b : fingerprint) stream << std::setfill ('0') << std::setw (2) << std::hex << unsigned (b);
     m_certificate_fingerprint = stream.str ();
 }
 

@@ -48,3 +48,15 @@ if get_option('docs')
 endif
 
 subdir('tests')
+
+subdir('src')
+
+conecto_deps = [
+  libconecto_dep
+]
+
+executable(
+  'com.github.hannesschulze.conecto',
+  conecto_sources,
+  dependencies: conecto_deps
+)

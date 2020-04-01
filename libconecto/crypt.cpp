@@ -124,7 +124,7 @@ Crypt::generate_key_cert (const std::string& key_path, const std::string& cert_p
     auto cert = generate_self_signed_cert (*key, name);
 
     export_to_file (cert_path, export_certificate (*cert));
-    export_to_file (cert_path, export_private_key (*key));
+    export_to_file (key_path, export_private_key (*key));
 }
 
 std::shared_ptr<GnuTLSX509Certificate>

@@ -119,7 +119,7 @@ class CommunicationChannel {
 
     Glib::RefPtr<Gio::InetSocketAddress> m_socket_addr;
     Glib::RefPtr<Gio::SocketConnection>  m_socket_conn;
-    Glib::RefPtr<Gio::TlsConnection>     m_tls_conn;
+    std::shared_ptr<Gio::TlsConnection>  m_tls_conn;
     Glib::RefPtr<Gio::DataOutputStream>  m_data_out;
     Glib::RefPtr<Gio::DataInputStream>   m_data_in;
     Glib::RefPtr<Gio::Socket>            m_socket;

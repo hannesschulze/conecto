@@ -54,25 +54,26 @@ Backend::Backend ()
         Crypt::generate_key_cert (key_file->get_path (), cert_file->get_path (), user + "@" + host_name);
     }
 
-    GError* err;
-    g_tls_certificate_new_from_files (cert_file->get_path ().c_str (), key_file->get_path ().c_str (), &err);
+    GError*          err = nullptr;
+    GTlsCertificate* cert =
+            g_tls_certificate_new_from_files (cert_file->get_path ().c_str (), key_file->get_path ().c_str (), &err);
     if (err) {
         g_error_free (err);
         throw InvalidCertificateException ("Failed to load certificate or key");
     }
+    if (!cert)
+        throw InvalidCertificateException ("Failed to load certificate or key");
+    m_certificate = Glib::wrap (cert);
 
     // Set up config
-    std::string user_config_path = get_config_dir () + "/" + ConfigFile::get_file_name ();
-    m_config = std::make_unique<ConfigFile> (user_config_path);
+    m_config = std::make_unique<ConfigFile> (get_config_dir ());
 
     // Write configuration to user config file if not present
-    if (m_config->get_path () != user_config_path) m_config->dump_to_file (user_config_path);
+    std::string expected_path = get_config_dir () + "/" + ConfigFile::get_file_name ();
+    if (m_config->get_path () != expected_path) m_config->dump_to_file (expected_path);
 
     // Listen to new devices
     m_discovery.signal_device_found ().connect (sigc::mem_fun (+this, &Backend::on_new_device));
-
-    // Load devices from cache
-    load_from_cache ();
 }
 
 ConfigFile&
@@ -222,7 +223,7 @@ Backend::on_capability_added (const std::string& cap, const std::shared_ptr<Devi
         device->register_capability_handler (cap, handler);
         m_signal_device_capability_added.emit (device, cap, handler);
     } else {
-        g_warning ("No handler for capability %s", cap.c_str ());
+        g_debug ("No handler for capability %s", cap.c_str ());
     }
 }
 
@@ -315,9 +316,9 @@ Backend::disallow_device (const std::shared_ptr<Device>& device)
 }
 
 void
-Backend::register_plugin (const std::string& capability, const std::shared_ptr<AbstractPacketHandler>& handler) noexcept
+Backend::register_plugin (const std::shared_ptr<AbstractPacketHandler>& handler) noexcept
 {
-    m_plugins[capability] = handler;
+    m_plugins[handler->get_packet_type ()] = handler;
 }
 
 std::shared_ptr<AbstractPacketHandler>

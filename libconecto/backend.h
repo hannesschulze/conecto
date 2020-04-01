@@ -46,15 +46,17 @@ class Backend {
      * @throw BindSocketException
      */
     void listen ();
+    /**
+     * Load existing devices from the cache
+     */
+    void load_from_cache () noexcept;
 
     /**
      * A register a new plugin (capability/packet handler). If the capability already exists, it will be overridden
      *
-     * @param capability The capability's name
      * @param handler The packet handler for this capability
      */
-    void register_plugin (const std::string&                            capability,
-                          const std::shared_ptr<AbstractPacketHandler>& handler) noexcept;
+    void register_plugin (const std::shared_ptr<AbstractPacketHandler>& handler) noexcept;
     /**
      * Get the packet handler for a capability (may be empty)
      *
@@ -169,7 +171,6 @@ class Backend {
     bool        get_allowed_in_config (const Device& device) const;
     void        activate_device (const std::shared_ptr<DeviceEntry>& entry);
     std::string get_cache_file () const; // Path to devices cache file
-    void        load_from_cache () noexcept;
     void        update_cache () noexcept;
 
     std::map<std::string, std::shared_ptr<DeviceEntry>> m_devices;

@@ -30,3 +30,6 @@
 #include "crypt.h"
 #include "config-file.h"
 #include "abstract-packet-handler.h"
+
+// Plugins
+#include "ping.h"

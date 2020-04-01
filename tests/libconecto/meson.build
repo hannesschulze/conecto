@@ -1,4 +1,5 @@
 libconecto_tests = [
+  [ 'test_crypt.cpp', 'crypt' ]
 ]
 
 foreach test : libconecto_tests

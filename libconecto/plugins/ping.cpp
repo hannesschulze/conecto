@@ -44,8 +44,8 @@ Ping::get_packet_type_virt () const noexcept
 void
 Ping::register_device_virt (const std::shared_ptr<Device>& device) noexcept
 {
-    m_devices[device] = device->signal_message ().connect
-        (sigc::bind (sigc::mem_fun (*this, &Ping::on_message), device));
+    m_devices[device] =
+            device->signal_message ().connect (sigc::bind (sigc::mem_fun (*this, &Ping::on_message), device));
 }
 
 void

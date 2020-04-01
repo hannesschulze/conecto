@@ -21,6 +21,7 @@
 #include "config-file.h"
 #include <glibmm/miscutils.h>
 #include <glibmm/fileutils.h>
+#include <iostream>
 
 using namespace Conecto;
 
@@ -45,8 +46,10 @@ ConfigFile::ConfigFile (const std::string& base_config_dir)
         g_message ("Loaded configuration from %s", full_path.c_str ());
     } catch (Glib::KeyFileError& err) {
         g_critical ("Failed to parse configuration file: %s", err.what ().c_str ());
+        m_keyfile = Glib::KeyFile ();
     } catch (Glib::FileError& err) {
         g_critical ("Failed to read configuration file: %s", err.what ().c_str ());
+        m_keyfile = Glib::KeyFile ();
     }
 }
 
@@ -67,9 +70,9 @@ ConfigFile::dump_to_file (const std::string& path)
 {
     std::string data = m_keyfile.to_data ();
     try {
-        Glib::file_set_contents (m_path, data);
+        Glib::file_set_contents (path, data);
     } catch (Glib::FileError& err) {
-        g_critical ("Failed to save configuration file to %s: %s", m_path.c_str (), err.what ().c_str ());
+        g_critical ("Failed to save configuration file to %s: %s", path.c_str (), err.what ().c_str ());
     }
 }
 
@@ -81,7 +84,7 @@ ConfigFile::get_device_allowed (const std::string& name, const std::string& type
 
         for (const auto& dev : devices) {
             if (m_keyfile.has_group (dev) == false) {
-                g_debug ("No group in keyfile: %s", dev.c_str ());
+                g_critical ("No group in keyfile: %s", dev.c_str ());
                 continue;
             }
 

@@ -200,6 +200,7 @@ CommunicationChannel::fixup_socket ()
 
     // Enable keepalive
     m_socket->set_keepalive (true);
+    m_socket->set_timeout (0);
 }
 
 void

@@ -127,7 +127,7 @@ class Backend {
     /**
      * @param device The new device
      */
-    using type_signal_found_new_device = sigc::signal<void, const Device& /* device */>;
+    using type_signal_found_new_device = sigc::signal<void, const std::shared_ptr<Device>& /* device */>;
     /**
      * @param device The device the capability was added to
      * @param capability The new capability's name

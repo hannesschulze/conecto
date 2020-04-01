@@ -62,6 +62,5 @@ Ping::on_message (const NetworkPacket& message, const std::shared_ptr<Device>& d
 {
     if (message.get_type () != PACKET_TYPE) return;
 
-    g_message ("Ping from device %s", device->to_string ().c_str ());
     m_signal_ping.emit (device);
 }

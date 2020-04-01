@@ -152,7 +152,7 @@ Backend::on_new_device (std::shared_ptr<Device> new_device)
 
     // Notify everyone that a new device appeared
     if (is_new) {
-        m_signal_found_new_device.emit (*device);
+        m_signal_found_new_device.emit (device);
 
         device->signal_capability_added ().connect (
                 sigc::bind (sigc::mem_fun (*this, &Backend::on_capability_added), device));

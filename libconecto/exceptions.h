@@ -35,20 +35,24 @@ class BindSocketException : public Exception {
   public:
     BindSocketException (Gio::Error::Code code, const std::string& message)
         : m_code (code)
-        , m_message (message) {}
+        , m_message (message)
+    {
+    }
     ~BindSocketException () {}
-    const char* what () const throw () override { return m_message.c_str (); }
+    const char*      what () const throw () override { return m_message.c_str (); }
     Gio::Error::Code get_code () { return m_code; }
 
   private:
     Gio::Error::Code m_code;
-    std::string m_message;
+    std::string      m_message;
 };
 
 class MalformedPacketException : public Exception {
   public:
     MalformedPacketException (const std::string& message)
-        : m_message (message) {}
+        : m_message (message)
+    {
+    }
     ~MalformedPacketException () {}
     const char* what () const throw () override { return m_message.c_str (); }
 
@@ -59,7 +63,9 @@ class MalformedPacketException : public Exception {
 class MalformedIdentityException : public Exception {
   public:
     MalformedIdentityException (const std::string& message)
-        : m_message (message) {}
+        : m_message (message)
+    {
+    }
     ~MalformedIdentityException () {}
     const char* what () const throw () override { return m_message.c_str (); }
 
@@ -70,7 +76,9 @@ class MalformedIdentityException : public Exception {
 class GnuTLSInitializationError : public Exception {
   public:
     GnuTLSInitializationError (const std::string& message)
-        : m_message (message) {}
+        : m_message (message)
+    {
+    }
     ~GnuTLSInitializationError () {}
     const char* what () const throw () override { return m_message.c_str (); }
 
@@ -81,7 +89,9 @@ class GnuTLSInitializationError : public Exception {
 class PEMWriteError : public Exception {
   public:
     PEMWriteError (const std::string& message)
-        : m_message (message) {}
+        : m_message (message)
+    {
+    }
     ~PEMWriteError () {}
     const char* what () const throw () override { return m_message.c_str (); }
 
@@ -92,7 +102,9 @@ class PEMWriteError : public Exception {
 class InvalidCertificateException : public Exception {
   public:
     InvalidCertificateException (const std::string& message)
-        : m_message (message) {}
+        : m_message (message)
+    {
+    }
     ~InvalidCertificateException () {}
     const char* what () const throw () override { return m_message.c_str (); }
 
@@ -103,7 +115,9 @@ class InvalidCertificateException : public Exception {
 class InvalidIpAddressException : public Exception {
   public:
     InvalidIpAddressException (const std::string& ip)
-        : m_message ("Invalid ip address: " + ip) {}
+        : m_message ("Invalid ip address: " + ip)
+    {
+    }
     ~InvalidIpAddressException () {}
     const char* what () const throw () override { return m_message.c_str (); }
 
@@ -114,7 +128,9 @@ class InvalidIpAddressException : public Exception {
 class DeviceNotFoundException : public Exception {
   public:
     DeviceNotFoundException (const std::string& dev)
-        : m_message ("Device not found in list: " + dev) {}
+        : m_message ("Device not found in list: " + dev)
+    {
+    }
     ~DeviceNotFoundException () {}
     const char* what () const throw () override { return m_message.c_str (); }
 
@@ -125,7 +141,9 @@ class DeviceNotFoundException : public Exception {
 class PacketHandlerAlreadyRegisteredException : public Exception {
   public:
     PacketHandlerAlreadyRegisteredException (const std::string& cap)
-        : m_message ("Packet handler already registered: " + cap) {}
+        : m_message ("Packet handler already registered: " + cap)
+    {
+    }
     ~PacketHandlerAlreadyRegisteredException () {}
     const char* what () const throw () override { return m_message.c_str (); }
 
@@ -136,7 +154,9 @@ class PacketHandlerAlreadyRegisteredException : public Exception {
 class PacketHandlerNotRegisteredException : public Exception {
   public:
     PacketHandlerNotRegisteredException (const std::string& cap)
-        : m_message ("Packet handler not registered: " + cap) {}
+        : m_message ("Packet handler not registered: " + cap)
+    {
+    }
     ~PacketHandlerNotRegisteredException () {}
     const char* what () const throw () override { return m_message.c_str (); }
 
@@ -144,4 +164,4 @@ class PacketHandlerNotRegisteredException : public Exception {
     std::string m_message;
 };
 
-}
+} // namespace Conecto

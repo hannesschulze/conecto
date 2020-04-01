@@ -35,13 +35,12 @@ NetworkPacket::NetworkPacket (const std::string& type, const Json::Value& body, 
     , m_id (id)
     , m_body (body)
 {
-    if (m_id == 0)
-        m_id = g_get_real_time () / 1000;
+    if (m_id == 0) m_id = g_get_real_time () / 1000;
 }
 
 NetworkPacket::NetworkPacket (const std::string& data)
 {
-    Json::CharReaderBuilder builder;
+    Json::CharReaderBuilder           builder;
     std::unique_ptr<Json::CharReader> reader (builder.newCharReader ());
 
     Json::Value val;
@@ -50,12 +49,9 @@ NetworkPacket::NetworkPacket (const std::string& data)
         throw MalformedPacketException ("Invalid JSON");
 
     // Object needs to have these fields
-    if (!val["type"].isString ())
-        throw MalformedPacketException ("Missing 'type' member");
-    if (!val["id"].isInt64 ())
-        throw MalformedPacketException ("Missing 'id' member");
-    if (!val["body"].isObject ())
-        throw MalformedPacketException ("Missing 'body' member");
+    if (!val["type"].isString ()) throw MalformedPacketException ("Missing 'type' member");
+    if (!val["id"].isInt64 ()) throw MalformedPacketException ("Missing 'id' member");
+    if (!val["body"].isObject ()) throw MalformedPacketException ("Missing 'body' member");
 
     m_type = val["type"].asString ();
     m_id = val["id"].asInt64 ();
@@ -65,16 +61,15 @@ NetworkPacket::NetworkPacket (const std::string& data)
     if (m_type == Constants::TYPE_ENCRYPTED) return;
 
     if (val["payloadSize"].isInt () && val["payloadTransferInfo"].isObject ()) {
-        int size = val["payloadSize"].asInt ();
+        int         size = val["payloadSize"].asInt ();
         Json::Value transfer_info = val["payloadTransferInfo"];
-        int port = 0;
+        int         port = 0;
         if (!transfer_info["port"].asInt ())
             g_warning ("No payload transfer info");
         else
             port = transfer_info["port"].asInt ();
-        
-        if (size != 0 && port != 0)
-            m_payload = std::make_shared<Payload> (size, port);
+
+        if (size != 0 && port != 0) m_payload = std::make_shared<Payload> (size, port);
     }
 }
 
@@ -88,7 +83,8 @@ NetworkPacket::create_pair (bool pair)
 }
 
 std::shared_ptr<NetworkPacket>
-NetworkPacket::create_identity (const std::string& name, const std::string& device_id, const std::list<std::string>& in_interfaces,
+NetworkPacket::create_identity (const std::string& name, const std::string& device_id,
+                                const std::list<std::string>& in_interfaces,
                                 const std::list<std::string>& out_interfaces, const std::string& device_type)
 {
     Json::Value body (Json::objectValue);
@@ -96,12 +92,10 @@ NetworkPacket::create_identity (const std::string& name, const std::string& devi
     body["deviceId"] = device_id;
     body["deviceType"] = device_type;
     Json::Value in_array (Json::arrayValue);
-    for (const auto& interface : in_interfaces)
-        in_array.append (interface);
+    for (const auto& interface : in_interfaces) in_array.append (interface);
     body["SupportedIncomingInterfaces"] = std::move (in_array);
     Json::Value out_array (Json::arrayValue);
-    for (const auto& interface : out_interfaces)
-        out_array.append (interface);
+    for (const auto& interface : out_interfaces) out_array.append (interface);
     body["SupportedOutgoingInterfaces"] = std::move (out_array);
     body["protocolVersion"] = PROTOCOL_VERSION;
 

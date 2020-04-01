@@ -38,19 +38,19 @@ class AbstractPacketHandler {
 
     /**
      * Get the packet type this class is handling
-     * 
+     *
      * @return The packet type as a string
      */
     std::string get_packet_type () const noexcept { return get_packet_type_virt (); }
     /**
      * Register a new device for this handler
-     * 
+     *
      * @param device The device
      */
     void register_device (const std::shared_ptr<Device>& device) noexcept { return register_device_virt (device); }
     /**
      * Unregister a device for this handler
-     * 
+     *
      * @param device The device
      */
     void unregister_device (const std::shared_ptr<Device>& device) noexcept { return unregister_device_virt (device); }
@@ -60,8 +60,8 @@ class AbstractPacketHandler {
 
   protected:
     virtual std::string get_packet_type_virt () const noexcept = 0;
-    virtual void register_device_virt (const std::shared_ptr<Device>& device) noexcept = 0;
-    virtual void unregister_device_virt (const std::shared_ptr<Device>& device) noexcept = 0;
+    virtual void        register_device_virt (const std::shared_ptr<Device>& device) noexcept = 0;
+    virtual void        unregister_device_virt (const std::shared_ptr<Device>& device) noexcept = 0;
 };
 
 } // namespace Conecto

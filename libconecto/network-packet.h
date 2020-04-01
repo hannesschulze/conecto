@@ -27,16 +27,16 @@
 namespace Conecto {
 
 namespace Constants {
-    static const std::string TYPE_IDENTITY = "kdeconnect.identity";
-    static const std::string TYPE_PAIR = "kdeconnect.pair";
-    static const std::string TYPE_ENCRYPTED = "kdeconnect.encrypted";
-}
+static const std::string TYPE_IDENTITY = "kdeconnect.identity";
+static const std::string TYPE_PAIR = "kdeconnect.pair";
+static const std::string TYPE_ENCRYPTED = "kdeconnect.encrypted";
+} // namespace Constants
 
 class NetworkPacket {
   public:
     /**
      * Create a new @p NetworkPacket with a specified type, body and id
-     * 
+     *
      * @param type The packet type as a string
      * @param body The JSON body
      * @param id A unique identifier
@@ -44,7 +44,7 @@ class NetworkPacket {
     NetworkPacket (const std::string& type, const Json::Value& body, const int64_t& id = 0) noexcept;
     /**
      * Create a new @p NetworkPacket from a stringified JSON value
-     * 
+     *
      * @param data The JSON data
      * @throw MalformedPacketException
      */
@@ -59,23 +59,27 @@ class NetworkPacket {
     static std::shared_ptr<NetworkPacket> create_identity (const std::string& name, const std::string& device_id,
                                                            const std::list<std::string>& in_interfaces,
                                                            const std::list<std::string>& out_interfaces,
-                                                           const std::string& device_type = "desktop");
+                                                           const std::string&            device_type = "desktop");
     ~NetworkPacket () {}
 
     /**
      * A wrapper structure for payload transfer information
      */
     struct Payload {
-        Payload (const uint64_t& size, uint port) : size (size), port (port) {}
+        Payload (const uint64_t& size, uint port)
+            : size (size)
+            , port (port)
+        {
+        }
         uint64_t size;
-        uint port;
+        uint     port;
     };
 
-    const std::string& get_type () const noexcept;
-    const int64_t& get_id () const noexcept;
-    const Json::Value& get_body () const noexcept;
+    const std::string&             get_type () const noexcept;
+    const int64_t&                 get_id () const noexcept;
+    const Json::Value&             get_body () const noexcept;
     std::shared_ptr<const Payload> get_payload () const noexcept;
-    void set_payload (const std::shared_ptr<Payload>& payload) noexcept;
+    void                           set_payload (const std::shared_ptr<Payload>& payload) noexcept;
 
     std::string serialize () const noexcept;
 
@@ -83,9 +87,9 @@ class NetworkPacket {
     NetworkPacket& operator= (const NetworkPacket&) = delete;
 
   private:
-    std::string m_type;
-    int64_t m_id;
-    Json::Value m_body;
+    std::string              m_type;
+    int64_t                  m_id;
+    Json::Value              m_body;
     std::shared_ptr<Payload> m_payload;
 };
 

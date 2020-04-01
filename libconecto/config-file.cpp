@@ -32,18 +32,16 @@ constexpr char CONFIG_FILE[] = "conecto.conf";
 
 ConfigFile::ConfigFile (const std::string& base_config_dir)
 {
-    auto dirs = get_search_dirs (base_config_dir);
+    auto        dirs = get_search_dirs (base_config_dir);
     std::string full_path;
 
-    for (const auto& dir : dirs)
-        g_debug ("Config search dir: %s", dir.c_str ());
-    
+    for (const auto& dir : dirs) g_debug ("Config search dir: %s", dir.c_str ());
+
     try {
         bool found = m_keyfile.load_from_dirs (CONFIG_FILE, dirs, full_path, Glib::KEY_FILE_KEEP_COMMENTS);
 
         m_path = full_path;
-        if (!found)
-            g_critical ("Configuration file %s not found", CONFIG_FILE);
+        if (!found) g_critical ("Configuration file %s not found", CONFIG_FILE);
         g_message ("Loaded configuration from %s", full_path.c_str ());
     } catch (Glib::KeyFileError& err) {
         g_critical ("Failed to parse configuration file: %s", err.what ().c_str ());
@@ -87,9 +85,8 @@ ConfigFile::get_device_allowed (const std::string& name, const std::string& type
                 continue;
             }
 
-            if (m_keyfile.get_string (dev, "name") == name &&
-                    m_keyfile.get_string (dev, "type") == type &&
-                    m_keyfile.get_boolean (dev, "allowed"))
+            if (m_keyfile.get_string (dev, "name") == name && m_keyfile.get_string (dev, "type") == type &&
+                m_keyfile.get_boolean (dev, "allowed"))
                 return true;
         }
     } catch (Glib::KeyFileError& err) {

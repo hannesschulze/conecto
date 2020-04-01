@@ -36,7 +36,7 @@ class Discovery {
 
     /**
      * Start listening for new devices
-     * 
+     *
      * @throw BindSocketException
      */
     void listen ();

@@ -33,8 +33,8 @@ class ConfigFile {
 
     const std::string& get_path () const noexcept;
     static std::string get_file_name () noexcept;
-    void dump_to_file (const std::string& path);
-    bool get_device_allowed (const std::string& name, const std::string& type);
+    void               dump_to_file (const std::string& path);
+    bool               get_device_allowed (const std::string& name, const std::string& type);
 
     static std::vector<std::string> get_search_dirs (const std::string& primary_dir) noexcept;
 

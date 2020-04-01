@@ -79,8 +79,7 @@ CommunicationChannel::send (const NetworkPacket& packet)
 
     g_assert (m_data_out);
 
-    if (!m_data_out->put_string (to_send))
-        g_warning ("Failed to send message");
+    if (!m_data_out->put_string (to_send)) g_warning ("Failed to send message");
 }
 
 void
@@ -120,7 +119,7 @@ CommunicationChannel::close ()
 }
 
 void
-CommunicationChannel::replace_streams (const Glib::RefPtr<Gio::InputStream>& input,
+CommunicationChannel::replace_streams (const Glib::RefPtr<Gio::InputStream>&  input,
                                        const Glib::RefPtr<Gio::OutputStream>& output)
 {
     if (m_data_out) {
@@ -180,8 +179,9 @@ void
 CommunicationChannel::handle_packet (const NetworkPacket& packet)
 {
     if (packet.get_type () == Constants::TYPE_ENCRYPTED)
-        g_warning ("Received packet with explicit encryption, this usually indicates a protocol version < 6 type packet, "
-                   "such packets are no longer supported, dropping..");
+        g_warning (
+                "Received packet with explicit encryption, this usually indicates a protocol version < 6 type packet, "
+                "such packets are no longer supported, dropping..");
     else
         // Signal that we got a packet
         m_signal_packet_received.emit (packet);
@@ -203,13 +203,13 @@ CommunicationChannel::fixup_socket ()
 }
 
 void
-CommunicationChannel::open (std::function<void(bool)> cb)
+CommunicationChannel::open (std::function<void (bool)> cb)
 {
     g_assert (m_socket_addr);
     g_debug ("Connecting to %s:%u", m_socket_addr->get_address ()->to_string ().c_str (), m_socket_addr->get_port ());
 
     auto client = Gio::SocketClient::create ();
-    client->connect_async (m_socket_addr, [this, cb, client](Glib::RefPtr<Gio::AsyncResult>& res) {
+    client->connect_async (m_socket_addr, [this, cb, client] (Glib::RefPtr<Gio::AsyncResult>& res) {
         Glib::RefPtr<Gio::SocketConnection> conn;
         try {
             conn = client->connect_finish (res);
@@ -232,7 +232,7 @@ CommunicationChannel::open (std::function<void(bool)> cb)
         // we pass Unix+Stream with which can skip closing the socket
         replace_streams (Gio::UnixInputStream::create (m_socket->get_fd (), false),
                          Gio::UnixOutputStream::create (m_socket->get_fd (), false));
-        
+
         // Start monitoring socket events
         monitor_events ();
 
@@ -241,7 +241,7 @@ CommunicationChannel::open (std::function<void(bool)> cb)
 }
 
 void
-CommunicationChannel::secure (const Glib::RefPtr<Gio::TlsCertificate>& expected_peer, std::function<void(bool)> cb)
+CommunicationChannel::secure (const Glib::RefPtr<Gio::TlsCertificate>& expected_peer, std::function<void (bool)> cb)
 {
     g_assert (m_socket_conn);
 
@@ -252,27 +252,29 @@ CommunicationChannel::secure (const Glib::RefPtr<Gio::TlsCertificate>& expected_
 
     // Make TLS connection
     g_debug ("Creating TLS server connection");
-    auto tls_server = Glib::RefPtr<Gio::TlsServerConnection>::cast_dynamic (Gio::TlsServerConnection::create (m_socket_conn, cert));
+    auto tls_server = Glib::RefPtr<Gio::TlsServerConnection>::cast_dynamic (
+            Gio::TlsServerConnection::create (m_socket_conn, cert));
     tls_server->property_authentication_mode ().set_value (Gio::TLS_AUTHENTICATION_REQUESTED);
-    tls_server->signal_accept_certificate ().connect ([this, expected_peer](const Glib::RefPtr<const Gio::TlsCertificate>& peer_cert,
-                                                                            Gio::TlsCertificateFlags errors) {
-        g_info ("Accept certificate, flags: 0x%x", errors);
-        g_info ("Certificate:\n%s\n---", peer_cert->property_certificate_pem ().get_value ().c_str ());
-        if (expected_peer) {
-            if (expected_peer->is_same (peer_cert)) {
+    tls_server->signal_accept_certificate ().connect (
+            [this, expected_peer] (const Glib::RefPtr<const Gio::TlsCertificate>& peer_cert,
+                                   Gio::TlsCertificateFlags                       errors) {
+                g_info ("Accept certificate, flags: 0x%x", errors);
+                g_info ("Certificate:\n%s\n---", peer_cert->property_certificate_pem ().get_value ().c_str ());
+                if (expected_peer) {
+                    if (expected_peer->is_same (peer_cert)) {
+                        return true;
+                    } else {
+                        g_warning ("Rejecting handshake, peer certificate mismatch, got:\n%s\n---",
+                                   peer_cert->property_certificate_pem ().get_value ().c_str ());
+                        return false;
+                    }
+                }
                 return true;
-            } else {
-                g_warning ("Rejecting handshake, peer certificate mismatch, got:\n%s\n---",
-                           peer_cert->property_certificate_pem ().get_value ().c_str ());
-                return false;
-            }
-        }
-        return true;
-    });
+            });
 
     // Wrap with TLS
     g_info ("Attempt TLS handshake");
-    tls_server->handshake_async ([this, cb, tls_server](Glib::RefPtr<Gio::AsyncResult>& res) {
+    tls_server->handshake_async ([this, cb, tls_server] (Glib::RefPtr<Gio::AsyncResult>& res) {
         try {
             bool success = tls_server->handshake_finish (res);
             if (success) {

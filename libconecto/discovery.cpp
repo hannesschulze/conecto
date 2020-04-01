@@ -39,15 +39,15 @@ Discovery::Discovery ()
 
 Discovery::~Discovery ()
 {
-    if (m_socket)
-        m_socket->close ();
+    if (m_socket) m_socket->close ();
 }
 
 void
 Discovery::listen ()
 {
     m_socket = Gio::Socket::create (Gio::SOCKET_FAMILY_IPV4, Gio::SOCKET_TYPE_DATAGRAM, Gio::SOCKET_PROTOCOL_UDP);
-    auto socket_addr = Gio::InetSocketAddress::create (Gio::InetAddress::create_any (Gio::SOCKET_FAMILY_IPV4), SOCKET_PORT);
+    auto socket_addr =
+            Gio::InetSocketAddress::create (Gio::InetAddress::create_any (Gio::SOCKET_FAMILY_IPV4), SOCKET_PORT);
 
     try {
         m_socket->bind (socket_addr, false);
@@ -65,8 +65,8 @@ Discovery::listen ()
 bool
 Discovery::on_packet (Glib::IOCondition condition)
 {
-    char buffer[4096];
-    Glib::RefPtr<Gio::SocketAddress> socket_addr;
+    char                                 buffer[4096];
+    Glib::RefPtr<Gio::SocketAddress>     socket_addr;
     Glib::RefPtr<Gio::InetSocketAddress> inet_socket_addr;
 
     try {
@@ -92,7 +92,8 @@ Discovery::parse_packet (std::string&& data, const Glib::RefPtr<Gio::InetAddress
 
         // Expecting an identity packet
         if (packet.get_type () != Constants::TYPE_IDENTITY) {
-            g_warning ("Unexpected packet type %s from device %s", packet.get_type ().c_str (), host->to_string ().c_str ());
+            g_warning ("Unexpected packet type %s from device %s", packet.get_type ().c_str (),
+                       host->to_string ().c_str ());
             return;
         }
 

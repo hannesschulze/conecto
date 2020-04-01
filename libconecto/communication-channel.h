@@ -51,12 +51,12 @@ class CommunicationChannel {
     bool receive ();
     /**
      * Send a packet
-     * 
+     *
      * @param packet instance of Packet
      */
     void send (const NetworkPacket& packet);
     void close ();
-    void open (std::function<void(bool /* connected */)> cb);
+    void open (std::function<void (bool /* connected */)> cb);
     /**
      * Switch channel to TLS mode
      *
@@ -69,12 +69,12 @@ class CommunicationChannel {
      *
      * @param expected_peer the peer certificate we are expecting to see
      */
-    void secure (const Glib::RefPtr<Gio::TlsCertificate>& expected_peer, std::function<void(bool /* success */)> cb);
+    void secure (const Glib::RefPtr<Gio::TlsCertificate>& expected_peer, std::function<void (bool /* success */)> cb);
     Glib::RefPtr<Gio::TlsCertificate> get_peer_certificate () { return m_peer_certificate; }
 
     using type_signal_disconnected = sigc::signal<void>;
     using type_signal_packet_received = sigc::signal<void, const NetworkPacket& /* packet */>;
-    type_signal_disconnected signal_disconnected () { return m_signal_disconnected; }
+    type_signal_disconnected    signal_disconnected () { return m_signal_disconnected; }
     type_signal_packet_received signal_packet_received () { return m_signal_packet_received; }
 
     CommunicationChannel (const CommunicationChannel&) = delete;
@@ -88,17 +88,17 @@ class CommunicationChannel {
     void fixup_socket ();
     bool on_io_ready (Glib::IOCondition cond);
 
-    type_signal_disconnected m_signal_disconnected;
+    type_signal_disconnected    m_signal_disconnected;
     type_signal_packet_received m_signal_packet_received;
 
     Glib::RefPtr<Gio::InetSocketAddress> m_socket_addr;
-    Glib::RefPtr<Gio::SocketConnection> m_socket_conn;
-    Glib::RefPtr<Gio::TlsConnection> m_tls_conn;
-    Glib::RefPtr<Gio::DataOutputStream> m_data_out;
-    Glib::RefPtr<Gio::DataInputStream> m_data_in;
-    Glib::RefPtr<Gio::Socket> m_socket;
-    Glib::RefPtr<Gio::TlsCertificate> m_peer_certificate;
-    Glib::RefPtr<Gio::SocketSource> m_source;
+    Glib::RefPtr<Gio::SocketConnection>  m_socket_conn;
+    Glib::RefPtr<Gio::TlsConnection>     m_tls_conn;
+    Glib::RefPtr<Gio::DataOutputStream>  m_data_out;
+    Glib::RefPtr<Gio::DataInputStream>   m_data_in;
+    Glib::RefPtr<Gio::Socket>            m_socket;
+    Glib::RefPtr<Gio::TlsCertificate>    m_peer_certificate;
+    Glib::RefPtr<Gio::SocketSource>      m_source;
 };
 
 } // namespace Conecto

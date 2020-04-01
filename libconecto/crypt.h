@@ -27,7 +27,7 @@
 
 namespace Conecto {
 
-typedef struct gnutls_x509_crt_int GnuTLSX509Certificate;
+typedef struct gnutls_x509_crt_int     GnuTLSX509Certificate;
 typedef struct gnutls_x509_privkey_int GnuTLSX509PrivateKey;
 
 /**
@@ -38,7 +38,8 @@ class Crypt {
     /**
      * @throw GnuTLSInitializationError
      */
-    static std::shared_ptr<GnuTLSX509Certificate> generate_self_signed_cert (GnuTLSX509PrivateKey& key, const std::string& common_name);
+    static std::shared_ptr<GnuTLSX509Certificate> generate_self_signed_cert (GnuTLSX509PrivateKey& key,
+                                                                             const std::string&    common_name);
     /**
      * @throw GnuTLSInitializationError, PEMWriteError
      */
@@ -55,7 +56,10 @@ class Crypt {
   private:
     struct DNSetting {
         DNSetting (const std::string& oid, const std::string& name)
-            : oid (oid), name (name) {}
+            : oid (oid)
+            , name (name)
+        {
+        }
         std::string oid, name;
     };
 
@@ -63,8 +67,8 @@ class Crypt {
      * @throw GnuTLSInitializationError
      */
     static std::shared_ptr<GnuTLSX509PrivateKey> generate_private_key ();
-    static std::string export_certificate (GnuTLSX509Certificate& cert);
-    static std::string export_private_key (GnuTLSX509PrivateKey& key);
+    static std::string                           export_certificate (GnuTLSX509Certificate& cert);
+    static std::string                           export_private_key (GnuTLSX509PrivateKey& key);
     /**
      * @throw PEMWriteError
      */

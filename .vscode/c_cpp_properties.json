@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/libconecto/plugins",
+                "/usr/include/sigc++-2.0",
+                "/usr/lib64/sigc++-2.0/include",
+                "/usr/include/giomm-2.4",
+                "/usr/lib64/giomm-2.4/include",
+                "/usr/include/glib-2.0",
+                "/usr/lib64/glib-2.0/include",
+                "/usr/include/libmount",
+                "/usr/include/blkid",
+                "/usr/include/glibmm-2.4",
+                "/usr/lib64/glibmm-2.4/include"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/lib64/ccache/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}

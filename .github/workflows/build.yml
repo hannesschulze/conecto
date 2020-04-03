@@ -1,0 +1,25 @@
+name: C/C++ CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ubuntu:eoan
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Dependencies
+      run: |
+        apt-get update &&
+        apt-get install -y build-essential meson ninja-build libjsoncpp-dev libsigc++-2.0-dev ca-certificates libgtkmm-3.0-dev
+    - name: Configure
+      run: meson build --prefix=/usr
+    - name: Build
+      run: ninja -C build
+    - name: Install
+      run: ninja -C build install
+    - name: Run tests
+      run: ninja -C build test

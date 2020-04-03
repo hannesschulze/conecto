@@ -141,7 +141,7 @@ NetworkPacket::serialize () const noexcept
     res["id"] = m_id;
     res["body"] = m_body;
     if (m_payload) {
-        res["payloadSize"] = m_payload->size;
+        res["payloadSize"] = static_cast<Json::UInt64> (m_payload->size);
         Json::Value transfer_info (Json::objectValue);
         transfer_info["port"] = m_payload->port;
         res["payloadTransferInfo"] = std::move (transfer_info);

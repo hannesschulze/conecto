@@ -49,7 +49,7 @@ Backend::Backend ()
     auto cert_file = Gio::File::create_for_path (Glib::build_filename (get_storage_dir (), "certificate.pem"));
 
     if (!key_file->query_exists () || !cert_file->query_exists ()) {
-        std::string host_name = Glib::get_host_name ();
+        std::string host_name = g_get_host_name ();
         std::string user = Glib::get_user_name ();
         Crypt::generate_key_cert (key_file->get_path (), cert_file->get_path (), user + "@" + host_name);
     }

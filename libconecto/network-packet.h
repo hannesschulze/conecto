@@ -23,6 +23,7 @@
 #include <string>
 #include <json/json.h>
 #include <list>
+#include <memory>
 
 namespace Conecto {
 

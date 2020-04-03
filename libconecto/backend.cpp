@@ -200,7 +200,7 @@ Backend::activate_device (const std::shared_ptr<DeviceEntry>& device)
                 device->device->deactivate ();
             }
         });
-        device->disconnected_conn = device->device->signal_disconnected ().connect ([this, device] () {
+        device->disconnected_conn = device->device->signal_disconnected ().connect ([device] () {
             g_debug ("Device %s got disconnected", device->device->to_string ().c_str ());
 
             device->paired_conn.disconnect ();

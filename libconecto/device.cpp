@@ -74,6 +74,7 @@ Device::create_from_packet (const NetworkPacket& packet, const Glib::RefPtr<Gio:
             res->m_outgoing_capabilities.push_back (body["outgoingCapabilities"][i].asString ());
 
     g_debug ("New device: %s", res->to_string ().c_str ());
+    return res;
 }
 
 std::shared_ptr<Device>
@@ -112,6 +113,8 @@ Device::create_from_cache (Glib::KeyFile& cache, const std::string& name)
         g_debug ("Failed to parse last known IP address (%s) for device %s", last_ip_str.c_str (), name.c_str ());
         throw InvalidIpAddressException (last_ip_str);
     }
+
+    return res;
 }
 
 void

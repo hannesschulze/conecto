@@ -259,8 +259,8 @@ CommunicationChannel::secure (const Glib::RefPtr<Gio::TlsCertificate>& expected_
     auto tls_server = std::make_shared<Gio::TlsServerConnection> (G_TLS_SERVER_CONNECTION (stream));
     tls_server->property_authentication_mode ().set_value (Gio::TLS_AUTHENTICATION_REQUESTED);
     tls_server->signal_accept_certificate ().connect (
-            [this, expected_peer] (const Glib::RefPtr<const Gio::TlsCertificate>& peer_cert,
-                                   Gio::TlsCertificateFlags                       errors) {
+            [expected_peer] (const Glib::RefPtr<const Gio::TlsCertificate>& peer_cert,
+                             Gio::TlsCertificateFlags                       errors) {
                 g_info ("Accept certificate, flags: 0x%x", errors);
                 g_info ("Certificate:\n%s\n---", peer_cert->property_certificate_pem ().get_value ().c_str ());
                 if (expected_peer) {

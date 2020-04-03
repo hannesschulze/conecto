@@ -31,23 +31,20 @@ on_activate (Glib::RefPtr<Gio::Application> app)
     auto& backend = Conecto::Backend::get_instance ();
 
     auto ping = std::make_shared<Conecto::Plugins::Ping> ();
-    ping->signal_ping ().connect ([](const std::shared_ptr<Conecto::Device>& dev) {
+    ping->signal_ping ().connect ([] (const std::shared_ptr<Conecto::Device>& dev) {
         std::cerr << "Received a ping from " << dev->to_string () << std::endl;
     });
     backend.register_plugin (ping);
 
-    backend.signal_found_new_device ().connect ([](const std::shared_ptr<Conecto::Device>& dev) {
+    backend.signal_found_new_device ().connect ([] (const std::shared_ptr<Conecto::Device>& dev) {
         std::cerr << "Found device: " << dev->to_string () << std::endl;
 
-        dev->signal_connected ().connect ([dev]() {
-            std::cerr << "Connected: " << dev->to_string () << std::endl;
-        });
+        dev->signal_connected ().connect ([dev] () { std::cerr << "Connected: " << dev->to_string () << std::endl; });
 
-        dev->signal_disconnected ().connect ([dev]() {
-            std::cerr << "Disconnected: " << dev->to_string () << std::endl;
-        });
+        dev->signal_disconnected ().connect (
+                [dev] () { std::cerr << "Disconnected: " << dev->to_string () << std::endl; });
 
-        dev->signal_paired ().connect ([dev](bool success) {
+        dev->signal_paired ().connect ([dev] (bool success) {
             std::cerr << "Paired (" << std::boolalpha << success << "): " << dev->to_string () << std::endl;
         });
     });

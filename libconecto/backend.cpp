@@ -61,8 +61,7 @@ Backend::Backend ()
         g_error_free (err);
         throw InvalidCertificateException ("Failed to load certificate or key");
     }
-    if (!cert)
-        throw InvalidCertificateException ("Failed to load certificate or key");
+    if (!cert) throw InvalidCertificateException ("Failed to load certificate or key");
     m_certificate = Glib::wrap (cert);
 
     // Set up config

@@ -41,7 +41,8 @@ class Device : public std::enable_shared_from_this<Device> {
      * @param host Source host that the packet came from
      * @throw MalformedPacketException
      */
-    static std::shared_ptr<Device> create_from_packet (const NetworkPacket& packet, const Glib::RefPtr<Gio::InetAddress>& host);
+    static std::shared_ptr<Device> create_from_packet (const NetworkPacket&                  packet,
+                                                       const Glib::RefPtr<Gio::InetAddress>& host);
     /**
      * Constructs a new Device wrapper based on data read from device cache file.
      *

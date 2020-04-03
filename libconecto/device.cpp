@@ -93,8 +93,9 @@ Device::create_from_cache (Glib::KeyFile& cache, const std::string& name)
     try {
         std::string cached_certificate = cache.get_string (name, "certificate");
         if (cached_certificate != std::string ()) {
-            GError* err = nullptr;
-            GTlsCertificate* cert = g_tls_certificate_new_from_pem (cached_certificate.c_str (), cached_certificate.size (), &err);
+            GError*          err = nullptr;
+            GTlsCertificate* cert =
+                    g_tls_certificate_new_from_pem (cached_certificate.c_str (), cached_certificate.size (), &err);
             g_assert (err == nullptr);
             res->update_certificate (Glib::wrap (cert));
         }
@@ -257,9 +258,7 @@ Device::greet (std::function<void ()> cb) noexcept
         g_info ("Secure: %s", success ? "true" : "false");
         if (success) {
             update_certificate (m_channel->get_peer_certificate ());
-            Glib::signal_timeout ().connect_seconds_once ([this]() {
-                maybe_pair ();
-            }, 1);
+            Glib::signal_timeout ().connect_seconds_once ([this] () { maybe_pair (); }, 1);
         } else {
             g_warning ("Failed to enable secure channel");
             close_and_cleanup ();

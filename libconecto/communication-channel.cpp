@@ -254,7 +254,7 @@ CommunicationChannel::secure (const Glib::RefPtr<Gio::TlsCertificate>& expected_
     // Make TLS connection
     g_debug ("Creating TLS server connection");
     GError* err = nullptr;
-    auto stream = g_tls_server_connection_new (G_IO_STREAM (m_socket_conn->gobj ()), cert->gobj (), &err);
+    auto    stream = g_tls_server_connection_new (G_IO_STREAM (m_socket_conn->gobj ()), cert->gobj (), &err);
     g_assert (err == nullptr);
     auto tls_server = std::make_shared<Gio::TlsServerConnection> (G_TLS_SERVER_CONNECTION (stream));
     tls_server->property_authentication_mode ().set_value (Gio::TLS_AUTHENTICATION_REQUESTED);

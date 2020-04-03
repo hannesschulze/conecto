@@ -138,7 +138,7 @@ NetworkPacket::serialize () const noexcept
     Json::Value res (Json::objectValue);
 
     res["type"] = m_type;
-    res["id"] = m_id;
+    res["id"] = static_cast<Json::UInt64> (m_id);
     res["body"] = m_body;
     if (m_payload) {
         res["payloadSize"] = static_cast<Json::UInt64> (m_payload->size);

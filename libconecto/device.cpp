@@ -249,7 +249,7 @@ Device::to_unique_string () const noexcept
 void
 Device::greet (std::function<void ()> cb) noexcept
 {
-    std::string host_name = Glib::get_host_name ();
+    std::string host_name = g_get_host_name ();
     std::string user = Glib::get_user_name ();
     auto        packet = NetworkPacket::create_identity (user + "@" + host_name, host_name,
                                                   Backend::get_instance ().get_handler_interfaces (),

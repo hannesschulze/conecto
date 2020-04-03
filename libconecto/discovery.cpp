@@ -97,7 +97,7 @@ Discovery::parse_packet (std::string&& data, const Glib::RefPtr<Gio::InetAddress
             return;
         }
 
-        auto device = std::make_shared<Device> (packet, host);
+        auto device = Device::create_from_packet (packet, host);
         m_signal_device_found.emit (device);
     } catch (MalformedPacketException& err) {
         g_warning ("Malformed packet: %s", err.what ());

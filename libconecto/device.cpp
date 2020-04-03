@@ -49,61 +49,65 @@ Device::Device ()
 {
 }
 
-Device::Device (const NetworkPacket& packet, const Glib::RefPtr<Gio::InetAddress>& host)
-    : Device ()
+std::shared_ptr<Device>
+Device::create_from_packet (const NetworkPacket& packet, const Glib::RefPtr<Gio::InetAddress>& host)
 {
+    std::shared_ptr<Device> res (new Device);
+
     const Json::Value& body = packet.get_body ();
     if (!body["deviceName"].isString () || !body["deviceId"].isString () || !body["deviceType"].isString () ||
         !body["protocolVersion"].isInt () || !body["tcpPort"].isInt () || !body["incomingCapabilities"].isArray () ||
         !body["outgoingCapabilities"].isArray ())
         throw MalformedPacketException ("Missing member(s)");
 
-    m_host = host;
-    m_device_name = body["deviceName"].asString ();
-    m_device_id = body["deviceId"].asString ();
-    m_device_type = body["deviceType"].asString ();
-    m_protocol_version = body["protocolVersion"].asInt ();
-    m_tcp_port = body["tcpPort"].asInt ();
+    res->m_host = host;
+    res->m_device_name = body["deviceName"].asString ();
+    res->m_device_id = body["deviceId"].asString ();
+    res->m_device_type = body["deviceType"].asString ();
+    res->m_protocol_version = body["protocolVersion"].asInt ();
+    res->m_tcp_port = body["tcpPort"].asInt ();
     for (Json::Value::ArrayIndex i = 0; i < body["incomingCapabilities"].size (); i++)
         if (body["incomingCapabilities"][i].isString ())
-            m_incoming_capabilities.push_back (body["incomingCapabilities"][i].asString ());
+            res->m_incoming_capabilities.push_back (body["incomingCapabilities"][i].asString ());
     for (Json::Value::ArrayIndex i = 0; i < body["outgoingCapabilities"].size (); i++)
         if (body["outgoingCapabilities"][i].isString ())
-            m_outgoing_capabilities.push_back (body["outgoingCapabilities"][i].asString ());
+            res->m_outgoing_capabilities.push_back (body["outgoingCapabilities"][i].asString ());
 
-    g_debug ("New device: %s", to_string ().c_str ());
+    g_debug ("New device: %s", res->to_string ().c_str ());
 }
 
-Device::Device (Glib::KeyFile& cache, const std::string& name)
-    : Device ()
+std::shared_ptr<Device>
+Device::create_from_cache (Glib::KeyFile& cache, const std::string& name)
 {
-    m_device_id = cache.get_string (name, "deviceId");
-    m_device_name = cache.get_string (name, "deviceName");
-    m_device_type = cache.get_string (name, "deviceType");
-    m_protocol_version = cache.get_integer (name, "protocolVersion");
-    m_tcp_port = (uint) cache.get_integer (name, "tcpPort");
+    std::shared_ptr<Device> res (new Device);
+
+    res->m_device_id = cache.get_string (name, "deviceId");
+    res->m_device_name = cache.get_string (name, "deviceName");
+    res->m_device_type = cache.get_string (name, "deviceType");
+    res->m_protocol_version = cache.get_integer (name, "protocolVersion");
+    res->m_tcp_port = (uint) cache.get_integer (name, "tcpPort");
     std::string last_ip_str = cache.get_string (name, "lastIPAddress");
-    g_debug ("Last known address: %s:%u", last_ip_str.c_str (), m_tcp_port);
-    m_allowed = cache.get_boolean (name, "allowed");
-    m_is_paired = cache.get_boolean (name, "paired");
+    g_debug ("Last known address: %s:%u", last_ip_str.c_str (), res->m_tcp_port);
+    res->m_allowed = cache.get_boolean (name, "allowed");
+    res->m_is_paired = cache.get_boolean (name, "paired");
     try {
         std::string cached_certificate = cache.get_string (name, "certificate");
         if (cached_certificate != std::string ()) {
             GError* err = nullptr;
             GTlsCertificate* cert = g_tls_certificate_new_from_pem (cached_certificate.c_str (), cached_certificate.size (), &err);
             g_assert (err == nullptr);
-            update_certificate (Glib::wrap (cert));
+            res->update_certificate (Glib::wrap (cert));
         }
     } catch (Glib::KeyFileError& err) {
         if (err.domain () == G_KEY_FILE_ERROR_KEY_NOT_FOUND)
-            g_warning ("Device %s using older cache format", m_device_id.c_str ());
+            g_warning ("Device %s using older cache format", res->m_device_id.c_str ());
         else
             throw err;
     }
-    m_outgoing_capabilities = cache.get_string_list (name, "outgoing_capabilities");
-    m_incoming_capabilities = cache.get_string_list (name, "incoming_capabilities");
-    m_host = Gio::InetAddress::create (last_ip_str);
-    if (!m_host) {
+    res->m_outgoing_capabilities = cache.get_string_list (name, "outgoing_capabilities");
+    res->m_incoming_capabilities = cache.get_string_list (name, "incoming_capabilities");
+    res->m_host = Gio::InetAddress::create (last_ip_str);
+    if (!res->m_host) {
         g_debug ("Failed to parse last known IP address (%s) for device %s", last_ip_str.c_str (), name.c_str ());
         throw InvalidIpAddressException (last_ip_str);
     }

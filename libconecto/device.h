@@ -35,17 +35,13 @@ namespace Conecto {
 class Device : public std::enable_shared_from_this<Device> {
   public:
     /**
-     * Default constructor
-     */
-    Device ();
-    /**
      * Constructs a new Device wrapper based on an identity packet
      *
      * @param packet An identity packet
      * @param host Source host that the packet came from
      * @throw MalformedPacketException
      */
-    Device (const NetworkPacket& packet, const Glib::RefPtr<Gio::InetAddress>& host);
+    static std::shared_ptr<Device> create_from_packet (const NetworkPacket& packet, const Glib::RefPtr<Gio::InetAddress>& host);
     /**
      * Constructs a new Device wrapper based on data read from device cache file.
      *
@@ -53,7 +49,7 @@ class Device : public std::enable_shared_from_this<Device> {
      * @param name device name
      * @throw Glib::KeyFileError, InvalidIPAddressException
      */
-    Device (Glib::KeyFile& cache, const std::string& name);
+    static std::shared_ptr<Device> create_from_cache (Glib::KeyFile& cache, const std::string& name);
     ~Device () {}
 
     /**
@@ -213,6 +209,11 @@ class Device : public std::enable_shared_from_this<Device> {
     Device& operator= (const Device&) = delete;
 
   private:
+    /**
+     * Default constructor
+     */
+    Device ();
+
     void greet (std::function<void ()> cb) noexcept;
     bool on_pair_timeout ();
     void on_packet_received (const NetworkPacket& packet);

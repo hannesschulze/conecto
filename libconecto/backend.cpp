@@ -259,7 +259,7 @@ Backend::load_from_cache () noexcept
         std::vector<std::string> groups = keyfile.get_groups ();
         for (const auto& group : groups) {
             try {
-                on_new_device (std::make_shared<Device> (keyfile, group));
+                on_new_device (Device::create_from_cache (keyfile, group));
             } catch (...) {
                 // ignore
             }

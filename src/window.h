@@ -23,6 +23,7 @@
 #include <gtkmm.h>
 #include <memory>
 #include "models/connected-devices.h"
+#include "models/unavailable-devices.h"
 #include "views/devices-list.h"
 
 namespace App {
@@ -43,14 +44,16 @@ class Window : public Gtk::ApplicationWindow {
      * 
      * @param connected_devices The connected-devices model
      */
-    static std::shared_ptr<Window> create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices);
+    static std::shared_ptr<Window> create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+                                           const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices);
     ~Window () {}
 
     Window (const Window&) = delete;
     Window& operator= (const Window&) = delete;
 
   protected:
-    Window (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices);
+    Window (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+            const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices);
 
     // Called when the window should be closed, saves the window's position and size
     bool on_delete_event (GdkEventAny* event) override;

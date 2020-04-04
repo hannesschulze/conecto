@@ -22,6 +22,7 @@
 
 #include <gtkmm.h>
 #include "../models/connected-devices.h"
+#include "../models/unavailable-devices.h"
 
 namespace App {
 namespace Views {
@@ -31,16 +32,17 @@ namespace Views {
  * 
  * A list shown in the main window, listing all online, offline and available devices
  * 
- * Connected to the following models: @p App::Models::ConnectedDevices
+ * Connected to the following models: @p App::Models::ConnectedDevices, @p App::Models::UnavailableDevices
  */
-class DevicesList : public Gtk::TreeView {
+class DevicesList : public Gtk::Box {
   public:
     /**
      * @brief Create a list of devices, visualizing the specified models
      * 
      * @param connected_devices The connected-devices model
      */
-    DevicesList (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices);
+    DevicesList (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+                 const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices);
     ~DevicesList () {}
 
     DevicesList (const DevicesList&) = delete;
@@ -48,6 +50,10 @@ class DevicesList : public Gtk::TreeView {
 
   private:
     Glib::RefPtr<Models::ConnectedDevices> m_connected_devices;
+    Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
+
+    Gtk::TreeView m_connected_view;
+    Gtk::TreeView m_unavailable_view;
 };
 
 } // namespace Views

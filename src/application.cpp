@@ -21,12 +21,14 @@
 #include "application.h"
 #include <conecto.h>
 #include "models/connected-devices.h"
+#include "models/unavailable-devices.h"
 
 using namespace App;
 
 Application::Application ()
     : Gtk::Application (Conecto::Config::APP_ID)
-    , m_devices (Models::ConnectedDevices::create ())
+    , m_connected_devices (Models::ConnectedDevices::create ())
+    , m_unavailable_devices (Models::UnavailableDevices::create ())
 {
     Conecto::Backend::get_instance ().load_from_cache ();
     Conecto::Backend::get_instance ().listen ();
@@ -45,7 +47,7 @@ Application::on_activate ()
     Gtk::Window* window = get_active_window ();
 
     if (!window) {
-        m_window = Window::create (m_devices);
+        m_window = Window::create (m_connected_devices, m_unavailable_devices);
         add_window (*m_window);
         window = m_window.get ();
     }

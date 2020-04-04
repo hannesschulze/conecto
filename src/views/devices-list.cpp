@@ -23,16 +23,27 @@
 using namespace App::Views;
 using namespace App::Models;
 
-DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_devices)
-    : Gtk::TreeView (connected_devices)
+DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_devices,
+                          const Glib::RefPtr<UnavailableDevices>& unavailable_devices)
+    : Gtk::Box (Gtk::ORIENTATION_VERTICAL)
     , m_connected_devices (connected_devices)
+    , m_unavailable_devices (unavailable_devices)
+    , m_connected_view (connected_devices)
+    , m_unavailable_view (unavailable_devices)
 {
-    append_column ("Name", m_connected_devices->column_name);
-    append_column ("ID", m_connected_devices->column_id);
-    append_column ("Type", m_connected_devices->column_type);
-    append_column ("Battery", m_connected_devices->column_battery);
-    append_column ("Charging", m_connected_devices->column_charging);
-    append_column ("Starred", m_connected_devices->column_starred);
-    append_column ("Host", m_connected_devices->column_host_addr);
-    append_column ("Port", m_connected_devices->column_host_port);
+    m_connected_view.append_column ("Name", m_connected_devices->column_name);
+    m_connected_view.append_column ("ID", m_connected_devices->column_id);
+    m_connected_view.append_column ("Type", m_connected_devices->column_type);
+    m_connected_view.append_column ("Battery", m_connected_devices->column_battery);
+    m_connected_view.append_column ("Charging", m_connected_devices->column_charging);
+    m_connected_view.append_column ("Starred", m_connected_devices->column_starred);
+    m_connected_view.append_column ("Host", m_connected_devices->column_host_addr);
+    m_connected_view.append_column ("Port", m_connected_devices->column_host_port);
+    pack_start (m_connected_view, true, true);
+
+    m_unavailable_view.append_column ("Name", m_unavailable_devices->column_name);
+    m_unavailable_view.append_column ("ID", m_unavailable_devices->column_id);
+    m_unavailable_view.append_column ("Type", m_unavailable_devices->column_type);
+    m_unavailable_view.append_column ("Starred", m_unavailable_devices->column_starred);
+    pack_start (m_unavailable_view, true, true);
 }

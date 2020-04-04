@@ -106,12 +106,23 @@ class ConfigFile {
      */
     static std::vector<std::string> get_search_dirs (const std::string& primary_dir) noexcept;
 
+    /**
+     * @param device The device updated in the configuration
+     */
+    using type_signal_device_changed = sigc::signal<void, const std::shared_ptr<Device>& /* device */>;
+    /**
+     * Called when a new device configuration has been changed
+     */
+    type_signal_device_changed signal_device_changed () { return m_signal_device_changed; }
+
     ConfigFile (const ConfigFile&) = delete;
     ConfigFile& operator= (const ConfigFile&) = delete;
 
   private:
     Glib::KeyFile m_keyfile;
     std::string   m_path;
+
+    type_signal_device_changed m_signal_device_changed;
 };
 
 } // namespace Conecto

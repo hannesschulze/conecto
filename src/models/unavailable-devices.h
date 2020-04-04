@@ -1,4 +1,4 @@
-/* connected-devices.h
+/* unavailable-devices.h
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -27,15 +27,15 @@ namespace App {
 namespace Models {
 
 /**
- * @brief A model containing a list of paired, online devices
+ * @brief A model containing a list of paired, but offline devices
  */
-class ConnectedDevices : public Gtk::ListStore {
+class UnavailableDevices : public Gtk::ListStore {
   public:
-    static Glib::RefPtr<ConnectedDevices> create ();
+    static Glib::RefPtr<UnavailableDevices> create ();
     /**
-     * Create a new ConnectedDevices-model using data from the @p Conecto::Backend
+     * Create a new UnavailableDevices-model using data from the @p Conecto::Backend
      */
-    ~ConnectedDevices () {
+    ~UnavailableDevices () {
         for (auto& conn : m_connections)
             conn.disconnect ();
     }
@@ -46,16 +46,8 @@ class ConnectedDevices : public Gtk::ListStore {
     Gtk::TreeModelColumn<Glib::ustring> column_id;
     /** @brief The device's type */
     Gtk::TreeModelColumn<Glib::ustring> column_type;
-    /** @brief The device's battery level [0..100] */
-    Gtk::TreeModelColumn<int> column_battery;
-    /** @brief true if the device's battery is currently charging */
-    Gtk::TreeModelColumn<bool> column_charging;
     /** @brief true if the device is starred */
     Gtk::TreeModelColumn<bool> column_starred;
-    /** @brief The host's address */
-    Gtk::TreeModelColumn<Glib::ustring> column_host_addr;
-    /** @brief The host's port */
-    Gtk::TreeModelColumn<uint> column_host_port;
 
     /**
      * @brief Find a device in the model
@@ -64,7 +56,7 @@ class ConnectedDevices : public Gtk::ListStore {
      */
     Gtk::TreeIter find_device (const std::shared_ptr<Conecto::Device>& device) const;
     /**
-     * @brief Get the connected device for a tree iterator
+     * @brief Get the device for a tree iterator
      * 
      * If the iterator is invalid, this will return an empty shared_ptr
      */
@@ -85,11 +77,11 @@ class ConnectedDevices : public Gtk::ListStore {
      */
     void set_device_starred (const Gtk::TreeIter& iter, bool starred);
 
-    ConnectedDevices (const ConnectedDevices&) = delete;
-    ConnectedDevices& operator= (const ConnectedDevices&) = delete;
+    UnavailableDevices (const UnavailableDevices&) = delete;
+    UnavailableDevices& operator= (const UnavailableDevices&) = delete;
 
   private:
-    ConnectedDevices ();
+    UnavailableDevices ();
 
     /** @brief The actual device */
     Gtk::TreeModelColumn<std::shared_ptr<Conecto::Device>> column_device;
@@ -97,9 +89,8 @@ class ConnectedDevices : public Gtk::ListStore {
     void on_new_device (const std::shared_ptr<Conecto::Device>& device);
     void update_for_device (const std::shared_ptr<Conecto::Device>& device);
 
-    Gtk::TreeModel::ColumnRecord               m_columns;
-    std::shared_ptr<Conecto::Plugins::Battery> m_battery_plugin;
-    std::list<sigc::connection>                m_connections;
+    Gtk::TreeModel::ColumnRecord m_columns;
+    std::list<sigc::connection>  m_connections;
 };
 
 } // namespace Models

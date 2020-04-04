@@ -26,7 +26,7 @@
 namespace App {
 
 // forward declarations
-namespace Models { class ConnectedDevices; }
+namespace Models { class ConnectedDevices; class UnavailableDevices; }
 
 /**
  * @brief The app's main application class
@@ -51,8 +51,9 @@ class Application : public Gtk::Application {
     void on_activate () override;
 
   private:
-    std::shared_ptr<Window>                m_window;
-    Glib::RefPtr<Models::ConnectedDevices> m_devices;
+    std::shared_ptr<Window>                  m_window;
+    Glib::RefPtr<Models::ConnectedDevices>   m_connected_devices;
+    Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
 };
 
 } // namespace App

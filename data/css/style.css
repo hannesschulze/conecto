@@ -1,4 +1,4 @@
-/* config.h.in
+/* style.css
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -17,17 +17,3 @@
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
-#pragma once
-
-#include <string>
-
-namespace Conecto {
-namespace Config {
-
-static const std::string PROJECT_NAME = @NAME@;
-static const std::string PROJECT_VERSION = @VERSION@;
-static const std::string APP_ID = @APPID@;
-
-} // namespace Config
-} // namespace Conecto

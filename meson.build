@@ -1,6 +1,6 @@
 project(
   'conecto',
-  ['cpp'],
+  ['c', 'cpp'],
   version: '0.1.0',
   meson_version: '>= 0.46.0',
 )
@@ -13,6 +13,8 @@ libconecto_deps = [
 ]
 
 pkgconfig = import('pkgconfig')
+gnome = import('gnome')
+i18n = import('i18n')
 
 subdir('libconecto')
 
@@ -48,15 +50,29 @@ if get_option('docs')
 endif
 
 subdir('tests')
-
+subdir('data')
+subdir('po')
 subdir('src')
 
 conecto_deps = [
-  libconecto_dep
+  libconecto_dep,
+  dependency('gtkmm-3.0')
 ]
+
+conecto_sources += gnome.compile_resources(
+  'conecto-resources',
+  'data/com.github.hannesschulze.conecto.gresources.xml',
+  source_dir: 'data',
+  c_name: 'conecto'
+)
 
 executable(
   'com.github.hannesschulze.conecto',
   conecto_sources,
-  dependencies: conecto_deps
+  dependencies: conecto_deps,
+  install: true
 )
+
+if not get_option('skip_postinstall')
+  meson.add_install_script('build-aux/meson/postinstall.py')
+endif

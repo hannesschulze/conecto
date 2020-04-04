@@ -18,51 +18,12 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include <conecto.h>
-#include <giomm/init.h>
-#include <giomm/application.h>
-#include <iostream>
-
-namespace {
-
-void
-on_activate (Glib::RefPtr<Gio::Application> app)
-{
-    auto& backend = Conecto::Backend::get_instance ();
-
-    auto ping = std::make_shared<Conecto::Plugins::Ping> ();
-    ping->signal_ping ().connect ([] (const std::shared_ptr<Conecto::Device>& dev) {
-        std::cerr << "Received a ping from " << dev->to_string () << std::endl;
-    });
-    backend.register_plugin (ping);
-
-    backend.signal_found_new_device ().connect ([] (const std::shared_ptr<Conecto::Device>& dev) {
-        std::cerr << "Found device: " << dev->to_string () << std::endl;
-
-        dev->signal_connected ().connect ([dev] () { std::cerr << "Connected: " << dev->to_string () << std::endl; });
-
-        dev->signal_disconnected ().connect (
-                [dev] () { std::cerr << "Disconnected: " << dev->to_string () << std::endl; });
-
-        dev->signal_paired ().connect ([dev] (bool success) {
-            std::cerr << "Paired (" << std::boolalpha << success << "): " << dev->to_string () << std::endl;
-        });
-    });
-    backend.load_from_cache ();
-    backend.listen ();
-    app->hold ();
-}
-
-} // namespace
+#include "application.h"
 
 int
 main (int argc, char** argv)
 {
-    Gio::init ();
-
-    Glib::RefPtr<Gio::Application> app = Gio::Application::create ("com.github.hannesschulze.conecto");
-
-    app->signal_activate ().connect (sigc::bind (&on_activate, app));
+    auto app = App::Application::create ();
 
     return app->run (argc, argv);
 }

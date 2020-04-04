@@ -22,6 +22,7 @@
 #include <glibmm/miscutils.h>
 #include <glibmm/fileutils.h>
 #include <iostream>
+#include "device.h"
 
 using namespace Conecto;
 
@@ -68,6 +69,7 @@ ConfigFile::get_file_name () noexcept
 void
 ConfigFile::dump_to_file (const std::string& path)
 {
+    m_path = path;
     std::string data = m_keyfile.to_data ();
     try {
         Glib::file_set_contents (path, data);
@@ -77,8 +79,10 @@ ConfigFile::dump_to_file (const std::string& path)
 }
 
 bool
-ConfigFile::get_device_allowed (const std::string& name, const std::string& type)
+ConfigFile::get_device_allowed (const Device& device) const
 {
+    const std::string& name = device.get_device_name ();
+    const std::string& type = device.get_device_type ();
     try {
         std::vector<std::string> devices = m_keyfile.get_string_list ("main", "devices");
 
@@ -96,6 +100,118 @@ ConfigFile::get_device_allowed (const std::string& name, const std::string& type
         g_critical ("Failed to read entries from configuration file: %s", err.what ().c_str ());
     }
     return false;
+}
+
+Glib::ustring
+ConfigFile::get_display_name (const Device& device) const
+{
+    const std::string& name = device.get_device_name ();
+    const std::string& type = device.get_device_type ();
+    try {
+        std::vector<std::string> devices = m_keyfile.get_string_list ("main", "devices");
+
+        for (const auto& dev : devices) {
+            if (m_keyfile.has_group (dev) == false) {
+                g_critical ("No group in keyfile: %s", dev.c_str ());
+                continue;
+            }
+
+            if (m_keyfile.get_string (dev, "name") == name && m_keyfile.get_string (dev, "type") == type &&
+                m_keyfile.has_key (dev, "display"))
+                return m_keyfile.get_string (dev, "display");
+        }
+    } catch (Glib::KeyFileError& err) {
+        g_critical ("Failed to read entries from configuration file: %s", err.what ().c_str ());
+    }
+    return name;
+}
+
+void
+ConfigFile::set_display_name (const std::shared_ptr<Device>& device, const Glib::ustring& display)
+{
+    const std::string& name = device->get_device_name ();
+    const std::string& type = device->get_device_type ();
+    try {
+        std::vector<std::string> devices = m_keyfile.get_string_list ("main", "devices");
+        for (const auto& dev : devices) {
+            if (m_keyfile.has_group (dev) == false) {
+                g_critical ("No group in keyfile: %s", dev.c_str ());
+                continue;
+            }
+            if (m_keyfile.get_string (dev, "name") != name || m_keyfile.get_string (dev, "type") != type)
+                continue;
+
+            m_keyfile.set_string (dev, "display", display);
+            dump_to_file (m_path);
+            return;
+        }
+
+        const std::string& id = device->get_device_id ();
+        devices.push_back (id);
+        m_keyfile.set_string_list ("main", "devices", devices);
+        m_keyfile.set_string (id, "name", name);
+        m_keyfile.set_string (id, "type", type);
+        m_keyfile.set_string (id, "display", display);
+        dump_to_file (m_path);
+    } catch (Glib::KeyFileError& err) {
+        g_critical ("Failed to write entries to configuration file: %s", err.what ().c_str ());
+    }
+}
+
+bool
+ConfigFile::get_device_starred (const Device& device) const
+{
+    const std::string& name = device.get_device_name ();
+    const std::string& type = device.get_device_type ();
+    try {
+        std::vector<std::string> devices = m_keyfile.get_string_list ("main", "devices");
+
+        for (const auto& dev : devices) {
+            if (m_keyfile.has_group (dev) == false) {
+                g_critical ("No group in keyfile: %s", dev.c_str ());
+                continue;
+            }
+
+            if (m_keyfile.get_string (dev, "name") == name && m_keyfile.get_string (dev, "type") == type &&
+                m_keyfile.has_key (dev, "starred"))
+                return m_keyfile.get_boolean (dev, "starred");
+        }
+    } catch (Glib::KeyFileError& err) {
+        g_critical ("Failed to read entries from configuration file: %s", err.what ().c_str ());
+    }
+    return false;
+}
+
+void
+ConfigFile::set_device_starred (const std::shared_ptr<Device>& device, bool starred)
+{
+    const std::string& name = device->get_device_name ();
+    const std::string& type = device->get_device_type ();
+    try {
+        std::vector<std::string> devices = m_keyfile.get_string_list ("main", "devices");
+        for (const auto& dev : devices) {
+            if (m_keyfile.has_group (dev) == false) {
+                g_critical ("No group in keyfile: %s", dev.c_str ());
+                continue;
+            }
+            if (m_keyfile.get_string (dev, "name") != name || m_keyfile.get_string (dev, "type") != type)
+                continue;
+
+            m_keyfile.set_boolean (dev, "starred", starred);
+            dump_to_file (m_path);
+            return;
+        }
+
+        const std::string& id = device->get_device_id ();
+        devices.push_back (id);
+        m_keyfile.set_string_list ("main", "devices", devices);
+        m_keyfile.set_string (id, "name", name);
+        m_keyfile.set_string (id, "type", type);
+        m_keyfile.set_boolean (id, "starred", starred);
+        dump_to_file (m_path);
+    } catch (Glib::KeyFileError& err) {
+        g_critical ("Failed to write entries to configuration file: %s", err.what ().c_str ());
+    }
 }
 
 std::vector<std::string>

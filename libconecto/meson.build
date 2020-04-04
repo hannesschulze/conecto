@@ -2,6 +2,7 @@
 conf_data = configuration_data()
 conf_data.set_quoted('NAME', meson.project_name())
 conf_data.set_quoted('VERSION', meson.project_version())
+conf_data.set_quoted('APPID', 'com.github.hannesschulze.' + meson.project_name())
 config_header = configure_file(
   input: 'config.h.in',
   output: 'config.h',
@@ -19,6 +20,7 @@ libconecto_sources = files(
   'config-file.cpp',
 
   'plugins/ping.cpp',
+  'plugins/battery.cpp',
 )
 
 libconecto_headers = files(
@@ -34,6 +36,7 @@ libconecto_headers = files(
   'abstract-packet-handler.h',
 
   'plugins/ping.h',
+  'plugins/battery.h',
 )
 libconecto_headers += config_header
 

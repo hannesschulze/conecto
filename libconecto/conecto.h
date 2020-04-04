@@ -33,3 +33,4 @@
 
 // Plugins
 #include "ping.h"
+#include "battery.h"

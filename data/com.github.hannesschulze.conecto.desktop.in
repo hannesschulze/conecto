@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Conecto
+Icon=com.github.hannesschulze.conecto
+Exec=com.github.hannesschulze.conecto
+Comment=Integrate your Android-phone with your PC
+Terminal=false
+Type=Application
+X-GNOME-Gettext-Domain=com.github.hannesschulze.conecto
+X-GNOME-UsesNotifications=true
+Categories=Utility;GTK;
+StartupNotify=true

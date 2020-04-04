@@ -26,6 +26,9 @@
 
 namespace Conecto {
 
+// forward declarations
+class Device;
+
 /**
  * @brief A config file stores a list of devices and their options (e.g. whether they are allowed)
  */
@@ -63,7 +66,38 @@ class ConfigFile {
      * @param name The device's name
      * @param type The device's type
      */
-    bool get_device_allowed (const std::string& name, const std::string& type);
+    bool get_device_allowed (const Device& device) const;
+    /**
+     * Get a device's display name from the configuration. If there is no entry for the specified device,
+     * this will return @p name
+     *
+     * @param name The device's name
+     * @param type The device's type
+     */
+    Glib::ustring get_display_name (const Device& device) const;
+    /**
+     * Set a device's name in the config file and save the file
+     *
+     * @param name The device's name
+     * @param type The device's type
+     * @param display The display name
+     */
+    void set_display_name (const std::shared_ptr<Device>& device, const Glib::ustring& display);
+    /**
+     * Check if a device is starred. If there is no entry for the specified device, this will return @p false
+     *
+     * @param name The device's name
+     * @param type The device's type
+     */
+    bool get_device_starred (const Device& device) const;
+    /**
+     * Set if a device is starred and save the config file
+     *
+     * @param name The device's name
+     * @param type The device's type
+     * @param starred true if the device has been starred
+     */
+    void set_device_starred (const std::shared_ptr<Device>& device, bool starred);
 
     /**
      * Get a list of search dirs
@@ -72,12 +106,23 @@ class ConfigFile {
      */
     static std::vector<std::string> get_search_dirs (const std::string& primary_dir) noexcept;
 
+    /**
+     * @param device The device updated in the configuration
+     */
+    using type_signal_device_changed = sigc::signal<void, const std::shared_ptr<Device>& /* device */>;
+    /**
+     * Called when a new device configuration has been changed
+     */
+    type_signal_device_changed signal_device_changed () { return m_signal_device_changed; }
+
     ConfigFile (const ConfigFile&) = delete;
     ConfigFile& operator= (const ConfigFile&) = delete;
 
   private:
     Glib::KeyFile m_keyfile;
     std::string   m_path;
+
+    type_signal_device_changed m_signal_device_changed;
 };
 
 } // namespace Conecto

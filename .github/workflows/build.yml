@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: ubuntu:focal
+      image: ubuntu:eoan
 
     steps:
     - uses: actions/checkout@v1

@@ -16,7 +16,7 @@ jobs:
         apt-get update &&
         apt-get install -y build-essential meson ninja-build libjsoncpp-dev libsigc++-2.0-dev ca-certificates libgtkmm-3.0-dev libghc-gnutls-dev
     - name: Configure
-      run: meson build --prefix=/usr
+      run: meson build --prefix=/usr -Dskip_postinstall=true
     - name: Build
       run: ninja -C build
     - name: Install

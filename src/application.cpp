@@ -1,4 +1,4 @@
-/* config.h.in
+/* application.cpp
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -18,16 +18,35 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#pragma once
+#include "application.h"
+#include <conecto.h>
 
-#include <string>
+using namespace App;
 
-namespace Conecto {
-namespace Config {
+Application::Application ()
+    : Gtk::Application (Conecto::Config::APP_ID)
+{
+}
 
-static const std::string PROJECT_NAME = @NAME@;
-static const std::string PROJECT_VERSION = @VERSION@;
-static const std::string APP_ID = @APPID@;
+#include <iostream>
 
-} // namespace Config
-} // namespace Conecto
+Glib::RefPtr<Application>
+Application::create ()
+{
+    return Glib::RefPtr<Application> (new Application);
+}
+
+void
+Application::on_activate ()
+{
+    // Get the current window, create one if it doesn't exist
+    Gtk::Window* window = get_active_window ();
+
+    if (!window) {
+        m_window = Window::create ();
+        add_window (*m_window);
+        window = m_window.get ();
+    }
+
+    window->present ();
+}

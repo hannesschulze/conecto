@@ -1,3 +1,7 @@
 conecto_sources = files(
-  'main.cpp'
+  'main.cpp',
+  'application.cpp',
+  'window.cpp',
+
+  'controllers/settings-manager.cpp',
 )

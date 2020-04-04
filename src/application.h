@@ -1,4 +1,4 @@
-/* config.h.in
+/* application.h
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -20,14 +20,35 @@
 
 #pragma once
 
-#include <string>
+#include <gtkmm.h>
+#include "window.h"
 
-namespace Conecto {
-namespace Config {
+namespace App {
 
-static const std::string PROJECT_NAME = @NAME@;
-static const std::string PROJECT_VERSION = @VERSION@;
-static const std::string APP_ID = @APPID@;
+/**
+ * @p The app's main application class
+ * 
+ * The @p Application manages the lifetime of the application by providing a mainloop and managing
+ * the app's windows
+ */
+class Application : public Gtk::Application {
+  public:
+    /**
+     * @brief Create a new application
+     */
+    static Glib::RefPtr<Application> create ();
+    ~Application () {}
 
-} // namespace Config
-} // namespace Conecto
+    Application (const Application&) = delete;
+    Application& operator= (const Application&) = delete;
+
+  protected:
+    Application ();
+
+    void on_activate () override;
+
+  private:
+    std::shared_ptr<Window> m_window;
+};
+
+} // namespace App

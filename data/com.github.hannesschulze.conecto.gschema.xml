@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="conecto">
+	<schema id="com.github.hannesschulze.conecto" path="/com/github/hannesschulze/conecto/">
+	  <key name="window-x" type="i">
+	    <default>-1</default>
+	    <summary>Most recent x position of Conecto</summary>
+	    <description>Most recent x position of Conecto</description>
+	  </key>
+	  <key name="window-y" type="i">
+	    <default>-1</default>
+	    <summary>Most recent y position of Conecto</summary>
+	    <description>Most recent y position of Conecto</description>
+	  </key>
+	  <key name="window-width" type="i">
+	    <default>-1</default>
+	    <summary>Most recent width of Conecto</summary>
+	    <description>Most recent width of Conecto</description>
+	  </key>
+	  <key name="window-height" type="i">
+	    <default>-1</default>
+	    <summary>Most recent height of Conecto</summary>
+	    <description>Most recent height of Conecto</description>
+	  </key>
+	</schema>
+</schemalist>

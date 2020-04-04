@@ -181,7 +181,7 @@ Backend::get_allowed_in_config (const Device& device) const
 {
     if (device.get_allowed ()) return true;
 
-    return m_config->get_device_allowed (device.get_device_name (), device.get_device_type ());
+    return m_config->get_device_allowed (device);
 }
 
 void

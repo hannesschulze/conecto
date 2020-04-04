@@ -442,7 +442,7 @@ Device::merge_capabilities (std::vector<std::string>& added, std::vector<std::st
         if (it != removed.end ()) removed.erase (it);
     }
 
-    m_capabilities = capabilities;
+    m_capabilities.swap (capabilities);
 }
 
 void

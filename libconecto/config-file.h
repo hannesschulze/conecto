@@ -26,6 +26,9 @@
 
 namespace Conecto {
 
+// forward declarations
+class Device;
+
 /**
  * @brief A config file stores a list of devices and their options (e.g. whether they are allowed)
  */
@@ -63,7 +66,38 @@ class ConfigFile {
      * @param name The device's name
      * @param type The device's type
      */
-    bool get_device_allowed (const std::string& name, const std::string& type);
+    bool get_device_allowed (const Device& device) const;
+    /**
+     * Get a device's display name from the configuration. If there is no entry for the specified device,
+     * this will return @p name
+     *
+     * @param name The device's name
+     * @param type The device's type
+     */
+    Glib::ustring get_display_name (const Device& device) const;
+    /**
+     * Set a device's name in the config file and save the file
+     *
+     * @param name The device's name
+     * @param type The device's type
+     * @param display The display name
+     */
+    void set_display_name (const std::shared_ptr<Device>& device, const Glib::ustring& display);
+    /**
+     * Check if a device is starred. If there is no entry for the specified device, this will return @p false
+     *
+     * @param name The device's name
+     * @param type The device's type
+     */
+    bool get_device_starred (const Device& device) const;
+    /**
+     * Set if a device is starred and save the config file
+     *
+     * @param name The device's name
+     * @param type The device's type
+     * @param starred true if the device has been starred
+     */
+    void set_device_starred (const std::shared_ptr<Device>& device, bool starred);
 
     /**
      * Get a list of search dirs

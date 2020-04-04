@@ -20,15 +20,17 @@
 
 #include "application.h"
 #include <conecto.h>
+#include "models/connected-devices.h"
 
 using namespace App;
 
 Application::Application ()
     : Gtk::Application (Conecto::Config::APP_ID)
+    , m_devices (Models::ConnectedDevices::create ())
 {
+    Conecto::Backend::get_instance ().load_from_cache ();
+    Conecto::Backend::get_instance ().listen ();
 }
-
-#include <iostream>
 
 Glib::RefPtr<Application>
 Application::create ()
@@ -43,7 +45,7 @@ Application::on_activate ()
     Gtk::Window* window = get_active_window ();
 
     if (!window) {
-        m_window = Window::create ();
+        m_window = Window::create (m_devices);
         add_window (*m_window);
         window = m_window.get ();
     }

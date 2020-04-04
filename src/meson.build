@@ -4,4 +4,8 @@ conecto_sources = files(
   'window.cpp',
 
   'controllers/settings-manager.cpp',
+
+  'models/connected-devices.cpp',
+
+  'views/devices-list.cpp',
 )

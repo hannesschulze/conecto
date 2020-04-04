@@ -1,4 +1,4 @@
-/* application.h
+/* devices-list.h
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -21,38 +21,34 @@
 #pragma once
 
 #include <gtkmm.h>
-#include "window.h"
+#include "../models/connected-devices.h"
 
 namespace App {
-
-// forward declarations
-namespace Models { class ConnectedDevices; }
+namespace Views {
 
 /**
- * @brief The app's main application class
+ * @brief A list shown on the left-hand side of the main window
  * 
- * The @p Application manages the lifetime of the application by providing a mainloop and managing
- * the app's windows
+ * A list shown in the main window, listing all online, offline and available devices
+ * 
+ * Connected to the following models: @p App::Models::ConnectedDevices
  */
-class Application : public Gtk::Application {
+class DevicesList : public Gtk::TreeView {
   public:
     /**
-     * @brief Create a new application
+     * @brief Create a list of devices, visualizing the specified models
+     * 
+     * @param connected_devices The connected-devices model
      */
-    static Glib::RefPtr<Application> create ();
-    ~Application () {}
+    DevicesList (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices);
+    ~DevicesList () {}
 
-    Application (const Application&) = delete;
-    Application& operator= (const Application&) = delete;
-
-  protected:
-    Application ();
-
-    void on_activate () override;
+    DevicesList (const DevicesList&) = delete;
+    DevicesList& operator= (const DevicesList&) = delete;
 
   private:
-    std::shared_ptr<Window>                m_window;
-    Glib::RefPtr<Models::ConnectedDevices> m_devices;
+    Glib::RefPtr<Models::ConnectedDevices> m_connected_devices;
 };
 
+} // namespace Views
 } // namespace App

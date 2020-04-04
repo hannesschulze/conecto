@@ -23,16 +23,16 @@
 
 using namespace App;
 
-Window::Window ()
+Window::Window (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices)
     : Gtk::ApplicationWindow ()
+    , m_devices_list (connected_devices)
 {
+    // Set size and position
     set_size_request (640, 480);
-
     int x = SETTINGS.get_window_x ();
     int y = SETTINGS.get_window_y ();
     int width = SETTINGS.get_window_width ();
     int height = SETTINGS.get_window_height ();
-
     if (x != -1 && y != -1 && width != -1 && height != -1) {
         move (x, y);
         set_default_size (width, height);
@@ -40,13 +40,16 @@ Window::Window ()
         set_default_size (640, 480);
     }
 
+    // Set up the view
+    add (m_devices_list);
+
     show_all ();
 }
 
 std::shared_ptr<Window>
-Window::create ()
+Window::create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices)
 {
-    return std::shared_ptr<Window> (new Window);
+    return std::shared_ptr<Window> (new Window (connected_devices));
 }
 
 bool

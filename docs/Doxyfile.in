@@ -102,7 +102,7 @@ WARN_NO_PARAMDOC       = NO
 WARN_AS_ERROR          = NO
 WARN_FORMAT            = "$file:$line: $text"
 WARN_LOGFILE           =
-INPUT                  = @SRCDIR@/README.md @SRCDIR@/libconecto
+INPUT                  = @SRCDIR@/README.md @SRCDIR@/libconecto @SRCDIR@/src
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \

@@ -7,6 +7,7 @@ conecto_sources = files(
 
   'models/connected-devices.cpp',
   'models/unavailable-devices.cpp',
+  'models/available-devices.cpp',
 
   'views/devices-list.cpp',
 )

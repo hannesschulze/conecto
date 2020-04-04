@@ -24,6 +24,7 @@
 #include <memory>
 #include "models/connected-devices.h"
 #include "models/unavailable-devices.h"
+#include "models/available-devices.h"
 #include "views/devices-list.h"
 
 namespace App {
@@ -43,9 +44,12 @@ class Window : public Gtk::ApplicationWindow {
      * The window should be attached to a @p Gtk::Application using @p Gtk::Application::add_window
      * 
      * @param connected_devices The connected-devices model
+     * @param unavailable_devices The unavailable-devices model
+     * @param available_devices The available-devices model
      */
     static std::shared_ptr<Window> create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
-                                           const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices);
+                                           const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
+                                           const Glib::RefPtr<Models::AvailableDevices>& available_devices);
     ~Window () {}
 
     Window (const Window&) = delete;
@@ -53,7 +57,8 @@ class Window : public Gtk::ApplicationWindow {
 
   protected:
     Window (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
-            const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices);
+            const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
+            const Glib::RefPtr<Models::AvailableDevices>& available_devices);
 
     // Called when the window should be closed, saves the window's position and size
     bool on_delete_event (GdkEventAny* event) override;

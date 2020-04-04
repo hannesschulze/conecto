@@ -24,9 +24,10 @@
 using namespace App;
 
 Window::Window (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
-                const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices)
+                const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
+                const Glib::RefPtr<Models::AvailableDevices>& available_devices)
     : Gtk::ApplicationWindow ()
-    , m_devices_list (connected_devices, unavailable_devices)
+    , m_devices_list (connected_devices, unavailable_devices, available_devices)
 {
     // Set size and position
     set_size_request (640, 480);
@@ -49,9 +50,10 @@ Window::Window (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
 
 std::shared_ptr<Window>
 Window::create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
-                const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices)
+                const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
+                const Glib::RefPtr<Models::AvailableDevices>& available_devices)
 {
-    return std::shared_ptr<Window> (new Window (connected_devices, unavailable_devices));
+    return std::shared_ptr<Window> (new Window (connected_devices, unavailable_devices, available_devices));
 }
 
 bool

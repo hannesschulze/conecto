@@ -24,12 +24,15 @@ using namespace App::Views;
 using namespace App::Models;
 
 DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_devices,
-                          const Glib::RefPtr<UnavailableDevices>& unavailable_devices)
+                          const Glib::RefPtr<UnavailableDevices>& unavailable_devices,
+                          const Glib::RefPtr<AvailableDevices>& available_devices)
     : Gtk::Box (Gtk::ORIENTATION_VERTICAL)
     , m_connected_devices (connected_devices)
     , m_unavailable_devices (unavailable_devices)
+    , m_available_devices (available_devices)
     , m_connected_view (connected_devices)
     , m_unavailable_view (unavailable_devices)
+    , m_available_view (available_devices)
 {
     m_connected_view.append_column ("Name", m_connected_devices->column_name);
     m_connected_view.append_column ("ID", m_connected_devices->column_id);
@@ -46,4 +49,11 @@ DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_device
     m_unavailable_view.append_column ("Type", m_unavailable_devices->column_type);
     m_unavailable_view.append_column ("Starred", m_unavailable_devices->column_starred);
     pack_start (m_unavailable_view, true, true);
+
+    m_available_view.append_column ("Name", m_available_devices->column_name);
+    m_available_view.append_column ("ID", m_available_devices->column_id);
+    m_available_view.append_column ("Type", m_available_devices->column_type);
+    m_available_view.append_column ("Host", m_available_devices->column_host_addr);
+    m_available_view.append_column ("Port", m_available_devices->column_host_port);
+    pack_start (m_available_view, true, true);
 }

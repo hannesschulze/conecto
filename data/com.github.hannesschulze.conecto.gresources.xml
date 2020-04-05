@@ -3,4 +3,8 @@
   <gresource prefix="/com/github/hannesschulze/conecto/css">
     <file alias="style.css" compressed="true">css/style.css</file>
   </gresource>
+
+  <gresource prefix="/com/github/hannesschulze/conecto/ui/widgets">
+    <file alias="header-bar.ui">ui/widgets/header-bar.ui</file>
+  </gresource>
 </gresources>

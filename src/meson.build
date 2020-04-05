@@ -13,5 +13,7 @@ conecto_sources = files(
   'views/devices-list.cpp',
   'views/active-device-view.cpp',
 
+  'widgets/header-bar.cpp',
+
   'utils/icons.cpp',
 )

@@ -27,6 +27,7 @@
 #include "models/available-devices.h"
 #include "views/devices-list.h"
 #include "views/active-device-view.h"
+#include "widgets/header-bar.h"
 
 namespace App {
 
@@ -68,6 +69,8 @@ class Window : public Gtk::ApplicationWindow {
     Gtk::Paned              m_paned;
     Views::DevicesList      m_devices_list;
     Views::ActiveDeviceView m_active_device;
+
+    std::shared_ptr<Widgets::HeaderBar> m_header_bar;
 };
 
 } // namespace App

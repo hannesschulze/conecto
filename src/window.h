@@ -26,6 +26,7 @@
 #include "models/unavailable-devices.h"
 #include "models/available-devices.h"
 #include "views/devices-list.h"
+#include "views/active-device-view.h"
 
 namespace App {
 
@@ -64,8 +65,9 @@ class Window : public Gtk::ApplicationWindow {
     bool on_delete_event (GdkEventAny* event) override;
 
   private:
-    Gtk::Paned         m_paned;
-    Views::DevicesList m_devices_list;
+    Gtk::Paned              m_paned;
+    Views::DevicesList      m_devices_list;
+    Views::ActiveDeviceView m_active_device;
 };
 
 } // namespace App

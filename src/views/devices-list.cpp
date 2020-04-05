@@ -20,6 +20,7 @@
 
 #include "devices-list.h"
 #include "../utils/icons.h"
+#include "../controllers/active-device-manager.h"
 
 using namespace App::Views;
 using namespace App::Models;
@@ -101,6 +102,7 @@ DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_device
 {
     m_columns.add (m_column_icon);
     m_columns.add (m_column_text);
+    m_columns.add (m_column_device);
     m_tree_store = Gtk::TreeStore::create (m_columns);
     m_tree_view.set_model (m_tree_store);
     m_tree_view.get_style_context ()->add_class ("source-list");
@@ -161,6 +163,11 @@ DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_device
         on_update_row_available (m_available_devices->get_path (child), child);
     }
 
+    // Activated event
+    m_tree_view.signal_row_activated ().connect
+        (sigc::mem_fun (*this, &DevicesList::on_activated));
+    m_tree_view.set_activate_on_single_click (true);
+
     m_tree_view.set_halign (Gtk::ALIGN_FILL);
     m_tree_view.set_valign (Gtk::ALIGN_FILL);
     m_tree_view.set_enable_search (false);
@@ -173,7 +180,6 @@ DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_device
     m_tree_view.set_level_indentation (24);
 
     // Selection
-    m_tree_view.get_selection ()->set_mode (Gtk::SELECTION_BROWSE);
     m_tree_view.get_selection ()->set_select_function (sigc::mem_fun (*this, &DevicesList::on_select));
 
     m_cell_expander = std::unique_ptr<Gtk::CellRenderer> (new CellRendererExpander);
@@ -226,6 +232,14 @@ bool
 DevicesList::on_select (const Glib::RefPtr<Gtk::TreeModel>& model, const Gtk::TreePath& path, bool test)
 {
     return m_tree_store->get_iter (path)->parent ();
+}
+
+void
+DevicesList::on_activated (const Gtk::TreePath& path, Gtk::TreeViewColumn* column)
+{
+    bool selectable = m_tree_store->get_iter (path)->parent ();
+    if (selectable)
+        ACTIVE_DEVICE.activate_device (m_tree_store->get_iter (path)->get_value (m_column_device));
 }
 
 bool
@@ -307,6 +321,7 @@ DevicesList::on_update_row_connected (const Gtk::TreeModel::Path& path, const Gt
     item->set_value (m_column_icon, Utils::Icons::get_icon_for_device_type
         (it->get_value (m_connected_devices->column_type), 16));
     item->set_value (m_column_text, it->get_value (m_connected_devices->column_name));
+    item->set_value (m_column_device, m_connected_devices->get_device (it));
 }
 
 void
@@ -317,6 +332,7 @@ DevicesList::on_update_row_unavailable (const Gtk::TreeModel::Path& path, const 
     item->set_value (m_column_icon, Utils::Icons::get_icon_for_device_type
         (it->get_value (m_unavailable_devices->column_type), 16));
     item->set_value (m_column_text, it->get_value (m_unavailable_devices->column_name));
+    item->set_value (m_column_device, m_unavailable_devices->get_device (it));
 }
 
 void
@@ -327,6 +343,7 @@ DevicesList::on_update_row_available (const Gtk::TreeModel::Path& path, const Gt
     item->set_value (m_column_icon, Utils::Icons::get_icon_for_device_type
         (it->get_value (m_available_devices->column_type), 16));
     item->set_value (m_column_text, it->get_value (m_available_devices->column_name));
+    item->set_value (m_column_device, m_available_devices->get_device (it));
 }
 
 void

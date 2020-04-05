@@ -29,6 +29,7 @@ Window::Window (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
     : Gtk::ApplicationWindow ()
     , m_paned (Gtk::ORIENTATION_HORIZONTAL)
     , m_devices_list (connected_devices, unavailable_devices, available_devices)
+    , m_active_device (connected_devices, unavailable_devices, available_devices)
 {
     // Set size and position
     set_size_request (640, 480);
@@ -46,7 +47,7 @@ Window::Window (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
     // Set up the view
     m_paned.set_position (155);
     m_paned.pack1 (m_devices_list, false, false);
-    m_paned.add2 (*Gtk::make_managed<Gtk::Label> ("Placeholder"));
+    m_paned.add2 (m_active_device);
     add (m_paned);
 
     show_all ();

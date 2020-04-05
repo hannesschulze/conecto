@@ -58,9 +58,10 @@ class DevicesList : public Gtk::ScrolledWindow {
     Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
     Glib::RefPtr<Models::AvailableDevices> m_available_devices;
 
-    Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> m_column_icon;
-    Gtk::TreeModelColumn<Glib::ustring>             m_column_text;
-    Gtk::TreeViewColumn                             m_item_column;
+    Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>>        m_column_icon;
+    Gtk::TreeModelColumn<Glib::ustring>                    m_column_text;
+    Gtk::TreeModelColumn<std::shared_ptr<Conecto::Device>> m_column_device;
+    Gtk::TreeViewColumn                                    m_item_column;
 
     Gtk::TreeModelColumnRecord   m_columns;
     Glib::RefPtr<Gtk::TreeStore> m_tree_store;
@@ -87,6 +88,7 @@ class DevicesList : public Gtk::ScrolledWindow {
     void on_update_row_connected (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it);
     void on_update_row_unavailable (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it);
     void on_update_row_available (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it);
+    void on_activated (const Gtk::TreePath& path, Gtk::TreeViewColumn* column);
 
     static Glib::RefPtr<Gdk::Pixbuf> get_color_pixbuf (Gdk::RGBA color);
 };

@@ -4,12 +4,14 @@ conecto_sources = files(
   'window.cpp',
 
   'controllers/settings-manager.cpp',
+  'controllers/active-device-manager.cpp',
 
   'models/connected-devices.cpp',
   'models/unavailable-devices.cpp',
   'models/available-devices.cpp',
 
   'views/devices-list.cpp',
+  'views/active-device-view.cpp',
 
   'utils/icons.cpp',
 )

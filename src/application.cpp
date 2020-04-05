@@ -22,6 +22,7 @@
 #include <conecto.h>
 #include "models/connected-devices.h"
 #include "models/unavailable-devices.h"
+#include "controllers/active-device-manager.h"
 
 using namespace App;
 
@@ -31,6 +32,7 @@ Application::Application ()
     , m_unavailable_devices (Models::UnavailableDevices::create ())
     , m_available_devices (Models::AvailableDevices::create ())
 {
+    ACTIVE_DEVICE.set_models (m_connected_devices, m_unavailable_devices, m_available_devices);
     Conecto::Backend::get_instance ().load_from_cache ();
     Conecto::Backend::get_instance ().listen ();
 }

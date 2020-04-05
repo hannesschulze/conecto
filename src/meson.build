@@ -10,4 +10,6 @@ conecto_sources = files(
   'models/available-devices.cpp',
 
   'views/devices-list.cpp',
+
+  'utils/icons.cpp',
 )

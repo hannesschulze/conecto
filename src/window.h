@@ -64,6 +64,7 @@ class Window : public Gtk::ApplicationWindow {
     bool on_delete_event (GdkEventAny* event) override;
 
   private:
+    Gtk::Paned         m_paned;
     Views::DevicesList m_devices_list;
 };
 

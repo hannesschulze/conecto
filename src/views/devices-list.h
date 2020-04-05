@@ -36,7 +36,7 @@ namespace Views {
  * Connected to the following models: @p App::Models::ConnectedDevices, @p App::Models::UnavailableDevices,
  * @p App::Models::AvailableDevices
  */
-class DevicesList : public Gtk::Box {
+class DevicesList : public Gtk::ScrolledWindow {
   public:
     /**
      * @brief Create a list of devices, visualizing the specified models
@@ -58,9 +58,37 @@ class DevicesList : public Gtk::Box {
     Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
     Glib::RefPtr<Models::AvailableDevices> m_available_devices;
 
-    Gtk::TreeView m_connected_view;
-    Gtk::TreeView m_unavailable_view;
-    Gtk::TreeView m_available_view;
+    Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> m_column_icon;
+    Gtk::TreeModelColumn<Glib::ustring>             m_column_text;
+    Gtk::TreeViewColumn                             m_item_column;
+
+    Gtk::TreeModelColumnRecord   m_columns;
+    Glib::RefPtr<Gtk::TreeStore> m_tree_store;
+    Gtk::TreeView                m_tree_view;
+
+    Gtk::TreeRow m_row_connected;
+    Gtk::TreeRow m_row_unavailable;
+    Gtk::TreeRow m_row_available;
+
+    std::unique_ptr<Gtk::CellRenderer>       m_cell_expander;
+    Gtk::CellRendererText                    m_cell_text;
+    std::unique_ptr<Gtk::CellRendererPixbuf> m_cell_icon;
+    std::unique_ptr<Gtk::CellRenderer>       m_cell_spacer;
+
+    void cell_data_func_expander (Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& it);
+    void cell_data_func_name (Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& it);
+    void cell_data_func_icon (Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& it);
+    bool on_select (const Glib::RefPtr<Gtk::TreeModel>& model, const Gtk::TreePath& path, bool);
+    bool on_button_release (GdkEventButton* event);
+
+    void on_insert_row (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it, Gtk::TreeRow parent);
+    void on_delete_row (const Gtk::TreeModel::Path& path, Gtk::TreeRow parent);
+    void on_rows_reordered (const Gtk::TreeModel::Path& path, const Gtk::TreeIter& it, int* new_order, Gtk::TreeRow parent);
+    void on_update_row_connected (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it);
+    void on_update_row_unavailable (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it);
+    void on_update_row_available (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it);
+
+    static Glib::RefPtr<Gdk::Pixbuf> get_color_pixbuf (Gdk::RGBA color);
 };
 
 } // namespace Views

@@ -21,6 +21,7 @@
 #include "devices-list.h"
 #include "../utils/icons.h"
 #include "../controllers/active-device-manager.h"
+#include <iostream>
 
 using namespace App::Views;
 using namespace App::Models;
@@ -90,6 +91,57 @@ class CellRendererIcon : public Gtk::CellRendererPixbuf {
     ~CellRendererIcon () {}
 };
 
+class CellRendererStarred : public Gtk::CellRenderer {
+  public:
+    CellRendererStarred () {
+        m_starred_icon = Gtk::IconTheme::get_default ()->load_icon ("starred", 16);
+        m_non_starred_icon = Gtk::IconTheme::get_default ()->load_icon ("non-starred", 16);
+        property_mode ().set_value (Gtk::CELL_RENDERER_MODE_ACTIVATABLE);
+    }
+    ~CellRendererStarred () {}
+
+    void set_is_starred (bool is_starred) { m_is_starred = is_starred; }
+
+    sigc::signal<void, const Gtk::TreePath&> signal_toggle_starred;
+
+  protected:
+    Gtk::SizeRequestMode get_request_mode_vfunc () const override {
+        return Gtk::SIZE_REQUEST_HEIGHT_FOR_WIDTH;
+    }
+    void get_preferred_width_vfunc (Gtk::Widget& widget, int& minimum_size, int& natural_size) const override {
+        minimum_size = natural_size = 16 + 2 * (int) property_xpad ().get_value ();
+    }
+    void get_preferred_height_for_width_vfunc (Gtk::Widget& widget, int width, int& minimum_size, int& natural_size) const override {
+        minimum_size = natural_size = 16 + 2 * (int) property_ypad ().get_value ();
+    }
+    void render_vfunc (const Cairo::RefPtr<Cairo::Context>& cr, Gtk::Widget& widget, const Gdk::Rectangle& bg_area,
+                       const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) override {
+        auto ctx = widget.get_style_context ();
+        bool is_hovering = (ctx->get_state () & Gtk::STATE_FLAG_PRELIGHT) == Gtk::STATE_FLAG_PRELIGHT;
+
+        Gdk::Rectangle aligned_area;
+        get_aligned_area (widget, flags, cell_area, aligned_area);
+
+        if (m_is_starred) {
+            Gdk::Cairo::set_source_pixbuf (cr, m_starred_icon, aligned_area.get_x (), aligned_area.get_y ());
+            cr->paint_with_alpha (is_hovering ? 1.0 : 0.75);
+        } else if (is_hovering) {
+            Gdk::Cairo::set_source_pixbuf (cr, m_non_starred_icon, aligned_area.get_x (), aligned_area.get_y ());
+            cr->paint_with_alpha (0.4);
+        }
+    }
+    bool activate_vfunc (GdkEvent* event, Gtk::Widget& widget, const Glib::ustring& path, const Gdk::Rectangle& bg_area,
+                         const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) override {
+        signal_toggle_starred.emit (Gtk::TreePath (path));
+        return true;
+    }
+    
+    Glib::RefPtr<Gdk::Pixbuf> m_starred_icon;
+    Glib::RefPtr<Gdk::Pixbuf> m_non_starred_icon;
+
+    bool m_is_starred;
+};
+
 } // namespace
 
 DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_devices,
@@ -103,6 +155,8 @@ DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_device
     m_columns.add (m_column_icon);
     m_columns.add (m_column_text);
     m_columns.add (m_column_device);
+    m_columns.add (m_column_starred);
+    m_columns.add (m_column_can_star);
     m_tree_store = Gtk::TreeStore::create (m_columns);
     m_tree_view.set_model (m_tree_store);
     m_tree_view.get_style_context ()->add_class ("source-list");
@@ -112,12 +166,18 @@ DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_device
     m_row_connected = *m_tree_store->append ();
     m_row_connected.set_value (m_column_icon, get_color_pixbuf (Gdk::RGBA ("#26a269")));
     m_row_connected.set_value (m_column_text, Glib::ustring ("Connected"));
+    m_row_connected.set_value (m_column_starred, false);
+    m_row_connected.set_value (m_column_can_star, false);
     m_row_unavailable = *m_tree_store->append ();
     m_row_unavailable.set_value (m_column_icon, get_color_pixbuf (Gdk::RGBA ("#e5a50a")));
     m_row_unavailable.set_value (m_column_text, Glib::ustring ("Paired"));
+    m_row_unavailable.set_value (m_column_starred, false);
+    m_row_unavailable.set_value (m_column_can_star, false);
     m_row_available = *m_tree_store->append ();
     m_row_available.set_value (m_column_icon, get_color_pixbuf (Gdk::RGBA ("#9a9996")));
     m_row_available.set_value (m_column_text, Glib::ustring ("Available"));
+    m_row_available.set_value (m_column_starred, false);
+    m_row_available.set_value (m_column_can_star, false);
 
     // Update connected devices
     m_connected_devices->signal_row_inserted ().connect
@@ -187,6 +247,12 @@ DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_device
     m_item_column.pack_end (*m_cell_expander, false);
     m_item_column.set_cell_data_func (*m_cell_expander, sigc::mem_fun (*this, &DevicesList::cell_data_func_expander));
 
+    m_cell_starred = std::unique_ptr<Gtk::CellRenderer> (new CellRendererStarred);
+    static_cast<CellRendererStarred&>(*m_cell_starred).signal_toggle_starred.connect
+        (sigc::mem_fun (*this, &DevicesList::on_toggle_starred));
+    m_item_column.pack_end (*m_cell_starred, false);
+    m_item_column.set_cell_data_func (*m_cell_starred, sigc::mem_fun (*this, &DevicesList::cell_data_func_starred));
+
     m_cell_text.property_ellipsize ().set_value (Pango::ELLIPSIZE_END);
     m_cell_text.property_xalign ().set_value (0);
     m_item_column.pack_end (m_cell_text, true);
@@ -226,6 +292,15 @@ DevicesList::cell_data_func_icon (Gtk::CellRenderer* renderer, const Gtk::TreeMo
     icon_renderer.set_visible (pixbuf.operator bool ());
     if (pixbuf)
         icon_renderer.property_pixbuf ().set_value (pixbuf);
+}
+
+void
+DevicesList::cell_data_func_starred (Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& it)
+{
+    renderer->set_visible (it->get_value (m_column_can_star));
+
+    CellRendererStarred& icon_renderer = dynamic_cast<CellRendererStarred&> (*renderer);
+    icon_renderer.set_is_starred (it->get_value (m_column_starred));
 }
 
 bool
@@ -322,6 +397,8 @@ DevicesList::on_update_row_connected (const Gtk::TreeModel::Path& path, const Gt
         (it->get_value (m_connected_devices->column_type), 16));
     item->set_value (m_column_text, it->get_value (m_connected_devices->column_name));
     item->set_value (m_column_device, m_connected_devices->get_device (it));
+    item->set_value (m_column_starred, it->get_value (m_connected_devices->column_starred));
+    item->set_value (m_column_can_star, true);
 }
 
 void
@@ -333,6 +410,8 @@ DevicesList::on_update_row_unavailable (const Gtk::TreeModel::Path& path, const 
         (it->get_value (m_unavailable_devices->column_type), 16));
     item->set_value (m_column_text, it->get_value (m_unavailable_devices->column_name));
     item->set_value (m_column_device, m_unavailable_devices->get_device (it));
+    item->set_value (m_column_starred, it->get_value (m_unavailable_devices->column_starred));
+    item->set_value (m_column_can_star, true);
 }
 
 void
@@ -344,6 +423,8 @@ DevicesList::on_update_row_available (const Gtk::TreeModel::Path& path, const Gt
         (it->get_value (m_available_devices->column_type), 16));
     item->set_value (m_column_text, it->get_value (m_available_devices->column_name));
     item->set_value (m_column_device, m_available_devices->get_device (it));
+    item->set_value (m_column_starred, false);
+    item->set_value (m_column_can_star, false);
 }
 
 void
@@ -351,4 +432,14 @@ DevicesList::on_rows_reordered (const Gtk::TreeModel::Path& path, const Gtk::Tre
 {
     std::vector<int> order (new_order, new_order + parent.children ().size ());
     m_tree_store->reorder (parent.children (), order);
+}
+
+void
+DevicesList::on_toggle_starred (const Gtk::TreePath& path)
+{
+    Gtk::TreeIter iter = m_tree_store->get_iter (path);
+    if (iter && iter->get_value (m_column_device) && iter->get_value (m_column_can_star)) {
+        Conecto::Backend::get_instance ().get_config ().set_device_starred
+            (iter->get_value (m_column_device), !iter->get_value (m_column_starred));
+    }
 }

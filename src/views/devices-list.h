@@ -61,6 +61,8 @@ class DevicesList : public Gtk::ScrolledWindow {
     Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>>        m_column_icon;
     Gtk::TreeModelColumn<Glib::ustring>                    m_column_text;
     Gtk::TreeModelColumn<std::shared_ptr<Conecto::Device>> m_column_device;
+    Gtk::TreeModelColumn<bool>                             m_column_starred;
+    Gtk::TreeModelColumn<bool>                             m_column_can_star;
     Gtk::TreeViewColumn                                    m_item_column;
 
     Gtk::TreeModelColumnRecord   m_columns;
@@ -74,13 +76,15 @@ class DevicesList : public Gtk::ScrolledWindow {
     std::unique_ptr<Gtk::CellRenderer>       m_cell_expander;
     Gtk::CellRendererText                    m_cell_text;
     std::unique_ptr<Gtk::CellRendererPixbuf> m_cell_icon;
-    std::unique_ptr<Gtk::CellRenderer>       m_cell_spacer;
+    std::unique_ptr<Gtk::CellRenderer>       m_cell_starred;
 
     void cell_data_func_expander (Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& it);
     void cell_data_func_name (Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& it);
     void cell_data_func_icon (Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& it);
+    void cell_data_func_starred (Gtk::CellRenderer* renderer, const Gtk::TreeModel::iterator& it);
     bool on_select (const Glib::RefPtr<Gtk::TreeModel>& model, const Gtk::TreePath& path, bool);
     bool on_button_release (GdkEventButton* event);
+    void on_toggle_starred (const Gtk::TreePath& path);
 
     void on_insert_row (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it, Gtk::TreeRow parent);
     void on_delete_row (const Gtk::TreeModel::Path& path, Gtk::TreeRow parent);

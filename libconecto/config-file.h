@@ -61,40 +61,29 @@ class ConfigFile {
      */
     void dump_to_file (const std::string& path);
     /**
-     * Check if a device is specified as allowed in the configuration
-     *
-     * @param name The device's name
-     * @param type The device's type
-     */
-    bool get_device_allowed (const Device& device) const;
-    /**
      * Get a device's display name from the configuration. If there is no entry for the specified device,
      * this will return @p name
      *
-     * @param name The device's name
-     * @param type The device's type
+     * @param device The device
      */
     Glib::ustring get_display_name (const Device& device) const;
     /**
      * Set a device's name in the config file and save the file
      *
-     * @param name The device's name
-     * @param type The device's type
+     * @param device The device
      * @param display The display name
      */
     void set_display_name (const std::shared_ptr<Device>& device, const Glib::ustring& display);
     /**
      * Check if a device is starred. If there is no entry for the specified device, this will return @p false
      *
-     * @param name The device's name
-     * @param type The device's type
+     * @param device The device
      */
     bool get_device_starred (const Device& device) const;
     /**
      * Set if a device is starred and save the config file
      *
-     * @param name The device's name
-     * @param type The device's type
+     * @param device The device
      * @param starred true if the device has been starred
      */
     void set_device_starred (const std::shared_ptr<Device>& device, bool starred);

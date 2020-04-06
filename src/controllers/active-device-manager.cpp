@@ -58,7 +58,7 @@ ActiveDeviceManager::activate_device (const std::shared_ptr<Conecto::Device>& de
             if (it) {
                 m_device = device;
                 m_signal_available_device_update.emit (it, true);
-                connect_signals (m_available_devices, m_signal_connected_device_update);
+                connect_signals (m_available_devices, m_signal_available_device_update);
                 return;
             }
         }
@@ -67,11 +67,17 @@ ActiveDeviceManager::activate_device (const std::shared_ptr<Conecto::Device>& de
             if (it) {
                 m_device = device;
                 m_signal_unavailable_device_update.emit (it, true);
-                connect_signals (m_unavailable_devices, m_signal_connected_device_update);
+                connect_signals (m_unavailable_devices, m_signal_unavailable_device_update);
                 return;
             }
         }
     }
     m_device.reset ();
     m_signal_no_device_selected.emit ();
+}
+
+std::shared_ptr<Conecto::Device>
+ActiveDeviceManager::get_device () const noexcept
+{
+    return m_device;
 }

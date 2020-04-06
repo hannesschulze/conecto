@@ -87,8 +87,6 @@ class Device : public std::enable_shared_from_this<Device> {
     Glib::RefPtr<Gio::InetAddress> get_host () const noexcept;
     /** @brief true if the device is currently paired */
     const bool& get_is_paired () const noexcept;
-    /** @brief A flag used for checking if a specific device is allowed */
-    const bool& get_allowed () const noexcept;
     /** @brief true if the device is currently active */
     const bool& get_is_active () const noexcept;
     /** @brief Get a list of outgoing capabilities */
@@ -102,8 +100,6 @@ class Device : public std::enable_shared_from_this<Device> {
     /** @brief Get the certificate's SHA1 encoded fingerprint */
     const std::string& get_certificate_fingerprint () const noexcept;
 
-    /** @brief A flag used for checking if a specific device is allowed */
-    void set_allowed (bool allowed) noexcept;
     /** @brief Update the certificate used for encryption */
     void set_certificate (Glib::RefPtr<Gio::TlsCertificate> certificate) noexcept;
 
@@ -126,6 +122,10 @@ class Device : public std::enable_shared_from_this<Device> {
      * Trigger pairing or call @p handle_pair if already paired.
      */
     void maybe_pair () noexcept;
+    /**
+     * Trigger unpairing
+     */
+    void unpair () noexcept;
     /**
      * Activate device. Emits @p signal_connected after successfuly opening a connection.
      */
@@ -245,7 +245,6 @@ class Device : public std::enable_shared_from_this<Device> {
     uint                                  m_tcp_port;
     Glib::RefPtr<Gio::InetAddress>        m_host;
     bool                                  m_is_paired;
-    bool                                  m_allowed;
     bool                                  m_is_active;
     std::list<std::string>                m_outgoing_capabilities;
     std::list<std::string>                m_incoming_capabilities;

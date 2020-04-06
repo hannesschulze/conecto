@@ -23,10 +23,34 @@
 
 using namespace App::Widgets;
 
+namespace {
+
+std::string
+get_icon_name_for_starred (bool starred)
+{
+    return starred ? "starred" : "non-starred";
+}
+
+} // namespace
+
 HeaderBar::HeaderBar (BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> glade_ref)
     : Gtk::HeaderBar (cobject)
     , m_builder (glade_ref)
+    , m_device_options_revealer (nullptr)
 {
+    // Get widgets from Gtk::Builder
+    glade_ref->get_widget ("device_options_revealer", m_device_options_revealer);
+    glade_ref->get_widget ("btn_disconnect", m_btn_disconnect);
+    glade_ref->get_widget ("btn_toggle_favorite", m_btn_toggle_favorite);
+    glade_ref->get_widget ("img_toggle_starred", m_img_toggle_starred);
+
+    // Connect to button events
+    m_btn_disconnect->signal_clicked ().connect
+        (sigc::mem_fun (*this, &HeaderBar::on_btn_disconnect_clicked));
+    m_btn_toggle_favorite->signal_clicked ().connect
+        (sigc::mem_fun (*this, &HeaderBar::on_btn_toggle_favorite_clicked));
+
+    // Connect to active-device changes
     ACTIVE_DEVICE.signal_connected_device_update ().connect
         (sigc::mem_fun (*this, &HeaderBar::on_update_connected_device));
     ACTIVE_DEVICE.signal_unavailable_device_update ().connect
@@ -56,22 +80,47 @@ void
 HeaderBar::on_update_connected_device (const Gtk::TreeIter& it, bool new_device)
 {
     set_subtitle (it->get_value (m_connected_devices->column_name) + " (Online)");
+    m_img_toggle_starred->set_from_icon_name (get_icon_name_for_starred (it->get_value
+        (m_connected_devices->column_starred)), Gtk::ICON_SIZE_LARGE_TOOLBAR);
+    m_device_options_revealer->set_reveal_child (true);
 }
 
 void
 HeaderBar::on_update_unavailable_device (const Gtk::TreeIter& it, bool new_device)
 {
     set_subtitle (it->get_value (m_unavailable_devices->column_name) + " (Offline)");
+    m_img_toggle_starred->set_from_icon_name (get_icon_name_for_starred (it->get_value
+        (m_unavailable_devices->column_starred)), Gtk::ICON_SIZE_LARGE_TOOLBAR);
+    m_device_options_revealer->set_reveal_child (true);
 }
 
 void
 HeaderBar::on_update_available_device (const Gtk::TreeIter& it, bool new_device)
 {
     set_subtitle (it->get_value (m_available_devices->column_name));
+    m_device_options_revealer->set_reveal_child (false);
 }
 
 void
 HeaderBar::on_reset ()
 {
     set_subtitle ("");
+    m_device_options_revealer->set_reveal_child (false);
+}
+
+void
+HeaderBar::on_btn_disconnect_clicked ()
+{
+    auto dev = ACTIVE_DEVICE.get_device ();
+    g_assert (dev);
+    dev->unpair ();
+}
+
+void
+HeaderBar::on_btn_toggle_favorite_clicked ()
+{
+    auto dev = ACTIVE_DEVICE.get_device ();
+    g_assert (dev);
+    Conecto::ConfigFile& config = Conecto::Backend::get_instance ().get_config ();
+    config.set_device_starred (dev, !config.get_device_starred (*dev));
 }

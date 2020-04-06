@@ -161,27 +161,11 @@ Backend::on_new_device (std::shared_ptr<Device> new_device)
 
     device->update (*new_device);
 
-    g_debug ("Allowed? %s", device->get_allowed () ? "true" : "false");
-
-    // Check if the device is whitelisted in configuration
-    if (!device->get_allowed () && get_allowed_in_config (*device)) device->set_allowed (true);
-
     // Update device cache
     update_cache ();
 
-    if (device->get_allowed ())
-        // Device is allowed
-        activate_device (entry);
-    else
-        g_warning ("Skipping device %s activation, not allowed", device->to_string ().c_str ());
-}
-
-bool
-Backend::get_allowed_in_config (const Device& device) const
-{
-    if (device.get_allowed ()) return true;
-
-    return m_config->get_device_allowed (device);
+    // Establish a connection
+    activate_device (entry);
 }
 
 void
@@ -192,13 +176,6 @@ Backend::activate_device (const std::shared_ptr<DeviceEntry>& device)
     if (!device->device->get_is_active ()) {
         device->paired_conn = device->device->signal_paired ().connect ([this, device] (bool success) {
             update_cache ();
-            if (!success) {
-                // Stop listening for this signal
-                device->paired_conn.disconnect ();
-
-                // Deactivate if needed
-                device->device->deactivate ();
-            }
         });
         device->disconnected_conn = device->device->signal_disconnected ().connect ([device] () {
             g_debug ("Device %s got disconnected", device->device->to_string ().c_str ());
@@ -283,35 +260,6 @@ Backend::update_cache () noexcept
     } catch (Glib::FileError& err) {
         g_warning ("Failed to save cache file: %s", err.what ().c_str ());
     }
-}
-
-void
-Backend::allow_device (const std::shared_ptr<Device>& device)
-{
-    for (const auto& entry : m_devices) {
-        if (entry.second->device != device) continue;
-
-        device->set_allowed (true);
-        update_cache ();
-        activate_device (entry.second);
-        return;
-    }
-
-    throw DeviceNotFoundException (device->to_string ());
-}
-
-void
-Backend::disallow_device (const std::shared_ptr<Device>& device)
-{
-    for (const auto& entry : m_devices) {
-        if (entry.second->device != device) continue;
-
-        device->set_allowed (false);
-        update_cache ();
-        return;
-    }
-
-    throw DeviceNotFoundException (device->to_string ());
 }
 
 void

@@ -58,6 +58,11 @@ class ActiveDeviceManager {
      */
     void activate_device (const std::shared_ptr<Conecto::Device>& device);
 
+    /**
+     * @brief Get the currently activated device (may be empty)
+     */
+    std::shared_ptr<Conecto::Device> get_device () const noexcept;
+
     using type_signal_device_update = sigc::signal<void, const Gtk::TreeIter& /* it */, bool /* new_device */>;
     /**
      * @param it The iterator inside of the connected_devices model

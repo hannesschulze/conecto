@@ -110,21 +110,6 @@ class Backend {
     static void init_user_dirs ();
 
     /**
-     * Allow given device
-     *
-     * @param device The device
-     * @throw DeviceNotFoundException
-     */
-    void allow_device (const std::shared_ptr<Device>& device);
-    /**
-     * Disallow given device
-     *
-     * @param device The device
-     * @throw DeviceNotFoundException
-     */
-    void disallow_device (const std::shared_ptr<Device>& device);
-
-    /**
      * @param device The new device
      */
     using type_signal_found_new_device = sigc::signal<void, const std::shared_ptr<Device>& /* device */>;
@@ -168,7 +153,6 @@ class Backend {
     void        on_new_device (std::shared_ptr<Device> device);
     void        on_capability_added (const std::string& cap, const std::shared_ptr<Device>& device);
     void        on_capability_removed (const std::string& cap, const std::shared_ptr<Device>& device);
-    bool        get_allowed_in_config (const Device& device) const;
     void        activate_device (const std::shared_ptr<DeviceEntry>& entry);
     std::string get_cache_file () const; // Path to devices cache file
     void        update_cache () noexcept;

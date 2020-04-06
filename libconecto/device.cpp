@@ -42,7 +42,6 @@ Device::Device ()
     , m_protocol_version (7)
     , m_tcp_port (1714)
     , m_is_paired (false)
-    , m_allowed (false)
     , m_is_active (false)
     , m_certificate_fingerprint ("")
     , m_pair_in_progress (false)
@@ -89,7 +88,6 @@ Device::create_from_cache (Glib::KeyFile& cache, const std::string& name)
     res->m_tcp_port = (uint) cache.get_integer (name, "tcpPort");
     std::string last_ip_str = cache.get_string (name, "lastIPAddress");
     g_debug ("Last known address: %s:%u", last_ip_str.c_str (), res->m_tcp_port);
-    res->m_allowed = cache.get_boolean (name, "allowed");
     res->m_is_paired = cache.get_boolean (name, "paired");
     try {
         std::string cached_certificate = cache.get_string (name, "certificate");
@@ -126,7 +124,6 @@ Device::to_cache (Glib::KeyFile& cache, const std::string& name) const noexcept
     cache.set_integer (name, "protocolVersion", (int) get_protocol_version ());
     cache.set_integer (name, "tcpPort", (int) get_tcp_port ());
     cache.set_string (name, "lastIPAddress", get_host ()->to_string ());
-    cache.set_boolean (name, "allowed", get_allowed ());
     cache.set_boolean (name, "paired", get_is_paired ());
     cache.set_string (name, "certificate", get_certificate_pem ());
     cache.set_string_list (name, "outgoing_capabilities", get_outgoing_capabilities ());
@@ -176,12 +173,6 @@ Device::get_is_paired () const noexcept
 }
 
 const bool&
-Device::get_allowed () const noexcept
-{
-    return m_allowed;
-}
-
-const bool&
 Device::get_is_active () const noexcept
 {
     return m_is_active;
@@ -216,12 +207,6 @@ const std::string&
 Device::get_certificate_fingerprint () const noexcept
 {
     return m_certificate_fingerprint;
-}
-
-void
-Device::set_allowed (bool allowed) noexcept
-{
-    m_allowed = allowed;
 }
 
 void
@@ -261,7 +246,6 @@ Device::greet (std::function<void ()> cb) noexcept
         g_info ("Secure: %s", success ? "true" : "false");
         if (success) {
             update_certificate (m_channel->get_peer_certificate ());
-            Glib::signal_timeout ().connect_seconds_once ([this] () { maybe_pair (); }, 1);
         } else {
             g_warning ("Failed to enable secure channel");
             close_and_cleanup ();
@@ -308,6 +292,18 @@ Device::maybe_pair () noexcept
         // We are already paired
         handle_pair (true);
     }
+}
+
+void
+Device::unpair () noexcept
+{
+    if (!m_host) return;
+    g_debug ("Unpairing");
+
+    // Send request
+    if (m_channel)
+        m_channel->send (*NetworkPacket::create_pair (false));
+    handle_pair (false);
 }
 
 void
@@ -387,6 +383,7 @@ Device::handle_pair (bool pair) noexcept
         if (pair) {
             // Pair was not initiated by us, but we were called with information that we are paired,
             // assume we are paired and send a pair packet, but not expecting a response this time
+            // TODO: Show pair request
             this->pair (false);
             m_is_paired = true;
         } else {

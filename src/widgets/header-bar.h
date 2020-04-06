@@ -62,10 +62,21 @@ class HeaderBar : public Gtk::HeaderBar {
 
     Glib::RefPtr<Gtk::Builder> m_builder;
 
+    std::shared_ptr<Conecto::Device> m_active_device;
+
+    // Widgets from the Gtk::Builder
+    Gtk::Revealer* m_device_options_revealer;
+    Gtk::Button*   m_btn_disconnect;
+    Gtk::Button*   m_btn_toggle_favorite;
+    Gtk::Image*    m_img_toggle_starred;
+
     void on_update_connected_device (const Gtk::TreeIter& it, bool new_device);
     void on_update_unavailable_device (const Gtk::TreeIter& it, bool new_device);
     void on_update_available_device (const Gtk::TreeIter& it, bool new_device);
     void on_reset ();
+
+    void on_btn_disconnect_clicked ();
+    void on_btn_toggle_favorite_clicked ();
 };
 
 } // namespace Widgets

@@ -78,30 +78,6 @@ ConfigFile::dump_to_file (const std::string& path)
     }
 }
 
-bool
-ConfigFile::get_device_allowed (const Device& device) const
-{
-    const std::string& name = device.get_device_name ();
-    const std::string& type = device.get_device_type ();
-    try {
-        std::vector<std::string> devices = m_keyfile.get_string_list ("main", "devices");
-
-        for (const auto& dev : devices) {
-            if (m_keyfile.has_group (dev) == false) {
-                g_critical ("No group in keyfile: %s", dev.c_str ());
-                continue;
-            }
-
-            if (m_keyfile.get_string (dev, "name") == name && m_keyfile.get_string (dev, "type") == type &&
-                m_keyfile.get_boolean (dev, "allowed"))
-                return true;
-        }
-    } catch (Glib::KeyFileError& err) {
-        g_critical ("Failed to read entries from configuration file: %s", err.what ().c_str ());
-    }
-    return false;
-}
-
 Glib::ustring
 ConfigFile::get_display_name (const Device& device) const
 {
@@ -143,6 +119,7 @@ ConfigFile::set_display_name (const std::shared_ptr<Device>& device, const Glib:
 
             m_keyfile.set_string (dev, "display", display);
             dump_to_file (m_path);
+            m_signal_device_changed.emit (device);
             return;
         }
 
@@ -153,6 +130,7 @@ ConfigFile::set_display_name (const std::shared_ptr<Device>& device, const Glib:
         m_keyfile.set_string (id, "type", type);
         m_keyfile.set_string (id, "display", display);
         dump_to_file (m_path);
+        m_signal_device_changed.emit (device);
     } catch (Glib::KeyFileError& err) {
         g_critical ("Failed to write entries to configuration file: %s", err.what ().c_str ());
     }
@@ -199,6 +177,7 @@ ConfigFile::set_device_starred (const std::shared_ptr<Device>& device, bool star
 
             m_keyfile.set_boolean (dev, "starred", starred);
             dump_to_file (m_path);
+            m_signal_device_changed.emit (device);
             return;
         }
 
@@ -209,6 +188,7 @@ ConfigFile::set_device_starred (const std::shared_ptr<Device>& device, bool star
         m_keyfile.set_string (id, "type", type);
         m_keyfile.set_boolean (id, "starred", starred);
         dump_to_file (m_path);
+        m_signal_device_changed.emit (device);
     } catch (Glib::KeyFileError& err) {
         g_critical ("Failed to write entries to configuration file: %s", err.what ().c_str ());
     }

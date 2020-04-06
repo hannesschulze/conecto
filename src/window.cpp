@@ -45,6 +45,17 @@ Window::Window (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
         set_default_size (640, 480);
     }
 
+    // Set up CSS
+    auto main_provider = Gtk::CssProvider::create ();
+    auto fallback_provider = Gtk::CssProvider::create ();
+    main_provider->load_from_resource ("/com/github/hannesschulze/conecto/css/style.css");
+    fallback_provider->load_from_resource ("/com/github/hannesschulze/conecto/css/fallback.css");
+
+    Gtk::StyleContext::add_provider_for_screen (Gdk::Screen::get_default (), main_provider,
+                                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    Gtk::StyleContext::add_provider_for_screen (Gdk::Screen::get_default (), fallback_provider,
+                                                GTK_STYLE_PROVIDER_PRIORITY_FALLBACK);
+
     // Set up the view
     m_paned.set_position (155);
     m_paned.pack1 (m_devices_list, false, false);

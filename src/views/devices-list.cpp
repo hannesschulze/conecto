@@ -21,7 +21,6 @@
 #include "devices-list.h"
 #include "../utils/icons.h"
 #include "../controllers/active-device-manager.h"
-#include <iostream>
 
 using namespace App::Views;
 using namespace App::Models;

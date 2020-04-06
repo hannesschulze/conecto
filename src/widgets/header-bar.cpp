@@ -72,7 +72,6 @@ HeaderBar::create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devic
     res->m_connected_devices = connected_devices;
     res->m_unavailable_devices = unavailable_devices;
     res->m_available_devices = available_devices;
-    res->gobj ();
     return std::shared_ptr<HeaderBar> (res);
 }
 

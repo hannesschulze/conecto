@@ -2,9 +2,14 @@
 <gresources>
   <gresource prefix="/com/github/hannesschulze/conecto/css">
     <file alias="style.css" compressed="true">css/style.css</file>
+    <file alias="fallback.css" compressed="true">css/fallback.css</file>
   </gresource>
 
   <gresource prefix="/com/github/hannesschulze/conecto/ui/widgets">
     <file alias="header-bar.ui">ui/widgets/header-bar.ui</file>
+  </gresource>
+
+  <gresource prefix="/com/github/hannesschulze/conecto/ui/views">
+    <file alias="empty-selection-view.ui">ui/views/empty-selection-view.ui</file>
   </gresource>
 </gresources>

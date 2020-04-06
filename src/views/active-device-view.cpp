@@ -30,12 +30,13 @@ ActiveDeviceView::ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>
     , m_connected_devices (connected_devices)
     , m_unavailable_devices (unavailable_devices)
     , m_available_devices (available_devices)
+    , m_empty_view (EmptySelectionView::create ())
 {
-    add (*Gtk::make_managed<Gtk::Label> ("Placeholder"), "placeholder");
+    add (*m_empty_view, "empty");
     add (*Gtk::make_managed<Gtk::Label> ("Connected"), "connected");
     add (*Gtk::make_managed<Gtk::Label> ("Unavailable"), "unavailable");
     add (*Gtk::make_managed<Gtk::Label> ("Available"), "available");
-    on_show_placeholder ();
+    on_show_empty ();
 
     ACTIVE_DEVICE.signal_connected_device_update ().connect
         (sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "connected"));
@@ -44,7 +45,7 @@ ActiveDeviceView::ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>
     ACTIVE_DEVICE.signal_available_device_update ().connect
         (sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "available"));
     ACTIVE_DEVICE.signal_no_device_selected ().connect
-        (sigc::mem_fun (*this, &ActiveDeviceView::on_show_placeholder));
+        (sigc::mem_fun (*this, &ActiveDeviceView::on_show_empty));
 }
 
 void
@@ -55,7 +56,7 @@ ActiveDeviceView::on_update_device (const Gtk::TreeIter& it, bool new_device, co
 }
 
 void
-ActiveDeviceView::on_show_placeholder ()
+ActiveDeviceView::on_show_empty ()
 {
-    set_visible_child ("placeholder");
+    set_visible_child ("empty");
 }

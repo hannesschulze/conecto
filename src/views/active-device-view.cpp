@@ -31,11 +31,12 @@ ActiveDeviceView::ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>
     , m_unavailable_devices (unavailable_devices)
     , m_available_devices (available_devices)
     , m_empty_view (EmptySelectionView::create ())
+    , m_available_device_view (AvailableDeviceView::create (available_devices))
 {
     add (*m_empty_view, "empty");
     add (*Gtk::make_managed<Gtk::Label> ("Connected"), "connected");
     add (*Gtk::make_managed<Gtk::Label> ("Unavailable"), "unavailable");
-    add (*Gtk::make_managed<Gtk::Label> ("Available"), "available");
+    add (*m_available_device_view, "available");
     on_show_empty ();
 
     ACTIVE_DEVICE.signal_connected_device_update ().connect

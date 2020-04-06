@@ -19,6 +19,7 @@
  */
 
 #include "available-devices.h"
+#include "../controllers/active-device-manager.h"
 
 using namespace App::Models;
 
@@ -31,6 +32,8 @@ AvailableDevices::AvailableDevices ()
     m_columns.add (column_type);
     m_columns.add (column_host_addr);
     m_columns.add (column_host_port);
+    m_columns.add (column_has_requested_pair);
+    m_columns.add (column_pair_in_progress);
     set_column_types (m_columns);
 
     auto& backend = Conecto::Backend::get_instance ();
@@ -57,7 +60,16 @@ AvailableDevices::on_new_device (const std::shared_ptr<Conecto::Device>& device)
         (sigc::bind (sigc::mem_fun (*this, &AvailableDevices::update_for_device), device)));
     m_connections.push_back (device->signal_paired ().connect
         (sigc::hide (sigc::bind<0> (sigc::mem_fun (*this, &AvailableDevices::update_for_device), device))));
+    m_connections.push_back (device->signal_pair_request ().connect
+        (sigc::bind (sigc::mem_fun (*this, &AvailableDevices::on_pair_request), device)));
     update_for_device (device);
+}
+
+void
+AvailableDevices::on_pair_request (const std::shared_ptr<Conecto::Device>& device)
+{
+    update_for_device (device);
+    ACTIVE_DEVICE.activate_device (device);
 }
 
 void
@@ -77,6 +89,8 @@ AvailableDevices::update_for_device (const std::shared_ptr<Conecto::Device>& dev
         iter->set_value (column_type, Glib::ustring (device->get_device_type ()));
         iter->set_value (column_host_addr, device->get_host ()->to_string ());
         iter->set_value (column_host_port, device->get_tcp_port ());
+        iter->set_value (column_has_requested_pair, device->get_pair_requested ());
+        iter->set_value (column_pair_in_progress, device->get_pair_in_progress ());
     } else if (is_valid && iter) {
         const auto& config = Conecto::Backend::get_instance ().get_config ();
         iter->set_value (column_name, config.get_display_name (*device));
@@ -84,6 +98,8 @@ AvailableDevices::update_for_device (const std::shared_ptr<Conecto::Device>& dev
         iter->set_value (column_type, Glib::ustring (device->get_device_type ()));
         iter->set_value (column_host_addr, device->get_host ()->to_string ());
         iter->set_value (column_host_port, device->get_tcp_port ());
+        iter->set_value (column_has_requested_pair, device->get_pair_requested ());
+        iter->set_value (column_pair_in_progress, device->get_pair_in_progress ());
     }
 }
 

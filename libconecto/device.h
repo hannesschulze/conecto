@@ -87,6 +87,10 @@ class Device : public std::enable_shared_from_this<Device> {
     Glib::RefPtr<Gio::InetAddress> get_host () const noexcept;
     /** @brief true if the device is currently paired */
     const bool& get_is_paired () const noexcept;
+    /** @brief true if the client has sent a pair request */
+    const bool& get_pair_requested () const noexcept;
+    /** @brief true if a pair request has been sent and we are waiting for a response */
+    const bool& get_pair_in_progress () const noexcept;
     /** @brief true if the device is currently active */
     const bool& get_is_active () const noexcept;
     /** @brief Get a list of outgoing capabilities */
@@ -102,6 +106,9 @@ class Device : public std::enable_shared_from_this<Device> {
 
     /** @brief Update the certificate used for encryption */
     void set_certificate (Glib::RefPtr<Gio::TlsCertificate> certificate) noexcept;
+
+    /** @brief Send a response to a pair request */
+    void send_pair_response (bool accept) noexcept;
 
     /**
      * Get a short string representing this device
@@ -169,6 +176,7 @@ class Device : public std::enable_shared_from_this<Device> {
     using type_signal_paired = sigc::signal<void, bool /* pair */>;
     using type_signal_connected = sigc::signal<void>;
     using type_signal_disconnected = sigc::signal<void>;
+    using type_signal_pair_request = sigc::signal<void>;
     /**
      * @param message The packet received
      */
@@ -185,6 +193,10 @@ class Device : public std::enable_shared_from_this<Device> {
      * Emitted when the device has been paired
      */
     type_signal_paired signal_paired () { return m_signal_paired; }
+    /**
+     * Emitted when either the device or the PC has sent a pair request
+     */
+    type_signal_pair_request signal_pair_request () { return m_signal_pair_request; }
     /**
      * Emitted when we are connected to the device
      */
@@ -235,6 +247,7 @@ class Device : public std::enable_shared_from_this<Device> {
     type_signal_connected          m_signal_connected;
     type_signal_disconnected       m_signal_disconnected;
     type_signal_message            m_signal_message;
+    type_signal_pair_request       m_signal_pair_request;
     type_signal_capability_added   m_signal_capability_added;
     type_signal_capability_removed m_signal_capability_removed;
 
@@ -252,6 +265,7 @@ class Device : public std::enable_shared_from_this<Device> {
     Glib::RefPtr<Gio::TlsCertificate>     m_certificate;
     std::string                           m_certificate_fingerprint;
     bool                                  m_pair_in_progress; // set to true if pair request was sent
+    bool                                  m_pair_requested; // set to true if the client sent a pair request
     sigc::connection                      m_pair_timeout_connection;
     std::unique_ptr<CommunicationChannel> m_channel;
 

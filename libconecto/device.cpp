@@ -45,6 +45,7 @@ Device::Device ()
     , m_is_active (false)
     , m_certificate_fingerprint ("")
     , m_pair_in_progress (false)
+    , m_pair_requested (false)
 {
 }
 
@@ -173,6 +174,18 @@ Device::get_is_paired () const noexcept
 }
 
 const bool&
+Device::get_pair_requested () const noexcept
+{
+    return m_pair_requested;
+}
+
+const bool&
+Device::get_pair_in_progress () const noexcept
+{
+    return m_pair_in_progress;
+}
+
+const bool&
 Device::get_is_active () const noexcept
 {
     return m_is_active;
@@ -261,6 +274,7 @@ Device::pair (bool expect_response) noexcept
 
     if (expect_response == true) {
         m_pair_in_progress = true;
+        m_signal_pair_request.emit ();
         // Pairing timeout
         m_pair_timeout_connection =
                 Glib::signal_timeout ().connect_seconds (sigc::mem_fun (*this, &Device::on_pair_timeout), PAIR_TIMEOUT);
@@ -304,6 +318,14 @@ Device::unpair () noexcept
     if (m_channel)
         m_channel->send (*NetworkPacket::create_pair (false));
     handle_pair (false);
+}
+
+void
+Device::send_pair_response (bool accept) noexcept
+{
+    if (!m_pair_requested) return;
+
+    handle_pair (accept);
 }
 
 void
@@ -372,23 +394,33 @@ Device::handle_pair (bool pair) noexcept
         if (pair) {
             g_debug ("Device paired, pairing complete");
             m_is_paired = true;
+            m_pair_requested = false;
         } else {
             g_warning ("Pairing rejected by device");
             m_is_paired = false;
+            m_pair_requested = false;
         }
         // Pair complete
         m_pair_in_progress = false;
+    } else if (m_pair_requested) {
+        m_pair_requested = false;
+        m_is_paired = pair;
+        if (pair)
+            this->pair (false);
+        else
+            m_channel->send (*NetworkPacket::create_pair (false));
     } else {
         g_debug ("Unsolicited pair change from device");
         if (pair) {
-            // Pair was not initiated by us, but we were called with information that we are paired,
-            // assume we are paired and send a pair packet, but not expecting a response this time
-            // TODO: Show pair request
-            this->pair (false);
-            m_is_paired = true;
+            // Show pair request
+            m_is_paired = false;
+            m_pair_requested = true;
+            m_signal_pair_request.emit ();
+            return;
         } else {
             // Unpair from device
             m_is_paired = false;
+            m_pair_requested = false;
         }
     }
 

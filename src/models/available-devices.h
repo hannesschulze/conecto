@@ -50,6 +50,10 @@ class AvailableDevices : public Gtk::ListStore {
     Gtk::TreeModelColumn<Glib::ustring> column_host_addr;
     /** @brief The host's port */
     Gtk::TreeModelColumn<uint> column_host_port;
+    /** @brief true if the device has sent a pair request */
+    Gtk::TreeModelColumn<bool> column_has_requested_pair;
+    /** @brief true if we are waiting for a response */
+    Gtk::TreeModelColumn<bool> column_pair_in_progress;
 
     /**
      * @brief Find a device in the model
@@ -74,6 +78,7 @@ class AvailableDevices : public Gtk::ListStore {
     Gtk::TreeModelColumn<std::shared_ptr<Conecto::Device>> column_device;
 
     void on_new_device (const std::shared_ptr<Conecto::Device>& device);
+    void on_pair_request (const std::shared_ptr<Conecto::Device>& device);
     void update_for_device (const std::shared_ptr<Conecto::Device>& device);
 
     Gtk::TreeModel::ColumnRecord m_columns;

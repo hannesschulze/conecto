@@ -24,7 +24,7 @@
 using namespace App::Controllers;
 
 SettingsManager::SettingsManager ()
-    : Gio::Settings (Conecto::Config::APP_ID)
+    : Gio::Settings (Conecto::Constants::APP_ID)
 {
 }
 

@@ -27,7 +27,7 @@
 using namespace App;
 
 Application::Application ()
-    : Gtk::Application (Conecto::Config::APP_ID)
+    : Gtk::Application (Conecto::Constants::APP_ID)
     , m_connected_devices (Models::ConnectedDevices::create ())
     , m_unavailable_devices (Models::UnavailableDevices::create ())
     , m_available_devices (Models::AvailableDevices::create ())

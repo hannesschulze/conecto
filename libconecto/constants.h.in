@@ -1,4 +1,4 @@
-/* config.h.in
+/* constants.h.in
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -23,11 +23,11 @@
 #include <string>
 
 namespace Conecto {
-namespace Config {
+namespace Constants {
 
 static const std::string PROJECT_NAME = @NAME@;
 static const std::string PROJECT_VERSION = @VERSION@;
 static const std::string APP_ID = @APPID@;
 
-} // namespace Config
+} // namespace Constants
 } // namespace Conecto

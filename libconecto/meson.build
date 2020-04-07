@@ -4,8 +4,8 @@ conf_data.set_quoted('NAME', meson.project_name())
 conf_data.set_quoted('VERSION', meson.project_version())
 conf_data.set_quoted('APPID', 'com.github.hannesschulze.' + meson.project_name())
 config_header = configure_file(
-  input: 'config.h.in',
-  output: 'config.h',
+  input: 'constants.h.in',
+  output: 'constants.h',
   configuration: conf_data
 )
 conf_inc = include_directories('.')

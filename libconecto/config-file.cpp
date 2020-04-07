@@ -46,11 +46,19 @@ ConfigFile::ConfigFile (const std::string& base_config_dir)
         if (!found) g_critical ("Configuration file %s not found", CONFIG_FILE);
         g_message ("Loaded configuration from %s", full_path.c_str ());
     } catch (Glib::KeyFileError& err) {
-        g_critical ("Failed to parse configuration file: %s", err.what ().c_str ());
         m_keyfile = Glib::KeyFile ();
     } catch (Glib::FileError& err) {
-        g_critical ("Failed to read configuration file: %s", err.what ().c_str ());
         m_keyfile = Glib::KeyFile ();
+    }
+
+    // Write configuration to user config file if not present
+    if (m_path != base_config_dir)
+        dump_to_file (base_config_dir + "/" + CONFIG_FILE);
+
+    // Create a simple config file if the current one is not valid
+    if (!m_keyfile.has_group ("main") || !m_keyfile.has_key ("main", "devices")) {
+        m_keyfile.set_string_list ("main", "devices", std::vector<std::string> ());
+        dump_to_file (base_config_dir + "/" + CONFIG_FILE);
     }
 }
 

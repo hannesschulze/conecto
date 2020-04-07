@@ -67,10 +67,6 @@ Backend::Backend ()
     // Set up config
     m_config = std::make_unique<ConfigFile> (get_config_dir ());
 
-    // Write configuration to user config file if not present
-    std::string expected_path = get_config_dir () + "/" + ConfigFile::get_file_name ();
-    if (m_config->get_path () != expected_path) m_config->dump_to_file (expected_path);
-
     // Listen to new devices
     m_discovery.signal_device_found ().connect (sigc::mem_fun (+this, &Backend::on_new_device));
 }

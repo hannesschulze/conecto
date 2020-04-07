@@ -25,7 +25,12 @@ using namespace App::Views;
 ConnectedDeviceView::ConnectedDeviceView (BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> glade_ref)
     : Gtk::Stack (cobject)
     , m_builder (glade_ref)
+    , m_grid_overview (nullptr)
 {
+    m_builder->get_widget ("grid_overview", m_grid_overview);
+
+    m_battery_level_widget.set_progress (0.4);
+    m_grid_overview->attach (m_battery_level_widget, 0, 1, 1, 1);
 }
 
 std::shared_ptr<ConnectedDeviceView>

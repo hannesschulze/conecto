@@ -21,6 +21,7 @@
 #pragma once
 
 #include <gtkmm.h>
+#include "../widgets/circular-progress-bar.h"
 
 namespace App {
 namespace Views {
@@ -47,6 +48,12 @@ class ConnectedDeviceView : public Gtk::Stack {
     ConnectedDeviceView (BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> glade_ref);
 
     Glib::RefPtr<Gtk::Builder> m_builder;
+
+    // Widgets from the Gtk::Builder
+    Gtk::Grid* m_grid_overview;
+
+    // Custom widgets
+    Widgets::CircularProgressBar m_battery_level_widget;
 };
 
 } // namespace Views

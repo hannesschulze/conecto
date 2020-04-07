@@ -18,6 +18,7 @@ conecto_sources = files(
   'views/connected-device-view.cpp',
 
   'widgets/header-bar.cpp',
+  'widgets/circular-progress-bar.cpp',
 
   'utils/icons.cpp',
 )

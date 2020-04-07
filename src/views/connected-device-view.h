@@ -22,6 +22,7 @@
 
 #include <gtkmm.h>
 #include "../widgets/circular-progress-bar.h"
+#include "../models/connected-devices.h"
 
 namespace App {
 namespace Views {
@@ -36,7 +37,7 @@ class ConnectedDeviceView : public Gtk::Stack {
     /**
      * @brief Construct the view
      */
-    static std::shared_ptr<ConnectedDeviceView> create ();
+    static std::shared_ptr<ConnectedDeviceView> create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices);
     ~ConnectedDeviceView () {}
 
     ConnectedDeviceView (const ConnectedDeviceView&) = delete;
@@ -50,10 +51,16 @@ class ConnectedDeviceView : public Gtk::Stack {
     Glib::RefPtr<Gtk::Builder> m_builder;
 
     // Widgets from the Gtk::Builder
-    Gtk::Grid* m_grid_overview;
+    Gtk::Grid*  m_grid_overview;
+    Gtk::Label* m_lbl_device_name;
+    Gtk::Label* m_lbl_battery_level;
 
     // Custom widgets
     Widgets::CircularProgressBar m_battery_level_widget;
+
+    Glib::RefPtr<Models::ConnectedDevices> m_connected_devices;
+
+    void on_update (const Gtk::TreeIter& iter, bool new_device);
 };
 
 } // namespace Views

@@ -41,7 +41,7 @@ CircularProgressBar::CircularProgressBar ()
     , Gtk::Bin ()
     , m_progress (0.0)
 {
-    set_size_request (140, 140);
+    set_size_request (120, 120);
 }
 
 Gtk::SizeRequestMode

@@ -27,6 +27,7 @@
 #include "empty-selection-view.h"
 #include "available-device-view.h"
 #include "unavailable-device-view.h"
+#include "connected-device-view.h"
 
 namespace App {
 namespace Views {
@@ -50,6 +51,9 @@ class ActiveDeviceView : public Gtk::Stack {
                       const Glib::RefPtr<Models::AvailableDevices>& available_devices);
     ~ActiveDeviceView () {}
 
+    /** @brief Get a stack containing all available views for connected devices (typically a @p ConnectedDeviceView) */
+    std::shared_ptr<Gtk::Stack> get_connected_device_stack () const;
+
     ActiveDeviceView (const ActiveDeviceView&) = delete;
     ActiveDeviceView& operator= (const ActiveDeviceView&) = delete;
 
@@ -64,6 +68,7 @@ class ActiveDeviceView : public Gtk::Stack {
     std::shared_ptr<EmptySelectionView>    m_empty_view;
     std::shared_ptr<AvailableDeviceView>   m_available_device_view;
     std::shared_ptr<UnavailableDeviceView> m_unavailable_device_view;
+    std::shared_ptr<ConnectedDeviceView>   m_connected_device_view;
 };
 
 } // namespace Views

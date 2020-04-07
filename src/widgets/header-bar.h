@@ -42,10 +42,13 @@ class HeaderBar : public Gtk::HeaderBar {
      * @param connected_devices The connected-devices model
      * @param unavailable_devices The unavailable-devices model
      * @param available_devices The available-devices model
+     * @param connected_stack A @p Gtk::Stack containing pages to switch between if a connected device is active
+     * (typically a @p ConnectedDeviceView)
      */
     static std::shared_ptr<HeaderBar> create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
                                               const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                                              const Glib::RefPtr<Models::AvailableDevices>& available_devices);
+                                              const Glib::RefPtr<Models::AvailableDevices>& available_devices,
+                                              Gtk::Stack& connected_stack);
     ~HeaderBar () {}
 
     HeaderBar (const HeaderBar&) = delete;
@@ -65,10 +68,14 @@ class HeaderBar : public Gtk::HeaderBar {
     std::shared_ptr<Conecto::Device> m_active_device;
 
     // Widgets from the Gtk::Builder
-    Gtk::Revealer* m_device_options_revealer;
-    Gtk::Button*   m_btn_disconnect;
-    Gtk::Button*   m_btn_toggle_favorite;
-    Gtk::Image*    m_img_toggle_starred;
+    Gtk::Stack*         m_title_stack;
+    Gtk::Label*         m_lbl_title;
+    Gtk::Label*         m_lbl_subtitle;
+    Gtk::StackSwitcher* m_connected_stack_switcher;
+    Gtk::Revealer*      m_device_options_revealer;
+    Gtk::Button*        m_btn_disconnect;
+    Gtk::Button*        m_btn_toggle_favorite;
+    Gtk::Image*         m_img_toggle_starred;
 
     void on_update_connected_device (const Gtk::TreeIter& it, bool new_device);
     void on_update_unavailable_device (const Gtk::TreeIter& it, bool new_device);

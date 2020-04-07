@@ -33,9 +33,10 @@ ActiveDeviceView::ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>
     , m_empty_view (EmptySelectionView::create ())
     , m_available_device_view (AvailableDeviceView::create (available_devices))
     , m_unavailable_device_view (UnavailableDeviceView::create (unavailable_devices))
+    , m_connected_device_view (ConnectedDeviceView::create ())
 {
     add (*m_empty_view, "empty");
-    add (*Gtk::make_managed<Gtk::Label> ("Connected"), "connected");
+    add (*m_connected_device_view, "connected");
     add (*m_unavailable_device_view, "unavailable");
     add (*m_available_device_view, "available");
     on_show_empty ();
@@ -61,4 +62,10 @@ void
 ActiveDeviceView::on_show_empty ()
 {
     set_visible_child ("empty");
+}
+
+std::shared_ptr<Gtk::Stack>
+ActiveDeviceView::get_connected_device_stack () const
+{
+    return m_connected_device_view;
 }

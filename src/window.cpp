@@ -30,7 +30,8 @@ Window::Window (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
     , m_paned (Gtk::ORIENTATION_HORIZONTAL)
     , m_devices_list (connected_devices, unavailable_devices, available_devices)
     , m_active_device (connected_devices, unavailable_devices, available_devices)
-    , m_header_bar (Widgets::HeaderBar::create (connected_devices, unavailable_devices, available_devices))
+    , m_header_bar (Widgets::HeaderBar::create (connected_devices, unavailable_devices, available_devices,
+                                                *m_active_device.get_connected_device_stack ()))
 {
     // Set size and position
     set_size_request (640, 480);

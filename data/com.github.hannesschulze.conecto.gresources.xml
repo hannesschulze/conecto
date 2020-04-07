@@ -13,5 +13,6 @@
     <file alias="empty-selection-view.ui">ui/views/empty-selection-view.ui</file>
     <file alias="available-device-view.ui">ui/views/available-device-view.ui</file>
     <file alias="unavailable-device-view.ui">ui/views/unavailable-device-view.ui</file>
+    <file alias="connected-device-view.ui">ui/views/connected-device-view.ui</file>
   </gresource>
 </gresources>

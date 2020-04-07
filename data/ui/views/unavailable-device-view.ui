@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.22.2 -->
+<interface>
+  <requires lib="gtk+" version="3.20"/>
+  <object class="GtkGrid" id="ConectoViewsUnavailableDeviceView">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="halign">center</property>
+    <property name="valign">center</property>
+    <property name="margin_left">24</property>
+    <property name="margin_right">24</property>
+    <property name="margin_top">24</property>
+    <property name="margin_bottom">24</property>
+    <property name="orientation">vertical</property>
+    <property name="row_spacing">12</property>
+    <child>
+      <object class="GtkLabel" id="lbl_title">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <property name="label" translatable="yes">DEVICE is currently unavailable</property>
+        <property name="justify">center</property>
+        <property name="wrap">True</property>
+        <style>
+          <class name="h2"/>
+        </style>
+      </object>
+      <packing>
+        <property name="left_attach">0</property>
+        <property name="top_attach">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <property name="label" translatable="yes">Please make sure that you are still paired and that you are in the same WiFi network</property>
+        <property name="justify">center</property>
+        <property name="wrap">True</property>
+        <style>
+          <class name="h3"/>
+        </style>
+      </object>
+      <packing>
+        <property name="left_attach">0</property>
+        <property name="top_attach">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="btn_disconnect">
+        <property name="label" translatable="yes">Disconnect Device</property>
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <property name="halign">center</property>
+        <property name="margin_top">12</property>
+        <style>
+          <class name="destructive-action"/>
+        </style>
+      </object>
+      <packing>
+        <property name="left_attach">0</property>
+        <property name="top_attach">2</property>
+      </packing>
+    </child>
+  </object>
+</interface>

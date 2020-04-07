@@ -369,10 +369,9 @@ Device::on_packet_received (const NetworkPacket& packet)
         handle_pair (pair);
     } else {
         if (!m_is_paired) {
-            // We sent a pair request, but got another packet, supposedly meaning we're alredy paired since the
-            // device is sending us data
-            g_warning ("Not paired but got a packet, assuming device is paired");
-            handle_pair (true);
+            // We are unpaired but received a packet -> tell the device that we are unpaired
+            g_warning ("Not paired but got a packet, assuming device is unpaired");
+            unpair ();
         }
 
         // Emit signal

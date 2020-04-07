@@ -14,6 +14,7 @@ conecto_sources = files(
   'views/active-device-view.cpp',
   'views/empty-selection-view.cpp',
   'views/available-device-view.cpp',
+  'views/unavailable-device-view.cpp',
 
   'widgets/header-bar.cpp',
 

@@ -77,9 +77,10 @@ CommunicationChannel::send (const NetworkPacket& packet)
     std::string to_send = packet.serialize () + "\n";
     g_debug ("Send data: %s", to_send.c_str ());
 
-    g_assert (m_data_out);
-
-    if (!m_data_out->put_string (to_send)) g_warning ("Failed to send message");
+    if (!m_data_out)
+        g_warning ("Tried to send a message with no output stream");
+    else if (!m_data_out->put_string (to_send))
+        g_warning ("Failed to send message");
 }
 
 void

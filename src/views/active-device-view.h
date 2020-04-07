@@ -26,6 +26,7 @@
 #include "../models/available-devices.h"
 #include "empty-selection-view.h"
 #include "available-device-view.h"
+#include "unavailable-device-view.h"
 
 namespace App {
 namespace Views {
@@ -60,8 +61,9 @@ class ActiveDeviceView : public Gtk::Stack {
     void on_update_device (const Gtk::TreeIter& it, bool new_device, const std::string& child_name);
     void on_show_empty ();
 
-    std::shared_ptr<EmptySelectionView>  m_empty_view;
-    std::shared_ptr<AvailableDeviceView> m_available_device_view;
+    std::shared_ptr<EmptySelectionView>    m_empty_view;
+    std::shared_ptr<AvailableDeviceView>   m_available_device_view;
+    std::shared_ptr<UnavailableDeviceView> m_unavailable_device_view;
 };
 
 } // namespace Views

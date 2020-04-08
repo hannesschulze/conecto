@@ -22,6 +22,8 @@
 
 #include <string>
 
+#mesondefine ENABLE_PLANK_SUPPORT
+
 namespace Conecto {
 namespace Constants {
 

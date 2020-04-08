@@ -3,6 +3,7 @@ conf_data = configuration_data()
 conf_data.set_quoted('NAME', meson.project_name())
 conf_data.set_quoted('VERSION', meson.project_version())
 conf_data.set_quoted('APPID', 'com.github.hannesschulze.' + meson.project_name())
+conf_data.set('ENABLE_PLANK_SUPPORT', not get_option('disable_plank_support'))
 config_header = configure_file(
   input: 'constants.h.in',
   output: 'constants.h',

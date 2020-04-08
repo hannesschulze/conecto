@@ -22,3 +22,7 @@ conecto_sources = files(
 
   'utils/icons.cpp',
 )
+
+if not get_option('disable_plank_support')
+  conecto_sources += files('controllers/dock-item-manager.cpp')
+endif

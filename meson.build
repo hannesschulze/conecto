@@ -59,6 +59,10 @@ conecto_deps = [
   dependency('gtkmm-3.0')
 ]
 
+if not get_option('disable_plank_support')
+  conecto_deps += dependency('plank')
+endif
+
 conecto_sources += gnome.compile_resources(
   'conecto-resources',
   'data/com.github.hannesschulze.conecto.gresources.xml',

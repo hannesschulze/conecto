@@ -44,7 +44,7 @@ class ActiveDeviceManager {
     }
     ~ActiveDeviceManager () {}
 
-    /** Update the models to look in */
+    /** @brief Update the models to look in */
     void set_models (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
                      const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
                      const Glib::RefPtr<Models::AvailableDevices>& available_devices);

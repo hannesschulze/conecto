@@ -1,2 +1,3 @@
 option('docs', type: 'boolean', value: false, description: 'build documentation')
 option('skip_postinstall', type: 'boolean', value: 'false')
+option('disable_plank_support', type: 'boolean', value: 'false')

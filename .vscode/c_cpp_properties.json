@@ -39,7 +39,10 @@
                 "/usr/include/gtk-3.0/unix-print",
                 "/usr/include/gdkmm-3.0",
                 "/usr/lib64/gdkmm-3.0/include",
-                "/usr/include/atk-1.0"
+                "/usr/include/atk-1.0",
+                "/usr/include/plank",
+                "/usr/include/gee-0.8",
+                "/usr/include/libbamf3"
             ],
             "defines": [],
             "compilerPath": "/usr/lib64/ccache/clang",

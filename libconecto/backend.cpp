@@ -110,6 +110,12 @@ Backend::get_storage_dir () noexcept
 }
 
 std::string
+Backend::get_launcher_dir () noexcept
+{
+    return Glib::build_filename (get_storage_dir (), "launchers");
+}
+
+std::string
 Backend::get_config_dir () noexcept
 {
     return Glib::build_filename (Glib::get_user_config_dir (), APP_NAME);
@@ -125,6 +131,7 @@ void
 Backend::init_user_dirs ()
 {
     g_mkdir_with_parents (get_storage_dir ().c_str (), 0700);
+    g_mkdir_with_parents (get_launcher_dir ().c_str (), 0700);
     g_mkdir_with_parents (get_config_dir ().c_str (), 0700);
 }
 

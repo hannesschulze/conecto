@@ -55,7 +55,20 @@ class DockItemManager {
   private:
     DockItemManager ();
 
-    Glib::RefPtr<Models::ConnectedDevices> m_connected_devices;
+    struct DeviceInfo {
+        DeviceInfo (const Glib::ustring& id, const Glib::ustring& name, const Glib::ustring& icon_name)
+            : id (id), name (name), icon_name (icon_name) {}
+        Glib::ustring id, name, icon_name;
+    };
+
+    /** @brief Find a (starred) device by id, or return nullptr */
+    std::shared_ptr<DeviceInfo> find_starred (const std::string& id) const;
+    /** @brief Get a list of (starred) devices */
+    std::list<std::shared_ptr<DeviceInfo>> get_starred () const;
+    /** @brief Dirty hack to prevent removal if moved between the two models */
+    void update_timeout ();
+
+    Glib::RefPtr<Models::ConnectedDevices>   m_connected_devices;
     Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
 
     void sync ();

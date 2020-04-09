@@ -19,9 +19,10 @@
  */
 
 #include "dock-item-manager.h"
+#include "../utils/icons.h"
 #include <conecto.h>
-#include <iostream>
 #include <plank.h>
+#include <glib/gstdio.h>
 
 using namespace App::Controllers;
 
@@ -42,10 +43,21 @@ DockItemManager::set_models (const Glib::RefPtr<Models::ConnectedDevices>& conne
     } else {
         auto tries = std::make_shared<int> (10);
         Glib::signal_timeout ().connect ([this, client, tries]() {
-            if (!plank_dbus_client_get_is_connected (client)) {
+            if (!plank_dbus_client_get_is_connected (client))
                 return (*tries)-- > 0;
-            }
             sync ();
+            m_connected_devices->signal_row_inserted ().connect (sigc::hide (sigc::hide
+                (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
+            m_unavailable_devices->signal_row_inserted ().connect (sigc::hide (sigc::hide
+                (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
+            m_connected_devices->signal_row_deleted ().connect (sigc::hide
+                (sigc::mem_fun (*this, &DockItemManager::update_timeout)));
+            m_unavailable_devices->signal_row_deleted ().connect (sigc::hide
+                (sigc::mem_fun (*this, &DockItemManager::update_timeout)));
+            m_connected_devices->signal_row_changed ().connect (sigc::hide (sigc::hide
+                (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
+            m_unavailable_devices->signal_row_changed ().connect (sigc::hide (sigc::hide
+                (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
             return false;
         }, 50);
     }
@@ -56,5 +68,117 @@ DockItemManager::sync ()
 {
     PlankDBusClient* client = plank_dbus_client_get_instance ();
     g_assert (plank_dbus_client_get_is_connected (client));
-    std::cout << "Established a connection" << std::endl;
+
+    int items_len;
+    gchar** array = plank_dbus_client_get_persistent_applications (client, &items_len);
+    if (!array) return;
+
+    std::string launcher_location = Conecto::Backend::get_launcher_dir () + "/";
+    std::list<std::string> found;
+    const std::string prefix = "file://";
+
+    for (int i = 0; i < items_len; i++) {
+        std::string item (array[i]);
+        item.erase (0, prefix.size ());
+        const std::string filename = item;
+        if (!g_str_has_prefix (filename.c_str (), launcher_location.c_str ())) continue;
+        if (!g_str_has_suffix (filename.c_str (), ".desktop")) continue;
+        item.erase (0, launcher_location.size ());
+        item.erase (item.find (".desktop"), item.size ());
+
+        try {
+            Glib::KeyFile file;
+            file.load_from_file (filename);
+
+            auto dev = find_starred (item);
+            if (dev) {
+                if (file.get_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME) != dev->name ||
+                        file.get_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON) != dev->icon_name) {
+                    file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, dev->name);
+                    file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, dev->icon_name);
+                    file.save_to_file (filename);
+                }
+                // If found, update the entry
+                found.push_back (item);
+            } else {
+                // If not found, remove the entry
+                plank_dbus_client_remove_item (client, array[i]);
+                g_remove (filename.c_str ());
+                g_debug ("Removed %s from Plank", filename.c_str ());
+            }
+        } catch (...) {
+            plank_dbus_client_remove_item (client, array[i]);
+            g_remove (filename.c_str ());
+            g_debug ("Removed %s from Plank", filename.c_str ());
+        }
+    }
+
+    // Add new items
+    for (const auto& item : get_starred ()) {
+        if (std::find (found.begin (), found.end (), item->id) != found.end ()) continue;
+        std::string filename = launcher_location + item->id + ".desktop";
+
+        if (!Gio::File::create_for_path (filename)->query_exists ()) {
+            g_debug ("Added %s to Plank", filename.c_str ());
+            Glib::KeyFile file;
+            file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, item->name);
+            file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_COMMENT, "Show the connected device: " + item->name);
+            file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TYPE, "Application");
+            file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_EXEC, "com.github.hannesschulze.conecto --open-dev " + item->id);
+            file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, item->icon_name);
+            file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TERMINAL, "false");
+            file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ACTIONS, "Reload;CloseAll;CloseAllOther");
+            file.save_to_file (filename);
+        }
+        std::string file_uri = "file://" + filename;
+        plank_dbus_client_add_item (client, file_uri.c_str ());
+        found.push_back (item->id);
+    }
+}
+
+std::shared_ptr<DockItemManager::DeviceInfo>
+DockItemManager::find_starred (const std::string& id) const
+{
+    for (const auto& item : m_connected_devices->children ()) {
+        if (id == item.get_value (m_connected_devices->column_id) &&
+                item.get_value (m_connected_devices->column_starred)) {
+            std::string icon_name = Utils::Icons::get_icon_name_for_device_type
+                (item.get_value (m_connected_devices->column_type));
+            return std::make_shared<DeviceInfo> (id, item.get_value (m_connected_devices->column_name), icon_name);
+        }
+    }
+    for (const auto& item : m_unavailable_devices->children ()) {
+        if (id == item.get_value (m_unavailable_devices->column_id) &&
+                item.get_value (m_unavailable_devices->column_starred)) {
+            std::string icon_name = Utils::Icons::get_icon_name_for_device_type
+                (item.get_value (m_unavailable_devices->column_type));
+            return std::make_shared<DeviceInfo> (id, item.get_value (m_unavailable_devices->column_name), icon_name);
+        }
+    }
+    return std::shared_ptr<DeviceInfo> ();
+}
+
+std::list<std::shared_ptr<DockItemManager::DeviceInfo>>
+DockItemManager::get_starred () const
+{
+    std::list<std::shared_ptr<DockItemManager::DeviceInfo>> res;
+    for (const auto& item : m_connected_devices->children ()) {
+        if (!item.get_value (m_connected_devices->column_starred)) continue;
+        std::string icon_name = Utils::Icons::get_icon_name_for_device_type (item.get_value (m_connected_devices->column_type));
+        res.push_back (std::make_shared<DeviceInfo> (item.get_value (m_connected_devices->column_id),
+                                                     item.get_value (m_connected_devices->column_name), icon_name));
+    }
+    for (const auto& item : m_unavailable_devices->children ()) {
+        if (!item.get_value (m_unavailable_devices->column_starred)) continue;
+        std::string icon_name = Utils::Icons::get_icon_name_for_device_type (item.get_value (m_unavailable_devices->column_type));
+        res.push_back (std::make_shared<DeviceInfo> (item.get_value (m_unavailable_devices->column_id),
+                                                     item.get_value (m_unavailable_devices->column_name), icon_name));
+    }
+    return res;
+}
+
+void
+DockItemManager::update_timeout ()
+{
+    Glib::signal_timeout ().connect_once (sigc::mem_fun (*this, &DockItemManager::sync), 50);
 }

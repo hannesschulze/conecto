@@ -97,6 +97,10 @@ class Backend {
      */
     static std::string get_storage_dir () noexcept;
     /**
+     * Get the launcher location (used for storing desktop files for displaying popovers)
+     */
+    static std::string get_launcher_dir () noexcept;
+    /**
      * Get the config location (used as a base path for loading the @p ConfigFile)
      */
     static std::string get_config_dir () noexcept;

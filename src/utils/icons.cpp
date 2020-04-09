@@ -23,15 +23,18 @@
 
 using namespace App::Utils;
 
+std::string
+Icons::get_icon_name_for_device_type (const std::string& type)
+{
+    if (type == "tablet")
+        return "computer-apple-ipad";
+    return type;
+}
+
 Glib::RefPtr<Gdk::Pixbuf>
 Icons::get_icon_for_device_type (const std::string& type, int size)
 {
-    std::string icon_name;
-
-    if (type == "tablet") icon_name = "computer-apple-ipad";
-    else icon_name = type;
-
-    auto icon_info = Gtk::IconTheme::get_default ()->lookup_icon (icon_name, size);
+    auto icon_info = Gtk::IconTheme::get_default ()->lookup_icon (get_icon_name_for_device_type (type), size);
     if (icon_info)
         return icon_info.load_icon ();
     else

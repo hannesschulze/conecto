@@ -20,6 +20,9 @@
 
 #include "window.h"
 #include "controllers/settings-manager.h"
+#ifdef ENABLE_PLANK_SUPPORT
+#include "controllers/dock-item-manager.h"
+#endif
 
 using namespace App;
 
@@ -90,4 +93,15 @@ Window::on_delete_event (GdkEventAny* event)
     SETTINGS.set_window_height (height);
 
     return false;
+}
+
+void
+Window::on_show ()
+{
+    Gtk::ApplicationWindow::on_show ();
+#ifdef ENABLE_PLANK_SUPPORT
+    Glib::signal_idle ().connect_once ([this]() {
+        DOCK_ITEMS.listen ();
+    });
+#endif
 }

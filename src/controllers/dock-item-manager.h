@@ -49,6 +49,12 @@ class DockItemManager {
     void set_models (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
                      const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices);
 
+    /** @brief Start listening for changes (if not done already) */
+    void listen ();
+
+    /** @brief Get the item position for a device selected from the dock */
+    void get_position_for_id (const std::string& id, std::function<void(int /* x */, int /* y */, Gtk::PositionType /* pos */)>&& cb);
+
     DockItemManager (const DockItemManager&) = delete;
     DockItemManager& operator= (const DockItemManager&) = delete;
 
@@ -68,8 +74,15 @@ class DockItemManager {
     /** @brief Dirty hack to prevent removal if moved between the two models */
     void update_timeout ();
 
+    using DockAction = std::function<void ()>;
+
+    /** @brief Schedule an action for when the Dbus interface becomes available */
+    void schedule_action (const DockAction& action);
+
     Glib::RefPtr<Models::ConnectedDevices>   m_connected_devices;
     Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
+
+    bool m_is_listening;
 
     void sync ();
 };

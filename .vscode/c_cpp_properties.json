@@ -42,7 +42,8 @@
                 "/usr/include/atk-1.0",
                 "/usr/include/plank",
                 "/usr/include/gee-0.8",
-                "/usr/include/libbamf3"
+                "/usr/include/libbamf3",
+                "/usr/include/granite"
             ],
             "defines": [],
             "compilerPath": "/usr/lib64/ccache/clang",

@@ -56,7 +56,8 @@ subdir('src')
 
 conecto_deps = [
   libconecto_dep,
-  dependency('gtkmm-3.0')
+  dependency('gtkmm-3.0'),
+  dependency('granite'),
 ]
 
 if not get_option('disable_plank_support')

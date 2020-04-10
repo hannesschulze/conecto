@@ -27,6 +27,7 @@
 using namespace App::Controllers;
 
 DockItemManager::DockItemManager ()
+    : m_is_listening (false)
 {
 }
 
@@ -34,35 +35,32 @@ void
 DockItemManager::set_models (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
                              const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices)
 {
-    if (m_connected_devices && m_unavailable_devices) return;
-
     m_connected_devices = connected_devices;
     m_unavailable_devices = unavailable_devices;
 
-    PlankDBusClient* client = plank_dbus_client_get_instance ();
-    if (plank_dbus_client_get_is_connected (client)) {
+    m_is_listening = false;
+}
+
+void
+DockItemManager::listen ()
+{
+    if (m_is_listening) return;
+
+    schedule_action ([this]() {
         sync ();
-    } else {
-        auto tries = std::make_shared<int> (10);
-        Glib::signal_timeout ().connect ([this, client, tries]() {
-            if (!plank_dbus_client_get_is_connected (client))
-                return (*tries)-- > 0;
-            sync ();
-            m_connected_devices->signal_row_inserted ().connect (sigc::hide (sigc::hide
-                (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
-            m_unavailable_devices->signal_row_inserted ().connect (sigc::hide (sigc::hide
-                (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
-            m_connected_devices->signal_row_deleted ().connect (sigc::hide
-                (sigc::mem_fun (*this, &DockItemManager::update_timeout)));
-            m_unavailable_devices->signal_row_deleted ().connect (sigc::hide
-                (sigc::mem_fun (*this, &DockItemManager::update_timeout)));
-            m_connected_devices->signal_row_changed ().connect (sigc::hide (sigc::hide
-                (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
-            m_unavailable_devices->signal_row_changed ().connect (sigc::hide (sigc::hide
-                (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
-            return false;
-        }, 50);
-    }
+        m_connected_devices->signal_row_inserted ().connect (sigc::hide (sigc::hide
+            (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
+        m_unavailable_devices->signal_row_inserted ().connect (sigc::hide (sigc::hide
+            (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
+        m_connected_devices->signal_row_deleted ().connect (sigc::hide
+            (sigc::mem_fun (*this, &DockItemManager::update_timeout)));
+        m_unavailable_devices->signal_row_deleted ().connect (sigc::hide
+            (sigc::mem_fun (*this, &DockItemManager::update_timeout)));
+        m_connected_devices->signal_row_changed ().connect (sigc::hide (sigc::hide
+            (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
+        m_unavailable_devices->signal_row_changed ().connect (sigc::hide (sigc::hide
+            (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
+    });
 }
 
 void
@@ -183,4 +181,52 @@ void
 DockItemManager::update_timeout ()
 {
     Glib::signal_timeout ().connect_once (sigc::mem_fun (*this, &DockItemManager::sync), 50);
+}
+
+void
+DockItemManager::get_position_for_id (const std::string& id,
+                                      std::function<void(int /* x */, int /* y */, Gtk::PositionType /* pos */)>&& cb)
+{
+    std::string uri = "file://" + Conecto::Backend::get_launcher_dir () + "/" + id + ".desktop";
+    schedule_action ([cb, uri]() {
+        PlankDBusClient* client = plank_dbus_client_get_instance ();
+        gint x, y;
+        GtkPositionType pos;
+        bool ok = plank_dbus_client_get_hover_position (client, uri.c_str (), &x, &y, &pos);
+        if (!ok) return cb (0, 0, Gtk::POS_TOP);
+
+        Gtk::PositionType wrapper_pos;
+        switch (pos) {
+        case GTK_POS_TOP:
+            wrapper_pos = Gtk::POS_TOP;
+            break;
+        case GTK_POS_LEFT:
+            wrapper_pos = Gtk::POS_LEFT;
+            break;
+        case GTK_POS_RIGHT:
+            wrapper_pos = Gtk::POS_RIGHT;
+            break;
+        default:
+            wrapper_pos = Gtk::POS_BOTTOM;
+            break;
+        }
+        cb (x, y, wrapper_pos);
+    });
+}
+
+void
+DockItemManager::schedule_action (const DockAction& action)
+{
+    PlankDBusClient* client = plank_dbus_client_get_instance ();
+    if (plank_dbus_client_get_is_connected (client)) {
+        action ();
+    } else {
+        auto tries = std::make_shared<int> (10);
+        Glib::signal_timeout ().connect ([this, action, client, tries]() {
+            if (!plank_dbus_client_get_is_connected (client))
+                return (*tries)-- > 0;
+            action ();
+            return false;
+        }, 50);
+    }
 }

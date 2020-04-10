@@ -64,6 +64,7 @@ class Window : public Gtk::ApplicationWindow {
 
     // Called when the window should be closed, saves the window's position and size
     bool on_delete_event (GdkEventAny* event) override;
+    void on_show () override;
 
   private:
     Gtk::Paned              m_paned;

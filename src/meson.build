@@ -2,6 +2,7 @@ conecto_sources = files(
   'main.cpp',
   'application.cpp',
   'window.cpp',
+  'device-popover.cpp',
 
   'controllers/settings-manager.cpp',
   'controllers/active-device-manager.cpp',
@@ -19,8 +20,10 @@ conecto_sources = files(
 
   'widgets/header-bar.cpp',
   'widgets/circular-progress-bar.cpp',
+  'widgets/popover-window.cpp',
 
   'utils/icons.cpp',
+  'utils/focus.cpp',
 )
 
 if not get_option('disable_plank_support')

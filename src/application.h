@@ -21,7 +21,9 @@
 #pragma once
 
 #include <gtkmm.h>
+#include <list>
 #include "window.h"
+#include "widgets/popover-window.h"
 
 namespace App {
 
@@ -58,6 +60,8 @@ class Application : public Gtk::Application {
     Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
     Glib::RefPtr<Models::AvailableDevices>   m_available_devices;
     Glib::ustring                            m_open_dev_id;
+
+    std::list<std::shared_ptr<Widgets::PopoverWindow>> m_popovers;
 };
 
 } // namespace App

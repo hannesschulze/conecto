@@ -14,7 +14,7 @@ jobs:
     - name: Install Dependencies
       run: |
         apt-get update &&
-        apt-get install -y build-essential meson ninja-build libjsoncpp-dev libsigc++-2.0-dev ca-certificates libgtkmm-3.0-dev libghc-gnutls-dev gettext desktop-file-utils
+        apt-get install -y build-essential meson ninja-build libjsoncpp-dev libsigc++-2.0-dev ca-certificates libgtkmm-3.0-dev libghc-gnutls-dev gettext desktop-file-utils libgranite-dev
     - name: Configure
       run: meson build --prefix=/usr -Dskip_postinstall=true -Ddisable_plank_support=true
     - name: Build

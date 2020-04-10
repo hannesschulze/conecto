@@ -24,24 +24,17 @@
 #include "models/unavailable-devices.h"
 #include "controllers/active-device-manager.h"
 #include "controllers/dock-item-manager.h"
+#include <iostream>
 
 using namespace App;
 
 Application::Application ()
-    : Gtk::Application (Conecto::Constants::APP_ID)
+    : Gtk::Application (Conecto::Constants::APP_ID, Gio::APPLICATION_HANDLES_COMMAND_LINE)
     , m_connected_devices (Models::ConnectedDevices::create ())
     , m_unavailable_devices (Models::UnavailableDevices::create ())
     , m_available_devices (Models::AvailableDevices::create ())
 {
     ACTIVE_DEVICE.set_models (m_connected_devices, m_unavailable_devices, m_available_devices);
-    Conecto::Backend::get_instance ().load_from_cache ();
-    Conecto::Backend::get_instance ().listen ();
-
-#ifdef ENABLE_PLANK_SUPPORT
-    Glib::signal_idle ().connect_once ([this]() {
-        DOCK_ITEMS.set_models (m_connected_devices, m_unavailable_devices);
-    });
-#endif
 }
 
 Glib::RefPtr<Application>
@@ -51,16 +44,63 @@ Application::create ()
 }
 
 void
+Application::on_startup ()
+{
+    Gtk::Application::on_startup ();
+
+    Conecto::Backend::get_instance ().load_from_cache ();
+    Conecto::Backend::get_instance ().listen ();
+#ifdef ENABLE_PLANK_SUPPORT
+    Glib::signal_idle ().connect_once ([this]() {
+        DOCK_ITEMS.set_models (m_connected_devices, m_unavailable_devices);
+    });
+#endif
+}
+
+void
 Application::on_activate ()
 {
-    // Get the current window, create one if it doesn't exist
-    Gtk::Window* window = get_active_window ();
+    if (m_open_dev_id == Glib::ustring ()) {
+        // Get the current window, create one if it doesn't exist
+        Gtk::Window* window = get_active_window ();
 
-    if (!window) {
-        m_window = Window::create (m_connected_devices, m_unavailable_devices, m_available_devices);
-        add_window (*m_window);
-        window = m_window.get ();
+        if (!window) {
+            m_window = Window::create (m_connected_devices, m_unavailable_devices, m_available_devices);
+            add_window (*m_window);
+            window = m_window.get ();
+        }
+
+        window->present ();
+    } else {
+        // Open a new popover-like window
+        std::cout << "Device ID: " << m_open_dev_id << std::endl;
+    }
+}
+
+int
+Application::on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line)
+{
+    Gtk::Application::on_command_line (command_line);
+
+    hold ();
+
+    Glib::OptionContext context ("- Conecto");
+    Glib::OptionGroup   group ("Options", "");
+    Glib::OptionEntry   open_dev_option;
+    open_dev_option.set_long_name ("open-dev");
+    open_dev_option.set_short_name ('o');
+    group.add_entry (open_dev_option, m_open_dev_id);
+    context.set_main_group (group);
+    context.set_help_enabled (true);
+    int argc;
+    char** argv = command_line->get_arguments (argc);
+    if (!context.parse (argv)) {
+        g_error ("Error while trying to parse command line arguments");
+        return 1;
     }
 
-    window->present ();
+    activate ();
+
+    release ();
+    return 0;
 }

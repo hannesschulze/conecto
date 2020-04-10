@@ -34,6 +34,8 @@ void
 DockItemManager::set_models (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
                              const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices)
 {
+    if (m_connected_devices && m_unavailable_devices) return;
+
     m_connected_devices = connected_devices;
     m_unavailable_devices = unavailable_devices;
 

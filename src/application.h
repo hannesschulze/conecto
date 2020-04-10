@@ -48,13 +48,16 @@ class Application : public Gtk::Application {
   protected:
     Application ();
 
+    void on_startup () override;
     void on_activate () override;
+    int on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line) override;
 
   private:
     std::shared_ptr<Window>                  m_window;
     Glib::RefPtr<Models::ConnectedDevices>   m_connected_devices;
     Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
     Glib::RefPtr<Models::AvailableDevices>   m_available_devices;
+    Glib::ustring                            m_open_dev_id;
 };
 
 } // namespace App

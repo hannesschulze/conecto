@@ -20,6 +20,7 @@ conecto_sources = files(
 
   'views/dock/active-device-view.cpp',
   'views/dock/warning-view.cpp',
+  'views/dock/connected-device-view.cpp',
 
   'widgets/header-bar.cpp',
   'widgets/circular-progress-bar.cpp',

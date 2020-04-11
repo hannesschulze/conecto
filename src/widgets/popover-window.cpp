@@ -28,7 +28,7 @@ namespace {
 
 constexpr int ARROW_WIDTH = 20;
 constexpr int ARROW_HEIGHT = 10;
-constexpr int BORDER_RADIUS = 10;
+constexpr int BORDER_RADIUS = 6;
 constexpr int BORDER_WIDTH = 1;
 constexpr int SHADOW_SIZE = 20;
 
@@ -174,27 +174,22 @@ PopoverWindow::update_child_margin ()
     if (!child)
         return;
 
-    int start = child->get_margin_start ();
-    int end = child->get_margin_end ();
-    int top = child->get_margin_top ();
-    int bottom = child->get_margin_bottom ();
-
-    child->set_margin_start (start + SHADOW_SIZE);
-    child->set_margin_end (end + SHADOW_SIZE);
-    child->set_margin_top (top + SHADOW_SIZE);
-    child->set_margin_bottom (bottom + SHADOW_SIZE);
+    child->set_margin_start (SHADOW_SIZE);
+    child->set_margin_end (SHADOW_SIZE);
+    child->set_margin_top (SHADOW_SIZE);
+    child->set_margin_bottom (SHADOW_SIZE);
     switch (m_arrow_position) {
     case Gtk::POS_LEFT:
-        child->set_margin_start (start + ARROW_HEIGHT);
+        child->set_margin_start (ARROW_HEIGHT);
         break;
     case Gtk::POS_RIGHT:
-        child->set_margin_end (end + ARROW_HEIGHT);
+        child->set_margin_end (ARROW_HEIGHT);
         break;
     case Gtk::POS_TOP:
-        child->set_margin_top (top + ARROW_HEIGHT);
+        child->set_margin_top (ARROW_HEIGHT);
         break;
     case Gtk::POS_BOTTOM:
-        child->set_margin_bottom (bottom + ARROW_HEIGHT);
+        child->set_margin_bottom (ARROW_HEIGHT);
         break;
     default:
         break;

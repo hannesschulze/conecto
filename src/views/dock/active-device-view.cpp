@@ -27,9 +27,10 @@ ActiveDeviceView::ActiveDeviceView (const Glib::ustring& id,
                                     const Glib::RefPtr<Models::ConnectedDevices>& connected_devices)
     : Gtk::Stack ()
     , m_warning_view (WarningView::create (id))
+    , m_connected_device_view (ConnectedDeviceView::create (connected_devices))
 {
     add (*m_warning_view, "warning");
-    add (*Gtk::make_managed<Gtk::Label> ("Connected"), "connected");
+    add (*m_connected_device_view, "connected");
     on_show_empty ();
 
     m_warning_view->signal_close_popover ().connect (m_signal_close_popover);

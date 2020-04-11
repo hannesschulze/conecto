@@ -18,5 +18,6 @@
 
   <gresource prefix="/com/github/hannesschulze/conecto/ui/views/dock">
     <file alias="warning-view.ui">ui/views/dock/warning-view.ui</file>
+    <file alias="connected-device-view.ui">ui/views/dock/connected-device-view.ui</file>
   </gresource>
 </gresources>

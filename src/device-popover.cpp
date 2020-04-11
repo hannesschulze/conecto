@@ -30,13 +30,24 @@ DevicePopover::DevicePopover (const Glib::RefPtr<Models::ConnectedDevices>& conn
     : Widgets::PopoverWindow ()
     , m_active_view (id, connected_devices)
 {
-    set_size_request (520, 380);
-    set_default_size (520, 380);
+    set_size_request (600, 430);
+    set_default_size (600, 430);
     add (m_active_view);
     m_active_view.show_all ();
 
     m_active_view.signal_close_popover ().connect
         (sigc::mem_fun (*this, &DevicePopover::close_popover));
+
+
+    // Set up CSS
+    auto main_provider = Gtk::CssProvider::create ();
+    auto fallback_provider = Gtk::CssProvider::create ();
+    main_provider->load_from_resource ("/com/github/hannesschulze/conecto/css/style.css");
+    fallback_provider->load_from_resource ("/com/github/hannesschulze/conecto/css/fallback.css");
+    Gtk::StyleContext::add_provider_for_screen (Gdk::Screen::get_default (), main_provider,
+                                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    Gtk::StyleContext::add_provider_for_screen (Gdk::Screen::get_default (), fallback_provider,
+                                                GTK_STYLE_PROVIDER_PRIORITY_FALLBACK);
 
     ACTIVE_DEVICE.activate_device (id);
 }

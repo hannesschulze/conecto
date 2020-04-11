@@ -24,6 +24,7 @@
 #include "../../models/connected-devices.h"
 #include "../../models/unavailable-devices.h"
 #include "warning-view.h"
+#include "connected-device-view.h"
 
 namespace App {
 namespace Views {
@@ -61,8 +62,8 @@ class ActiveDeviceView : public Gtk::Stack {
     void on_update_device (const Gtk::TreeIter& it, bool new_device, const std::string& child_name);
     void on_show_empty ();
 
-    std::shared_ptr<WarningView> m_warning_view;
-    //std::shared_ptr<ConnectedDeviceView>   m_connected_device_view;
+    std::shared_ptr<WarningView>         m_warning_view;
+    std::shared_ptr<ConnectedDeviceView> m_connected_device_view;
 
     type_signal_close_popover m_signal_close_popover;
 };

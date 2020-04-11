@@ -17,3 +17,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
+
+.titlebar.borderless-titlebar {
+    border-radius: none;
+}

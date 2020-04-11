@@ -55,5 +55,7 @@ WarningView::on_btn_remove_clicked ()
         Conecto::Backend::get_instance ().get_config ().set_device_starred (dev, false);
         ACTIVE_DEVICE.activate_device (std::shared_ptr<Conecto::Device> ());
     }
+#ifdef ENABLE_PLANK_SUPPORT
     DOCK_ITEMS.update ([this]() { m_signal_close_popover.emit (); });
+#endif
 }

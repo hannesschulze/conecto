@@ -25,8 +25,8 @@
 #include "models/connected-devices.h"
 #include "models/unavailable-devices.h"
 #include "models/available-devices.h"
-#include "views/devices-list.h"
-#include "views/active-device-view.h"
+#include "views/main/devices-list.h"
+#include "views/main/active-device-view.h"
 #include "widgets/header-bar.h"
 
 namespace App {
@@ -67,9 +67,9 @@ class Window : public Gtk::ApplicationWindow {
     void on_show () override;
 
   private:
-    Gtk::Paned              m_paned;
-    Views::DevicesList      m_devices_list;
-    Views::ActiveDeviceView m_active_device;
+    Gtk::Paned                    m_paned;
+    Views::Main::DevicesList      m_devices_list;
+    Views::Main::ActiveDeviceView m_active_device;
 
     std::shared_ptr<Widgets::HeaderBar> m_header_bar;
 };

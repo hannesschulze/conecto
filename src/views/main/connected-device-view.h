@@ -21,11 +21,12 @@
 #pragma once
 
 #include <gtkmm.h>
-#include "../widgets/circular-progress-bar.h"
-#include "../models/connected-devices.h"
+#include "../../widgets/circular-progress-bar.h"
+#include "../../models/connected-devices.h"
 
 namespace App {
 namespace Views {
+namespace Main {
 
 /**
  * @brief A view shown if the active device is currently paired and available
@@ -63,5 +64,6 @@ class ConnectedDeviceView : public Gtk::Stack {
     void on_update (const Gtk::TreeIter& iter, bool new_device);
 };
 
+} // namespace Main
 } // namespace Views
 } // namespace App

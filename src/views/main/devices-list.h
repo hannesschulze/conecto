@@ -21,12 +21,13 @@
 #pragma once
 
 #include <gtkmm.h>
-#include "../models/connected-devices.h"
-#include "../models/unavailable-devices.h"
-#include "../models/available-devices.h"
+#include "../../models/connected-devices.h"
+#include "../../models/unavailable-devices.h"
+#include "../../models/available-devices.h"
 
 namespace App {
 namespace Views {
+namespace Main {
 
 /**
  * @brief A list shown on the left-hand side of the main window
@@ -97,5 +98,6 @@ class DevicesList : public Gtk::ScrolledWindow {
     static Glib::RefPtr<Gdk::Pixbuf> get_color_pixbuf (Gdk::RGBA color);
 };
 
+} // namespace Main
 } // namespace Views
 } // namespace App

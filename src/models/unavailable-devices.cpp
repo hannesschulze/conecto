@@ -96,6 +96,18 @@ UnavailableDevices::find_device (const std::shared_ptr<Conecto::Device>& dev) co
     return Gtk::TreeIter ();
 }
 
+Gtk::TreeIter
+UnavailableDevices::find_device (const std::string& id) const
+{
+    const Gtk::TreeNodeChildren& child_nodes = children ();
+    for (auto it = child_nodes.begin (); it != child_nodes.end (); it++) {
+        if (it->get_value (column_id) == id) {
+            return it;
+        }
+    }
+    return Gtk::TreeIter ();
+}
+
 std::shared_ptr<Conecto::Device>
 UnavailableDevices::get_device (const Gtk::TreeIter& iter) const
 {

@@ -11,12 +11,12 @@ conecto_sources = files(
   'models/unavailable-devices.cpp',
   'models/available-devices.cpp',
 
-  'views/devices-list.cpp',
-  'views/active-device-view.cpp',
-  'views/empty-selection-view.cpp',
-  'views/available-device-view.cpp',
-  'views/unavailable-device-view.cpp',
-  'views/connected-device-view.cpp',
+  'views/main/devices-list.cpp',
+  'views/main/active-device-view.cpp',
+  'views/main/empty-selection-view.cpp',
+  'views/main/available-device-view.cpp',
+  'views/main/unavailable-device-view.cpp',
+  'views/main/connected-device-view.cpp',
 
   'widgets/header-bar.cpp',
   'widgets/circular-progress-bar.cpp',

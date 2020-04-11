@@ -21,10 +21,11 @@
 #pragma once
 
 #include <gtkmm.h>
-#include "../models/unavailable-devices.h"
+#include "../../models/unavailable-devices.h"
 
 namespace App {
 namespace Views {
+namespace Main {
 
 /**
  * @brief A view shown if the selected device is paired but currently unavailable
@@ -59,5 +60,6 @@ class UnavailableDeviceView : public Gtk::Grid {
     void on_update (const Gtk::TreeIter& iter, bool new_device);
 };
 
+} // namespace Main
 } // namespace Views
 } // namespace App

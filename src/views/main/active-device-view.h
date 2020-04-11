@@ -21,9 +21,9 @@
 #pragma once
 
 #include <gtkmm.h>
-#include "../models/connected-devices.h"
-#include "../models/unavailable-devices.h"
-#include "../models/available-devices.h"
+#include "../../models/connected-devices.h"
+#include "../../models/unavailable-devices.h"
+#include "../../models/available-devices.h"
 #include "empty-selection-view.h"
 #include "available-device-view.h"
 #include "unavailable-device-view.h"
@@ -31,11 +31,16 @@
 
 namespace App {
 namespace Views {
+namespace Main {
 
 /**
  * @brief The main view for the windowed app
  * 
  * This view automatically switches between four widgets, depending on the currently activated device:
+ * - EmptySelectionView
+ * - AvailableDeviceView
+ * - UnavailableDeviceView
+ * - ConnectedDeviceView
  */
 class ActiveDeviceView : public Gtk::Stack {
   public:
@@ -71,5 +76,6 @@ class ActiveDeviceView : public Gtk::Stack {
     std::shared_ptr<ConnectedDeviceView>   m_connected_device_view;
 };
 
+} // namespace Main
 } // namespace Views
 } // namespace App

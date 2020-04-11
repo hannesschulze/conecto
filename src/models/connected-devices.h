@@ -64,6 +64,12 @@ class ConnectedDevices : public Gtk::ListStore {
      */
     Gtk::TreeIter find_device (const std::shared_ptr<Conecto::Device>& device) const;
     /**
+     * @brief Find a device in the model
+     * 
+     * This may return an invalid iterator
+     */
+    Gtk::TreeIter find_device (const std::string& id) const;
+    /**
      * @brief Get the connected device for a tree iterator
      * 
      * If the iterator is invalid, this will return an empty shared_ptr

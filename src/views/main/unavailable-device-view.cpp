@@ -19,9 +19,9 @@
  */
 
 #include "unavailable-device-view.h"
-#include "../controllers/active-device-manager.h"
+#include "../../controllers/active-device-manager.h"
 
-using namespace App::Views;
+using namespace App::Views::Main;
 
 UnavailableDeviceView::UnavailableDeviceView (BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> glade_ref)
     : Gtk::Grid (cobject)

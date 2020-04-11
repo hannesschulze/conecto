@@ -19,6 +19,7 @@
  */
 
 #include "device-popover.h"
+#include "controllers/active-device-manager.h"
 #ifdef ENABLE_PLANK_SUPPORT
 #include "controllers/dock-item-manager.h"
 #endif
@@ -28,8 +29,9 @@ using namespace App;
 DevicePopover::DevicePopover (const std::string& id)
     : Widgets::PopoverWindow ()
 {
+    ACTIVE_DEVICE.activate_device (id);
     Gtk::Label* lbl = Gtk::make_managed<Gtk::Label> ("Device: " + id);
-    set_size_request (400, 300);
+    set_size_request (500, 370);
     add (*lbl);
     lbl->show_all ();
 }

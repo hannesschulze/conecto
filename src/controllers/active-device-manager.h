@@ -57,6 +57,14 @@ class ActiveDeviceManager {
      * @param device The new device
      */
     void activate_device (const std::shared_ptr<Conecto::Device>& device);
+    /**
+     * @brief Activate a new device and find it in one of the models
+     * 
+     * If not found, the currently active device will be deselected
+     * 
+     * @param id The new device's id
+     */
+    void activate_device (const std::string& id);
 
     /**
      * @brief Get the currently activated device (may be empty)
@@ -128,6 +136,42 @@ class ActiveDeviceManager {
             if (!model->find_device (m_device))
                 activate_device (std::shared_ptr<Conecto::Device> ());
         });
+    }
+
+    template<class T>
+    void activate_device_priv (const T& property) {
+        m_connection_changed.disconnect ();
+        m_connection_removed.disconnect ();
+        auto cached = m_device;
+        if (m_connected_devices) {
+            auto it = m_connected_devices->find_device (property);
+            if (it) {
+                m_device = m_connected_devices->get_device (it);
+                m_signal_connected_device_update.emit (it, true);
+                connect_signals (m_connected_devices, m_signal_connected_device_update);
+                return;
+            }
+        }
+        if (m_available_devices) {
+            auto it = m_available_devices->find_device (property);
+            if (it) {
+                m_device = m_available_devices->get_device (it);
+                m_signal_available_device_update.emit (it, true);
+                connect_signals (m_available_devices, m_signal_available_device_update);
+                return;
+            }
+        }
+        if (m_unavailable_devices) {
+            auto it = m_unavailable_devices->find_device (property);
+            if (it) {
+                m_device = m_unavailable_devices->get_device (it);
+                m_signal_unavailable_device_update.emit (it, true);
+                connect_signals (m_unavailable_devices, m_signal_unavailable_device_update);
+                return;
+            }
+        }
+        m_device.reset ();
+        m_signal_no_device_selected.emit ();
     }
 };
 

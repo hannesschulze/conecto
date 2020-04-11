@@ -21,10 +21,11 @@
 #pragma once
 
 #include <gtkmm.h>
-#include "../models/available-devices.h"
+#include "../../models/available-devices.h"
 
 namespace App {
 namespace Views {
+namespace Main {
 
 /**
  * @brief A view offering the user the option to pair a device
@@ -65,5 +66,6 @@ class AvailableDeviceView : public Gtk::Stack {
     void on_reject_request_clicked ();
 };
 
+} // namespace Main
 } // namespace Views
 } // namespace App

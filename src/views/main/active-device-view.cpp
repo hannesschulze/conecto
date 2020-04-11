@@ -19,9 +19,9 @@
  */
 
 #include "active-device-view.h"
-#include "../controllers/active-device-manager.h"
+#include "../../controllers/active-device-manager.h"
 
-using namespace App::Views;
+using namespace App::Views::Main;
 
 ActiveDeviceView::ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
                                     const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,

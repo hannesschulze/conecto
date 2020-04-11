@@ -40,40 +40,13 @@ ActiveDeviceManager::set_models (const Glib::RefPtr<Models::ConnectedDevices>& c
 void
 ActiveDeviceManager::activate_device (const std::shared_ptr<Conecto::Device>& device)
 {
-    m_connection_changed.disconnect ();
-    m_connection_removed.disconnect ();
-    if (device) {
-        auto cached = m_device;
-        if (m_connected_devices) {
-            auto it = m_connected_devices->find_device (device);
-            if (it) {
-                m_device = device;
-                m_signal_connected_device_update.emit (it, true);
-                connect_signals (m_connected_devices, m_signal_connected_device_update);
-                return;
-            }
-        }
-        if (m_available_devices) {
-            auto it = m_available_devices->find_device (device);
-            if (it) {
-                m_device = device;
-                m_signal_available_device_update.emit (it, true);
-                connect_signals (m_available_devices, m_signal_available_device_update);
-                return;
-            }
-        }
-        if (m_unavailable_devices) {
-            auto it = m_unavailable_devices->find_device (device);
-            if (it) {
-                m_device = device;
-                m_signal_unavailable_device_update.emit (it, true);
-                connect_signals (m_unavailable_devices, m_signal_unavailable_device_update);
-                return;
-            }
-        }
-    }
-    m_device.reset ();
-    m_signal_no_device_selected.emit ();
+    activate_device_priv (device);
+}
+
+void
+ActiveDeviceManager::activate_device (const std::string& id)
+{
+    activate_device_priv (id);
 }
 
 std::shared_ptr<Conecto::Device>

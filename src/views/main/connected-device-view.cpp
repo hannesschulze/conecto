@@ -19,10 +19,10 @@
  */
 
 #include "connected-device-view.h"
-#include "../controllers/active-device-manager.h"
-#include "../utils/icons.h"
+#include "../../controllers/active-device-manager.h"
+#include "../../utils/icons.h"
 
-using namespace App::Views;
+using namespace App::Views::Main;
 
 ConnectedDeviceView::ConnectedDeviceView (BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> glade_ref)
     : Gtk::Stack (cobject)

@@ -19,10 +19,10 @@
  */
 
 #include "devices-list.h"
-#include "../utils/icons.h"
-#include "../controllers/active-device-manager.h"
+#include "../../utils/icons.h"
+#include "../../controllers/active-device-manager.h"
 
-using namespace App::Views;
+using namespace App::Views::Main;
 using namespace App::Models;
 
 namespace {

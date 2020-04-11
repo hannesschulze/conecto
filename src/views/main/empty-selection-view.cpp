@@ -1,4 +1,4 @@
-/* empty-selection-view.h
+/* empty-selection-view.cpp
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -18,36 +18,21 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#pragma once
+#include "empty-selection-view.h"
 
-#include <gtkmm.h>
+using namespace App::Views::Main;
 
-namespace App {
-namespace Views {
+EmptySelectionView::EmptySelectionView (BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> glade_ref)
+    : Gtk::Grid (cobject)
+    , m_builder (glade_ref)
+{
+}
 
-/**
- * @brief A view shown if no device is selected
- * 
- * This is just a simple screen set up using Glade
- */
-class EmptySelectionView : public Gtk::Grid {
-  public:
-    /**
-     * @brief Construct the view
-     */
-    static std::shared_ptr<EmptySelectionView> create ();
-    ~EmptySelectionView () {}
-
-    EmptySelectionView (const EmptySelectionView&) = delete;
-    EmptySelectionView& operator= (const EmptySelectionView&) = delete;
-
-    friend Gtk::Builder;
-
-  private:
-    EmptySelectionView (BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> glade_ref);
-
-    Glib::RefPtr<Gtk::Builder> m_builder;
-};
-
-} // namespace Views
-} // namespace App
+std::shared_ptr<EmptySelectionView>
+EmptySelectionView::create ()
+{
+    EmptySelectionView* res = nullptr;
+    auto builder = Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/views/empty-selection-view.ui");
+    builder->get_widget_derived ("ConectoViewsEmptySelectionView", res);
+    return std::shared_ptr<EmptySelectionView> (res);
+}

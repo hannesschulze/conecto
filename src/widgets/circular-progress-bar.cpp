@@ -66,8 +66,6 @@ CircularProgressBar::get_preferred_height_vfunc (int& min_height, int& natural_h
     natural_height = std::max (diameter, MIN_DIAMETER);
 }
 
-#include <iostream>
-
 bool
 CircularProgressBar::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {

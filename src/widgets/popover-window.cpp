@@ -49,7 +49,6 @@ PopoverWindow::PopoverWindow ()
 {
     set_app_paintable (true);
     set_decorated (false);
-    set_resizable (false);
     set_deletable (false);
     gtk_widget_set_visual (GTK_WIDGET (gobj ()), get_screen ()->get_rgba_visual ()->gobj ());
 
@@ -239,10 +238,8 @@ PopoverWindow::on_button_release_event (GdkEventButton* event)
 {
     Gtk::ApplicationWindow::on_button_release_event (event);
     if (event->x < 0 || event->y < 0 ||
-            event->x >= get_allocated_width () || event->y >= get_allocated_height ()) {
-        Utils::Focus::ungrab ();
-        hide();
-    }
+            event->x >= get_allocated_width () || event->y >= get_allocated_height ())
+        close_popover ();
     return false;
 }
 
@@ -250,10 +247,7 @@ bool
 PopoverWindow::on_key_release_event (GdkEventKey* event)
 {
     Gtk::ApplicationWindow::on_key_release_event (event);
-    if (event->keyval == GDK_KEY_Escape) {
-        Utils::Focus::ungrab ();
-        hide ();
-    }
+    if (event->keyval == GDK_KEY_Escape) close_popover ();
     return false;
 }
 
@@ -261,10 +255,7 @@ bool
 PopoverWindow::on_window_state_event (GdkEventWindowState* event)
 {
     Gtk::ApplicationWindow::on_window_state_event (event);
-    if (!m_do_not_close) {
-        Utils::Focus::ungrab ();
-        hide ();
-    }
+    if (!m_do_not_close) close_popover ();
     return false;
 }
 
@@ -277,4 +268,11 @@ PopoverWindow::on_show ()
     Glib::signal_timeout ().connect_once ([this]() {
         m_do_not_close = false;
     }, 200);
+}
+
+void
+PopoverWindow::close_popover ()
+{
+    Utils::Focus::ungrab ();
+    hide ();
 }

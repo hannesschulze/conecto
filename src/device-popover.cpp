@@ -26,20 +26,25 @@
 
 using namespace App;
 
-DevicePopover::DevicePopover (const std::string& id)
+DevicePopover::DevicePopover (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices, const Glib::ustring& id)
     : Widgets::PopoverWindow ()
+    , m_active_view (id, connected_devices)
 {
+    set_size_request (520, 380);
+    set_default_size (520, 380);
+    add (m_active_view);
+    m_active_view.show_all ();
+
+    m_active_view.signal_close_popover ().connect
+        (sigc::mem_fun (*this, &DevicePopover::close_popover));
+
     ACTIVE_DEVICE.activate_device (id);
-    Gtk::Label* lbl = Gtk::make_managed<Gtk::Label> ("Device: " + id);
-    set_size_request (500, 370);
-    add (*lbl);
-    lbl->show_all ();
 }
 
 std::shared_ptr<DevicePopover>
-DevicePopover::create (Gtk::Application& app, const std::string& id)
+DevicePopover::create (Gtk::Application& app, const Glib::RefPtr<Models::ConnectedDevices>& connected_devices, const Glib::ustring& id)
 {
-    std::shared_ptr<DevicePopover> res (new DevicePopover (id));
+    std::shared_ptr<DevicePopover> res (new DevicePopover (connected_devices, id));
     app.add_window (*res);
 #ifdef ENABLE_PLANK_SUPPORT
     DOCK_ITEMS.get_position_for_id (id, [res](int x, int y, Gtk::PositionType pos) {

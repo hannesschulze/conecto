@@ -52,6 +52,9 @@ class DockItemManager {
     /** @brief Start listening for changes (if not done already) */
     void listen ();
 
+    /** @brief Manually update dock items (usually not necessary when using listen) */
+    void update (std::function<void()>&& cb);
+
     /** @brief Get the item position for a device selected from the dock */
     void get_position_for_id (const std::string& id, std::function<void(int /* x */, int /* y */, Gtk::PositionType /* pos */)>&& cb);
 

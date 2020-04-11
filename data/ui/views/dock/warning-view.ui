@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkGrid" id="ConectoViewsUnavailableDeviceView">
+  <object class="GtkGrid" id="ConectoViewsDockWarningView">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>
@@ -14,11 +14,11 @@
     <property name="orientation">vertical</property>
     <property name="row_spacing">12</property>
     <child>
-      <object class="GtkLabel" id="lbl_title">
+      <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
-        <property name="label" translatable="yes">DEVICE is currently unavailable</property>
+        <property name="label" translatable="yes">This device is currently unavailable</property>
         <property name="justify">center</property>
         <property name="wrap">True</property>
         <style>
@@ -35,7 +35,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
-        <property name="label" translatable="yes">Please make sure that you are still paired and that you are in the same WiFi network</property>
+        <property name="label" translatable="yes">You can remove this launcher from the dock</property>
         <property name="justify">center</property>
         <property name="wrap">True</property>
         <style>
@@ -48,8 +48,8 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton" id="btn_disconnect">
-        <property name="label" translatable="yes">Disconnect Device</property>
+      <object class="GtkButton" id="btn_remove">
+        <property name="label" translatable="yes">Remove launcher</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>

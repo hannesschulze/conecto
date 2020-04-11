@@ -47,8 +47,8 @@ std::shared_ptr<ConnectedDeviceView>
 ConnectedDeviceView::create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices)
 {
     ConnectedDeviceView* res = nullptr;
-    auto builder = Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/views/connected-device-view.ui");
-    builder->get_widget_derived ("ConectoViewsConnectedDeviceView", res);
+    auto builder = Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/views/main/connected-device-view.ui");
+    builder->get_widget_derived ("ConectoViewsMainConnectedDeviceView", res);
     res->m_connected_devices = connected_devices;
     return std::shared_ptr<ConnectedDeviceView> (res);
 }

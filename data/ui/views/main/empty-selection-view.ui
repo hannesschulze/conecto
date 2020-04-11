@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkGrid" id="ConectoViewsEmptySelectionView">
+  <object class="GtkGrid" id="ConectoViewsMainEmptySelectionView">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">center</property>

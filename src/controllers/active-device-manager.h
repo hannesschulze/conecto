@@ -133,8 +133,12 @@ class ActiveDeviceManager {
                 signal.emit (it, false);
         });
         m_connection_removed = model->signal_row_deleted ().connect ([this, model](const Gtk::TreeModel::Path& path) {
-            if (!model->find_device (m_device))
-                activate_device (std::shared_ptr<Conecto::Device> ());
+            // Dirty hack to prevent removal if moved between the two models
+            Glib::signal_timeout ().connect_once ([model, this]() {
+                if (!model->find_device (m_device))
+                    // Try to find the device somewhere else
+                    activate_device (m_device);
+            }, 50);
         });
     }
 

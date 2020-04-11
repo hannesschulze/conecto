@@ -24,6 +24,7 @@
 #include <memory>
 #include "widgets/popover-window.h"
 #include "widgets/header-bar.h"
+#include "views/dock/active-device-view.h"
 
 namespace App {
 
@@ -41,14 +42,18 @@ class DevicePopover : public Widgets::PopoverWindow {
      * @param app The application this window should be attached to using @p Gtk::Application::add_window
      * @param id The selected device's id
      */
-    static std::shared_ptr<DevicePopover> create (Gtk::Application& app, const std::string& id);
+    static std::shared_ptr<DevicePopover> create (Gtk::Application& app, const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+                                                  const Glib::ustring& id);
     ~DevicePopover () {}
 
     DevicePopover (const DevicePopover&) = delete;
     DevicePopover& operator= (const DevicePopover&) = delete;
 
   protected:
-    DevicePopover (const std::string& id);
+    DevicePopover (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices, const Glib::ustring& id);
+
+  private:
+    Views::Dock::ActiveDeviceView m_active_view;
 };
 
 } // namespace App

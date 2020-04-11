@@ -32,7 +32,7 @@ std::shared_ptr<EmptySelectionView>
 EmptySelectionView::create ()
 {
     EmptySelectionView* res = nullptr;
-    auto builder = Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/views/empty-selection-view.ui");
-    builder->get_widget_derived ("ConectoViewsEmptySelectionView", res);
+    auto builder = Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/views/main/empty-selection-view.ui");
+    builder->get_widget_derived ("ConectoViewsMainEmptySelectionView", res);
     return std::shared_ptr<EmptySelectionView> (res);
 }

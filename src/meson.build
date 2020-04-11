@@ -18,6 +18,9 @@ conecto_sources = files(
   'views/main/unavailable-device-view.cpp',
   'views/main/connected-device-view.cpp',
 
+  'views/dock/active-device-view.cpp',
+  'views/dock/warning-view.cpp',
+
   'widgets/header-bar.cpp',
   'widgets/circular-progress-bar.cpp',
   'widgets/popover-window.cpp',

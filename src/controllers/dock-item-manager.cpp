@@ -64,6 +64,15 @@ DockItemManager::listen ()
 }
 
 void
+DockItemManager::update (std::function<void()>&& cb)
+{
+    schedule_action ([this, cb]() {
+        sync ();
+        cb ();
+    });
+}
+
+void
 DockItemManager::sync ()
 {
     PlankDBusClient* client = plank_dbus_client_get_instance ();

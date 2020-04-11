@@ -43,8 +43,8 @@ std::shared_ptr<UnavailableDeviceView>
 UnavailableDeviceView::create (const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices)
 {
     UnavailableDeviceView* res = nullptr;
-    auto builder = Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/views/unavailable-device-view.ui");
-    builder->get_widget_derived ("ConectoViewsUnavailableDeviceView", res);
+    auto builder = Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/views/main/unavailable-device-view.ui");
+    builder->get_widget_derived ("ConectoViewsMainUnavailableDeviceView", res);
     res->m_unavailable_devices = unavailable_devices;
     return std::shared_ptr<UnavailableDeviceView> (res);
 }

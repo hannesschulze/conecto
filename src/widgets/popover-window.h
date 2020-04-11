@@ -42,7 +42,18 @@ class PopoverWindow : public Gtk::ApplicationWindow {
     static std::shared_ptr<PopoverWindow> create ();
     ~PopoverWindow () {}
 
+    /**
+     * Set the position this popover is pointing to on the screen and the arrow position
+     * 
+     * @param x The horizontal position
+     * @param y The vertical position
+     * @param position The arrow's position
+     */
     void set_pointing_to (int x, int y, Gtk::PositionType position);
+    /**
+     * Close the popover
+     */
+    void close_popover ();
 
     PopoverWindow (const PopoverWindow&) = delete;
     PopoverWindow& operator= (const PopoverWindow&) = delete;

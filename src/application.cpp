@@ -27,7 +27,6 @@
 #ifdef ENABLE_PLANK_SUPPORT
 #include "controllers/dock-item-manager.h"
 #endif
-#include <iostream>
 
 using namespace App;
 
@@ -37,7 +36,6 @@ Application::Application ()
     , m_unavailable_devices (Models::UnavailableDevices::create ())
     , m_available_devices (Models::AvailableDevices::create ())
 {
-    ACTIVE_DEVICE.set_models (m_connected_devices, m_unavailable_devices, m_available_devices);
 }
 
 Glib::RefPtr<Application>
@@ -53,6 +51,7 @@ Application::on_startup ()
 
     Conecto::Backend::get_instance ().load_from_cache ();
     Conecto::Backend::get_instance ().listen ();
+    ACTIVE_DEVICE.set_models (m_connected_devices, m_unavailable_devices, m_available_devices);
 #ifdef ENABLE_PLANK_SUPPORT
     DOCK_ITEMS.set_models (m_connected_devices, m_unavailable_devices);
 #endif
@@ -74,7 +73,7 @@ Application::on_activate ()
         window->present ();
     } else {
         // Open a new popover-like window
-        auto popover = DevicePopover::create (*this, m_open_dev_id);
+        auto popover = DevicePopover::create (*this, m_connected_devices, m_open_dev_id);
         m_popovers.push_back (popover);
     }
 }

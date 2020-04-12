@@ -28,6 +28,7 @@ conecto_sources = files(
   'widgets/header-bar.cpp',
   'widgets/circular-progress-bar.cpp',
   'widgets/popover-window.cpp',
+  'widgets/notification-row.cpp',
 
   'utils/icons.cpp',
   'utils/focus.cpp',

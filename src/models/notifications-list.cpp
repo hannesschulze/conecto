@@ -34,7 +34,7 @@ NotificationsList::NotificationsList (const std::shared_ptr<Conecto::Device>& de
     m_columns.add (column_body);
     m_columns.add (column_time);
     set_column_types (m_columns);
-    
+
     // Connect to signals
     m_connections.push_back (m_plugin->signal_new_notification ().connect
         (sigc::mem_fun (*this, &NotificationsList::on_new_notification)));

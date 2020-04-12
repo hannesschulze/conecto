@@ -1,4 +1,4 @@
-/* notifications-view.h
+/* notification-row.h
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -24,36 +24,36 @@
 #include "../models/notifications-list.h"
 
 namespace App {
-namespace Views {
+namespace Widgets {
 
 /**
- * @brief A list showing a list of most recent notifications
- * 
- * Connected to the following model: @p App::Models::NotificationsList
+ * @brief A single listbox row representing a notification
  */
-class NotificationsView : public Gtk::ListBox {
+class NotificationRow : public Gtk::ListBoxRow {
   public:
     /**
-     * @brief Create a list of notifications
+     * @brief Construct a new ListBoxRow
      */
-    NotificationsView ();
-    ~NotificationsView () {}
+    static std::shared_ptr<NotificationRow> create (const Glib::RefPtr<Models::NotificationsList>& model);
+    ~NotificationRow () {}
 
-    /** Update the model */
-    void update (const Glib::RefPtr<Models::NotificationsList>& model);
+    /** @brief Update the view */
+    void update (const Gtk::TreeIter& iter);
 
-    NotificationsView (const NotificationsView&) = delete;
-    NotificationsView& operator= (const NotificationsView&) = delete;
+    NotificationRow (const NotificationRow&) = delete;
+    NotificationRow& operator= (const NotificationRow&) = delete;
 
   private:
-    Glib::RefPtr<Models::NotificationsList> m_model;
-    std::list<sigc::connection> m_model_connections;
-    std::list<std::shared_ptr<Gtk::ListBoxRow>> m_row_refs;
+    NotificationRow (const Glib::RefPtr<Models::NotificationsList>& model);
 
-    void on_row_inserted (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it);
-    void on_row_deleted (const Gtk::TreeModel::Path& path);
-    void on_row_changed (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it);
+    Glib::RefPtr<Models::NotificationsList> m_model;
+    Glib::RefPtr<Gtk::Builder> m_builder;
+
+    // Widgets from the Gtk::Builder
+    Gtk::Label* m_lbl_title;
+    Gtk::Label* m_lbl_text;
+    Gtk::Label* m_lbl_time;
 };
 
-} // namespace Views
+} // namespace Widgets
 } // namespace App

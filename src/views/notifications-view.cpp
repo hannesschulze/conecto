@@ -19,12 +19,13 @@
  */
 
 #include "notifications-view.h"
+#include "../widgets/notification-row.h"
 
 using namespace App::Views;
 using namespace App::Models;
 
 NotificationsView::NotificationsView ()
-    : Gtk::TreeView ()
+    : Gtk::ListBox ()
 {
     set_vexpand (true);
 }
@@ -32,11 +33,38 @@ NotificationsView::NotificationsView ()
 void
 NotificationsView::update (const Glib::RefPtr<NotificationsList>& model)
 {
-    remove_all_columns ();
-    set_model (model);
-    append_column ("Application", model->column_app_name);
-    append_column ("Id", model->column_id);
-    append_column ("Title", model->column_title);
-    append_column ("Body", model->column_body);
-    append_column ("Timestamp", model->column_time);
+    for (auto& connection : m_model_connections)
+        connection.disconnect ();
+    m_model = model;
+    m_row_refs.clear ();
+    m_model_connections.push_back (model->signal_row_inserted ().connect
+        (sigc::mem_fun (*this, &NotificationsView::on_row_inserted)));
+    m_model_connections.push_back (model->signal_row_changed ().connect
+        (sigc::mem_fun (*this, &NotificationsView::on_row_changed)));
+    m_model_connections.push_back (model->signal_row_deleted ().connect
+        (sigc::mem_fun (*this, &NotificationsView::on_row_deleted)));
+}
+
+void
+NotificationsView::on_row_inserted (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it)
+{
+    auto row = Widgets::NotificationRow::create (m_model);
+    insert (*row, path[0]);
+    row->show_all ();
+    row->update (it);
+    m_row_refs.push_back (row);
+}
+
+void
+NotificationsView::on_row_deleted (const Gtk::TreeModel::Path& path)
+{
+    if (path[0] >= static_cast<int> (get_children ().size ())) return;
+    remove (*get_children ()[path[0]]);
+}
+
+void
+NotificationsView::on_row_changed (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it)
+{
+    if (path[0] >= static_cast<int> (get_children ().size ())) return;
+    dynamic_cast<Widgets::NotificationRow*> (get_children ()[path[0]])->update (it);
 }

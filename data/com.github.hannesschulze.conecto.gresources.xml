@@ -7,6 +7,7 @@
 
   <gresource prefix="/com/github/hannesschulze/conecto/ui/widgets">
     <file alias="header-bar.ui">ui/widgets/header-bar.ui</file>
+    <file alias="notification-row.ui">ui/widgets/notification-row.ui</file>
   </gresource>
 
   <gresource prefix="/com/github/hannesschulze/conecto/ui/views/main">

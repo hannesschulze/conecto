@@ -38,7 +38,7 @@ class Backend {
      * @throw (on first call) GnuTLSInitializationError, PEMWriteError, InvalidCertificateException
      */
     static Backend& get_instance ();
-    ~Backend () {}
+    ~Backend ();
 
     /**
      * Start listening for new devices

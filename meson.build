@@ -10,6 +10,7 @@ libconecto_deps = [
   dependency('sigc++-2.0'),
   dependency('giomm-2.4'),
   dependency('gnutls'),
+  dependency('libnotify'),
 ]
 
 pkgconfig = import('pkgconfig')

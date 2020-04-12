@@ -20,10 +20,12 @@
 
 #include "backend.h"
 #include "crypt.h"
+#include "constants.h"
 #include "exceptions.h"
 #include <glibmm/miscutils.h>
 #include <glibmm/fileutils.h>
 #include <giomm/file.h>
+#include <libnotify/notify.h>
 
 using namespace Conecto;
 
@@ -69,6 +71,14 @@ Backend::Backend ()
 
     // Listen to new devices
     m_discovery.signal_device_found ().connect (sigc::mem_fun (+this, &Backend::on_new_device));
+
+    // Set up notifications
+    notify_init (Constants::APP_ID.c_str ());
+}
+
+Backend::~Backend ()
+{
+    notify_uninit ();
 }
 
 ConfigFile&

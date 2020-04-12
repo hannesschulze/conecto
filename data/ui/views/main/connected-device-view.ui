@@ -61,6 +61,7 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_top">36</property>
+            <property name="margin_bottom">24</property>
             <property name="label" translatable="yes">Notifications</property>
             <style>
               <class name="h3"/>
@@ -71,6 +72,9 @@
             <property name="top_attach">2</property>
             <property name="width">2</property>
           </packing>
+        </child>
+        <child>
+          <placeholder/>
         </child>
         <child>
           <placeholder/>

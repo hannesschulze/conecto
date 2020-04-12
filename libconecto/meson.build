@@ -21,6 +21,7 @@ libconecto_sources = files(
   'config-file.cpp',
 
   'plugins/ping.cpp',
+  'plugins/notifications.cpp',
   'plugins/battery.cpp',
 )
 
@@ -37,6 +38,7 @@ libconecto_headers = files(
   'abstract-packet-handler.h',
 
   'plugins/ping.h',
+  'plugins/notifications.h',
   'plugins/battery.h',
 )
 libconecto_headers += config_header

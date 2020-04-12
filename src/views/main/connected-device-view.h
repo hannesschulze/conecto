@@ -23,6 +23,7 @@
 #include <gtkmm.h>
 #include "../../widgets/circular-progress-bar.h"
 #include "../../models/connected-devices.h"
+#include "../notifications-view.h"
 
 namespace App {
 namespace Views {
@@ -58,6 +59,7 @@ class ConnectedDeviceView : public Gtk::Stack {
 
     // Custom widgets
     Widgets::CircularProgressBar m_battery_level_widget;
+    NotificationsView            m_notifications;
 
     Glib::RefPtr<Models::ConnectedDevices> m_connected_devices;
 

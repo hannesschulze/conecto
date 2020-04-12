@@ -22,6 +22,7 @@
 
 #include <gtkmm.h>
 #include <conecto.h>
+#include "notifications-list.h"
 
 namespace App {
 namespace Models {
@@ -56,6 +57,8 @@ class ConnectedDevices : public Gtk::ListStore {
     Gtk::TreeModelColumn<Glib::ustring> column_host_addr;
     /** @brief The host's port */
     Gtk::TreeModelColumn<uint> column_host_port;
+    /** @brief A notifications-model for the device */
+    Gtk::TreeModelColumn<Glib::RefPtr<NotificationsList>> column_notifications;
 
     /**
      * @brief Find a device in the model
@@ -106,6 +109,8 @@ class ConnectedDevices : public Gtk::ListStore {
     Gtk::TreeModel::ColumnRecord               m_columns;
     std::shared_ptr<Conecto::Plugins::Battery> m_battery_plugin;
     std::list<sigc::connection>                m_connections;
+
+    std::map<std::string /* id */, Glib::RefPtr<NotificationsList> /* model */> m_notification_models;
 };
 
 } // namespace Models

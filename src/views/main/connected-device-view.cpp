@@ -37,6 +37,7 @@ ConnectedDeviceView::ConnectedDeviceView (BaseObjectType* cobject, const Glib::R
 
     // Add custom widgets
     m_grid_overview->attach (m_battery_level_widget, 0, 0, 1, 2);
+    m_grid_overview->attach (m_notifications, 0, 3, 2, 1);
 
     // Listen for changes
     ACTIVE_DEVICE.signal_connected_device_update ().connect
@@ -60,4 +61,6 @@ ConnectedDeviceView::on_update (const Gtk::TreeIter& iter, bool new_device)
     m_battery_level_widget.set_icon (Utils::Icons::get_icon_for_device_type (iter->get_value (m_connected_devices->column_type), 48));
     m_lbl_device_name->set_label (iter->get_value (m_connected_devices->column_name));
     m_lbl_battery_level->set_label ("Battery Level: " + std::to_string(iter->get_value (m_connected_devices->column_battery)) + " %");
+
+    m_notifications.update (iter->get_value (m_connected_devices->column_notifications));
 }

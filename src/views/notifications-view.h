@@ -1,4 +1,4 @@
-/* conecto.h
+/* notifications-view.h
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -20,18 +20,31 @@
 
 #pragma once
 
-#include "constants.h"
-#include "exceptions.h"
-#include "backend.h"
-#include "discovery.h"
-#include "device.h"
-#include "network-packet.h"
-#include "communication-channel.h"
-#include "crypt.h"
-#include "config-file.h"
-#include "abstract-packet-handler.h"
+#include <gtkmm.h>
+#include "../models/notifications-list.h"
 
-// Plugins
-#include "ping.h"
-#include "battery.h"
-#include "notifications.h"
+namespace App {
+namespace Views {
+
+/**
+ * @brief A list showing a list of most recent notifications
+ * 
+ * Connected to the following model: @p App::Models::NotificationsList
+ */
+class NotificationsView : public Gtk::TreeView {
+  public:
+    /**
+     * @brief Create a list of notifications
+     */
+    NotificationsView ();
+    ~NotificationsView () {}
+
+    /** Update the model */
+    void update (const Glib::RefPtr<Models::NotificationsList>& model);
+
+    NotificationsView (const NotificationsView&) = delete;
+    NotificationsView& operator= (const NotificationsView&) = delete;
+};
+
+} // namespace Views
+} // namespace App

@@ -34,6 +34,7 @@ ConnectedDevices::ConnectedDevices ()
     m_columns.add (column_starred);
     m_columns.add (column_host_addr);
     m_columns.add (column_host_port);
+    m_columns.add (column_notifications);
     set_column_types (m_columns);
 
     auto& backend = Conecto::Backend::get_instance ();
@@ -44,6 +45,13 @@ ConnectedDevices::ConnectedDevices ()
     if (!m_battery_plugin) {
         m_battery_plugin = std::make_shared<Conecto::Plugins::Battery> ();
         backend.register_plugin (m_battery_plugin);
+    }
+    // Register notification plugin
+    auto notifications_plugin = std::dynamic_pointer_cast<Conecto::Plugins::Notifications>
+        (backend.get_plugin ("kdeconnect.notification"));
+    if (!notifications_plugin) {
+        notifications_plugin = std::make_shared<Conecto::Plugins::Notifications> ();
+        backend.register_plugin (notifications_plugin);
     }
 
     // Register signals devices
@@ -94,6 +102,15 @@ ConnectedDevices::update_for_device (const std::shared_ptr<Conecto::Device>& dev
         iter->set_value (column_starred, config.get_device_starred (*device));
         iter->set_value (column_host_addr, device->get_host ()->to_string ());
         iter->set_value (column_host_port, device->get_tcp_port ());
+        if (m_notification_models.find (device->get_device_id ()) == m_notification_models.end ()) {
+            // Create a new, empty model
+            auto model = NotificationsList::create (device);
+            iter->set_value (column_notifications, model);
+            m_notification_models.insert ({ device->get_device_id (), model });
+        } else {
+            // Set to an existing model
+            iter->set_value (column_notifications, m_notification_models.at (device->get_device_id ()));
+        }
     } else if (is_valid && iter) {
         auto battery = m_battery_plugin->get_last_value (device);
         const auto& config = Conecto::Backend::get_instance ().get_config ();

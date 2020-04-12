@@ -10,6 +10,7 @@ conecto_sources = files(
   'models/connected-devices.cpp',
   'models/unavailable-devices.cpp',
   'models/available-devices.cpp',
+  'models/notifications-list.cpp',
 
   'views/main/devices-list.cpp',
   'views/main/active-device-view.cpp',
@@ -21,6 +22,8 @@ conecto_sources = files(
   'views/dock/active-device-view.cpp',
   'views/dock/warning-view.cpp',
   'views/dock/connected-device-view.cpp',
+
+  'views/notifications-view.cpp',
 
   'widgets/header-bar.cpp',
   'widgets/circular-progress-bar.cpp',

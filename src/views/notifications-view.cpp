@@ -1,4 +1,4 @@
-/* conecto.h
+/* notifications-view.cpp
  *
  * Copyright 2020 Hannes Schulze <haschu0103@gmail.com>
  *
@@ -18,20 +18,25 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#pragma once
+#include "notifications-view.h"
 
-#include "constants.h"
-#include "exceptions.h"
-#include "backend.h"
-#include "discovery.h"
-#include "device.h"
-#include "network-packet.h"
-#include "communication-channel.h"
-#include "crypt.h"
-#include "config-file.h"
-#include "abstract-packet-handler.h"
+using namespace App::Views;
+using namespace App::Models;
 
-// Plugins
-#include "ping.h"
-#include "battery.h"
-#include "notifications.h"
+NotificationsView::NotificationsView ()
+    : Gtk::TreeView ()
+{
+    set_vexpand (true);
+}
+
+void
+NotificationsView::update (const Glib::RefPtr<NotificationsList>& model)
+{
+    remove_all_columns ();
+    set_model (model);
+    append_column ("Application", model->column_app_name);
+    append_column ("Id", model->column_id);
+    append_column ("Title", model->column_title);
+    append_column ("Body", model->column_body);
+    append_column ("Timestamp", model->column_time);
+}

@@ -73,3 +73,10 @@ NotificationsList::on_notification_dismissed (const std::shared_ptr<Conecto::Dev
         }
     }
 }
+
+void
+NotificationsList::dismiss (const std::string& id)
+{
+    // Send a dismiss request via the plugin
+    m_plugin->dismiss (m_device, id);
+}

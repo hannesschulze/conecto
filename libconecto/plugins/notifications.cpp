@@ -138,3 +138,13 @@ Notifications::on_notification_closed (NotifyNotification* notification, Notific
         }
     }
 }
+
+void
+Notifications::dismiss (const std::shared_ptr<Device>& device, const std::string& id)
+{
+    Json::Value body (Json::objectValue);
+    body["cancel"] = id;
+    NetworkPacket packet ("kdeconnect.notification.request", body);
+    device->send (packet);
+    m_signal_notification_dismissed.emit (device, id);
+}

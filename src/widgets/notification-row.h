@@ -50,9 +50,16 @@ class NotificationRow : public Gtk::ListBoxRow {
     Glib::RefPtr<Gtk::Builder> m_builder;
 
     // Widgets from the Gtk::Builder
-    Gtk::Label* m_lbl_title;
-    Gtk::Label* m_lbl_text;
-    Gtk::Label* m_lbl_time;
+    Gtk::Label*  m_lbl_title;
+    Gtk::Label*  m_lbl_text;
+    Gtk::Label*  m_lbl_time;
+    Gtk::Label*  m_lbl_app_name;
+    Gtk::Button* m_btn_dismiss;
+
+    // Current id
+    std::string m_id;
+
+    void on_dismiss ();
 };
 
 } // namespace Widgets

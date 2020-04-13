@@ -21,3 +21,7 @@
 .titlebar.borderless-titlebar {
     border-radius: 0;
 }
+
+list {
+    background: none;
+}

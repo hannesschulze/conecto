@@ -72,6 +72,9 @@ class Notifications : public AbstractPacketHandler {
      */
     type_signal_notification_dismissed signal_notification_dismissed () { return m_signal_notification_dismissed; }
 
+    /** @brief Dismiss a notification, this will immediately emit a @p signal_notification_dismissed */
+    void dismiss (const std::shared_ptr<Device>& device, const std::string& id);
+
     Notifications (const Notifications&) = delete;
     Notifications& operator= (const Notifications&) = delete;
 

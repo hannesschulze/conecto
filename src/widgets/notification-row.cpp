@@ -29,17 +29,24 @@ NotificationRow::NotificationRow (const Glib::RefPtr<Models::NotificationsList>&
     , m_lbl_title (nullptr)
     , m_lbl_text (nullptr)
     , m_lbl_time (nullptr)
+    , m_lbl_app_name (nullptr)
+    , m_btn_dismiss (nullptr)
 {
     Gtk::Grid* widget = nullptr;
     m_builder->get_widget ("ConectoWidgetsNotificationRow", widget);
     m_builder->get_widget ("lbl_title", m_lbl_title);
     m_builder->get_widget ("lbl_text", m_lbl_text);
     m_builder->get_widget ("lbl_time", m_lbl_time);
+    m_builder->get_widget ("lbl_app_name", m_lbl_app_name);
+    m_builder->get_widget ("btn_dismiss", m_btn_dismiss);
     add (*widget);
 
     set_hexpand (true);
     get_style_context ()->add_class (GTK_STYLE_CLASS_MENUITEM);
     show_all ();
+
+    m_btn_dismiss->signal_clicked ().connect
+        (sigc::mem_fun (*this, &NotificationRow::on_dismiss));
 }
 
 std::shared_ptr<NotificationRow>
@@ -51,9 +58,18 @@ NotificationRow::create (const Glib::RefPtr<Models::NotificationsList>& model)
 void
 NotificationRow::update (const Gtk::TreeIter& iter)
 {
+    m_id = iter->get_value (m_model->column_id);
     m_lbl_title->set_label ("<b>" + iter->get_value (m_model->column_title) + "</b>");
     m_lbl_time->set_label (iter->get_value (m_model->column_time));
     Glib::ustring message = iter->get_value (m_model->column_body);
     m_lbl_text->set_visible (message != Glib::ustring ());
     m_lbl_text->set_label (message);
+    m_lbl_app_name->set_label (iter->get_value (m_model->column_app_name));
+}
+
+void
+NotificationRow::on_dismiss ()
+{
+    if (m_id != std::string ())
+        m_model->dismiss (m_id);
 }

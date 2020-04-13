@@ -51,6 +51,9 @@ class NotificationsList : public Gtk::ListStore {
     /** @brief The time the notification was sent */
     Gtk::TreeModelColumn<Glib::ustring> column_time;
 
+    /** @brief Dismiss a notification, it will be immediately removed from this model */
+    void dismiss (const std::string& id);
+
     NotificationsList (const NotificationsList&) = delete;
     NotificationsList& operator= (const NotificationsList&) = delete;
 

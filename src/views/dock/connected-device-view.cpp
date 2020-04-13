@@ -31,17 +31,21 @@ ConnectedDeviceView::ConnectedDeviceView (BaseObjectType* cobject, const Glib::R
     , m_lbl_device_name (nullptr)
     , m_lbl_battery_level (nullptr)
     , m_main_stack_switcher (nullptr)
+    , m_grid_notifications (nullptr)
 {
     m_builder->get_widget ("grid_sidebar", m_grid_sidebar);
     m_builder->get_widget ("lbl_device_name", m_lbl_device_name);
     m_builder->get_widget ("lbl_battery_level", m_lbl_battery_level);
     m_builder->get_widget ("main_stack_switcher", m_main_stack_switcher);
+    m_builder->get_widget ("grid_notifications", m_grid_notifications);
 
     // Add custom widgets
     m_battery_level_widget.set_size_request (96, 96);
     m_battery_level_widget.set_halign (Gtk::ALIGN_CENTER);
     m_battery_level_widget.set_margin_top (36);
     m_grid_sidebar->attach (m_battery_level_widget, 0, 0, 1, 1);
+
+    m_grid_notifications->attach (m_notifications, 0, 0, 1, 1);
 
     // Update other widgets
     m_main_stack_switcher->set_homogeneous (true);
@@ -68,4 +72,6 @@ ConnectedDeviceView::on_update (const Gtk::TreeIter& iter, bool new_device)
     m_battery_level_widget.set_icon (Utils::Icons::get_icon_for_device_type (iter->get_value (m_connected_devices->column_type), 48));
     m_lbl_device_name->set_label (iter->get_value (m_connected_devices->column_name));
     m_lbl_battery_level->set_label (std::to_string(iter->get_value (m_connected_devices->column_battery)) + " %");
+
+    m_notifications.update (iter->get_value (m_connected_devices->column_notifications));
 }

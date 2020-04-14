@@ -27,7 +27,7 @@ namespace Widgets {
 
 /**
  * @brief A widget displaying a progress in a circular shape
- * 
+ *
  * Based on Optimizer's implementation, which is originally based on vala-circular-progressbar
  * by phastmike
  */
@@ -54,17 +54,17 @@ class CircularProgressBar : public Gtk::Bin {
   protected:
     // Overrides
     Gtk::SizeRequestMode get_request_mode_vfunc () const override;
-    void get_preferred_width_vfunc (int& min_width, int& natural_width) const override;
-    void get_preferred_height_vfunc (int& min_height, int& natural_height) const override;
-    bool on_draw (const Cairo::RefPtr<Cairo::Context>& cr) override;
+    void                 get_preferred_width_vfunc (int& min_width, int& natural_width) const override;
+    void                 get_preferred_height_vfunc (int& min_height, int& natural_height) const override;
+    bool                 on_draw (const Cairo::RefPtr<Cairo::Context>& cr) override;
 
   private:
-    int calculate_radius () const;
+    int  calculate_radius () const;
     void draw_stroke (const Cairo::RefPtr<Cairo::Context>& cr, int radius, int line_width, int position,
                       double center_x, double center_y, double progress, const Gdk::RGBA& color) const;
 
     Glib::RefPtr<Gdk::Pixbuf> m_icon;
-    double m_progress;
+    double                    m_progress;
 };
 
 } // namespace Widgets

@@ -47,7 +47,7 @@ class NotificationRow : public Gtk::ListBoxRow {
     NotificationRow (const Glib::RefPtr<Models::NotificationsList>& model);
 
     Glib::RefPtr<Models::NotificationsList> m_model;
-    Glib::RefPtr<Gtk::Builder> m_builder;
+    Glib::RefPtr<Gtk::Builder>              m_builder;
 
     // Widgets from the Gtk::Builder
     Gtk::Label*  m_lbl_title;

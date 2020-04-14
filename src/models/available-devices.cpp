@@ -39,10 +39,10 @@ AvailableDevices::AvailableDevices ()
     auto& backend = Conecto::Backend::get_instance ();
 
     // Register signals devices
-    m_connections.push_back (backend.signal_found_new_device ().connect
-        (sigc::mem_fun (*this, &AvailableDevices::on_new_device)));
-    m_connections.push_back (backend.get_config ().signal_device_changed ().connect
-        (sigc::mem_fun (*this, &AvailableDevices::update_for_device)));
+    m_connections.push_back (
+            backend.signal_found_new_device ().connect (sigc::mem_fun (*this, &AvailableDevices::on_new_device)));
+    m_connections.push_back (backend.get_config ().signal_device_changed ().connect (
+            sigc::mem_fun (*this, &AvailableDevices::update_for_device)));
 }
 
 Glib::RefPtr<AvailableDevices>
@@ -54,14 +54,14 @@ AvailableDevices::create ()
 void
 AvailableDevices::on_new_device (const std::shared_ptr<Conecto::Device>& device)
 {
-    m_connections.push_back (device->signal_connected ().connect
-        (sigc::bind (sigc::mem_fun (*this, &AvailableDevices::update_for_device), device)));
-    m_connections.push_back (device->signal_disconnected ().connect
-        (sigc::bind (sigc::mem_fun (*this, &AvailableDevices::update_for_device), device)));
-    m_connections.push_back (device->signal_paired ().connect
-        (sigc::hide (sigc::bind<0> (sigc::mem_fun (*this, &AvailableDevices::update_for_device), device))));
-    m_connections.push_back (device->signal_pair_request ().connect
-        (sigc::bind (sigc::mem_fun (*this, &AvailableDevices::on_pair_request), device)));
+    m_connections.push_back (device->signal_connected ().connect (
+            sigc::bind (sigc::mem_fun (*this, &AvailableDevices::update_for_device), device)));
+    m_connections.push_back (device->signal_disconnected ().connect (
+            sigc::bind (sigc::mem_fun (*this, &AvailableDevices::update_for_device), device)));
+    m_connections.push_back (device->signal_paired ().connect (
+            sigc::hide (sigc::bind<0> (sigc::mem_fun (*this, &AvailableDevices::update_for_device), device))));
+    m_connections.push_back (device->signal_pair_request ().connect (
+            sigc::bind (sigc::mem_fun (*this, &AvailableDevices::on_pair_request), device)));
     update_for_device (device);
 }
 
@@ -108,9 +108,7 @@ AvailableDevices::find_device (const std::shared_ptr<Conecto::Device>& dev) cons
 {
     const Gtk::TreeNodeChildren& child_nodes = children ();
     for (auto it = child_nodes.begin (); it != child_nodes.end (); it++) {
-        if (it->get_value (column_device) == dev) {
-            return it;
-        }
+        if (it->get_value (column_device) == dev) { return it; }
     }
     return Gtk::TreeIter ();
 }
@@ -120,9 +118,7 @@ AvailableDevices::find_device (const std::string& id) const
 {
     const Gtk::TreeNodeChildren& child_nodes = children ();
     for (auto it = child_nodes.begin (); it != child_nodes.end (); it++) {
-        if (it->get_value (column_id) == id) {
-            return it;
-        }
+        if (it->get_value (column_id) == id) { return it; }
     }
     return Gtk::TreeIter ();
 }

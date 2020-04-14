@@ -25,7 +25,8 @@ using namespace App::Widgets;
 NotificationRow::NotificationRow (const Glib::RefPtr<Models::NotificationsList>& model)
     : Gtk::ListBoxRow ()
     , m_model (model)
-    , m_builder (Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/widgets/notification-row.ui"))
+    , m_builder (
+              Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/widgets/notification-row.ui"))
     , m_lbl_title (nullptr)
     , m_lbl_text (nullptr)
     , m_lbl_time (nullptr)
@@ -45,8 +46,7 @@ NotificationRow::NotificationRow (const Glib::RefPtr<Models::NotificationsList>&
     get_style_context ()->add_class (GTK_STYLE_CLASS_MENUITEM);
     show_all ();
 
-    m_btn_dismiss->signal_clicked ().connect
-        (sigc::mem_fun (*this, &NotificationRow::on_dismiss));
+    m_btn_dismiss->signal_clicked ().connect (sigc::mem_fun (*this, &NotificationRow::on_dismiss));
 }
 
 std::shared_ptr<NotificationRow>
@@ -70,6 +70,5 @@ NotificationRow::update (const Gtk::TreeIter& iter)
 void
 NotificationRow::on_dismiss ()
 {
-    if (m_id != std::string ())
-        m_model->dismiss (m_id);
+    if (m_id != std::string ()) m_model->dismiss (m_id);
 }

@@ -32,15 +32,15 @@ WarningView::WarningView (BaseObjectType* cobject, const Glib::RefPtr<Gtk::Build
 {
     m_builder->get_widget ("btn_remove", m_btn_remove);
 
-    m_btn_remove->signal_clicked ().connect
-        (sigc::mem_fun (*this, &WarningView::on_btn_remove_clicked));
+    m_btn_remove->signal_clicked ().connect (sigc::mem_fun (*this, &WarningView::on_btn_remove_clicked));
 }
 
 std::shared_ptr<WarningView>
 WarningView::create (const Glib::ustring& id)
 {
     WarningView* res = nullptr;
-    auto builder = Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/views/dock/warning-view.ui");
+    auto         builder =
+            Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/views/dock/warning-view.ui");
     builder->get_widget_derived ("ConectoViewsDockWarningView", res);
     res->m_id = id;
     return std::shared_ptr<WarningView> (res);
@@ -56,6 +56,6 @@ WarningView::on_btn_remove_clicked ()
         ACTIVE_DEVICE.activate_device (std::shared_ptr<Conecto::Device> ());
     }
 #ifdef ENABLE_PLANK_SUPPORT
-    DOCK_ITEMS.update ([this]() { m_signal_close_popover.emit (); });
+    DOCK_ITEMS.update ([this] () { m_signal_close_popover.emit (); });
 #endif
 }

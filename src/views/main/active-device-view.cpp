@@ -23,9 +23,9 @@
 
 using namespace App::Views::Main;
 
-ActiveDeviceView::ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+ActiveDeviceView::ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                                     const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                                    const Glib::RefPtr<Models::AvailableDevices>& available_devices)
+                                    const Glib::RefPtr<Models::AvailableDevices>&   available_devices)
     : Gtk::Stack ()
     , m_connected_devices (connected_devices)
     , m_unavailable_devices (unavailable_devices)
@@ -41,21 +41,19 @@ ActiveDeviceView::ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>
     add (*m_available_device_view, "available");
     on_show_empty ();
 
-    ACTIVE_DEVICE.signal_connected_device_update ().connect
-        (sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "connected"));
-    ACTIVE_DEVICE.signal_unavailable_device_update ().connect
-        (sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "unavailable"));
-    ACTIVE_DEVICE.signal_available_device_update ().connect
-        (sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "available"));
-    ACTIVE_DEVICE.signal_no_device_selected ().connect
-        (sigc::mem_fun (*this, &ActiveDeviceView::on_show_empty));
+    ACTIVE_DEVICE.signal_connected_device_update ().connect (
+            sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "connected"));
+    ACTIVE_DEVICE.signal_unavailable_device_update ().connect (
+            sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "unavailable"));
+    ACTIVE_DEVICE.signal_available_device_update ().connect (
+            sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "available"));
+    ACTIVE_DEVICE.signal_no_device_selected ().connect (sigc::mem_fun (*this, &ActiveDeviceView::on_show_empty));
 }
 
 void
 ActiveDeviceView::on_update_device (const Gtk::TreeIter& it, bool new_device, const std::string& child_name)
 {
-    if (new_device)
-        set_visible_child (child_name);
+    if (new_device) set_visible_child (child_name);
 }
 
 void

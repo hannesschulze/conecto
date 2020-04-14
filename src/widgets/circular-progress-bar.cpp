@@ -28,7 +28,8 @@ namespace {
 constexpr int MIN_DIAMETER = 80;
 
 template<class T>
-constexpr const T& clamp (const T& v, const T& lo, const T& hi)
+constexpr const T&
+clamp (const T& v, const T& lo, const T& hi)
 {
     assert (!(hi < lo));
     return (v < lo) ? lo : (hi < v) ? hi : v;
@@ -80,12 +81,12 @@ CircularProgressBar::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
     int radius = calculate_radius () - 1;
 
     Gtk::StateFlags state = get_state_flags ();
-    bool in_focus = !((state & Gtk::STATE_FLAG_BACKDROP) == Gtk::STATE_FLAG_BACKDROP);
+    bool            in_focus = !((state & Gtk::STATE_FLAG_BACKDROP) == Gtk::STATE_FLAG_BACKDROP);
 
-    bool found = false;
+    bool        found = false;
     std::string theme = Glib::getenv ("GTK_THEME");
-    bool dark = Gtk::Settings::get_default ()->property_gtk_application_prefer_dark_theme ().get_value () ||
-        (found && (g_str_has_suffix (theme.c_str (), ":dark") || g_str_has_suffix (theme.c_str (), "-dark")));
+    bool        dark = Gtk::Settings::get_default ()->property_gtk_application_prefer_dark_theme ().get_value () ||
+                (found && (g_str_has_suffix (theme.c_str (), ":dark") || g_str_has_suffix (theme.c_str (), "-dark")));
 
     // TODO: Do rendering using an offscreen progress bar
     if (dark) {
@@ -113,7 +114,8 @@ CircularProgressBar::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
         cr->clip ();
         int width = icon->get_width ();
         int height = icon->get_height ();
-        Gdk::Cairo::set_source_pixbuf (cr, icon, (allocation.get_width () - width) / 2, (allocation.get_height () - height) / 2);
+        Gdk::Cairo::set_source_pixbuf (cr, icon, (allocation.get_width () - width) / 2,
+                                       (allocation.get_height () - height) / 2);
         cr->paint ();
     }
 

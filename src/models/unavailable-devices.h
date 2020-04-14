@@ -35,9 +35,9 @@ class UnavailableDevices : public Gtk::ListStore {
     /**
      * Create a new UnavailableDevices-model using data from the @p Conecto::Backend
      */
-    ~UnavailableDevices () {
-        for (auto& conn : m_connections)
-            conn.disconnect ();
+    ~UnavailableDevices ()
+    {
+        for (auto& conn : m_connections) conn.disconnect ();
     }
 
     /** @brief The device's user-specified name */
@@ -51,33 +51,33 @@ class UnavailableDevices : public Gtk::ListStore {
 
     /**
      * @brief Find a device in the model
-     * 
+     *
      * This may return an invalid iterator
      */
     Gtk::TreeIter find_device (const std::shared_ptr<Conecto::Device>& device) const;
     /**
      * @brief Find a device in the model
-     * 
+     *
      * This may return an invalid iterator
      */
     Gtk::TreeIter find_device (const std::string& id) const;
     /**
      * @brief Get the device for a tree iterator
-     * 
+     *
      * If the iterator is invalid, this will return an empty shared_ptr
      */
     std::shared_ptr<Conecto::Device> get_device (const Gtk::TreeIter& iter) const;
 
     /**
      * @brief Update a device's name
-     * 
+     *
      * @param iter The device iterator
      * @param name The new display name
      */
     void set_device_name (const Gtk::TreeIter& iter, const std::string& name);
     /**
      * @brief Update a starred flag
-     * 
+     *
      * @param iter The device iterator
      * @param name true to make the device starred
      */

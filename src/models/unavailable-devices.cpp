@@ -35,10 +35,10 @@ UnavailableDevices::UnavailableDevices ()
     auto& backend = Conecto::Backend::get_instance ();
 
     // Register signals devices
-    m_connections.push_back (backend.signal_found_new_device ().connect
-        (sigc::mem_fun (*this, &UnavailableDevices::on_new_device)));
-    m_connections.push_back (backend.get_config ().signal_device_changed ().connect
-        (sigc::mem_fun (*this, &UnavailableDevices::update_for_device)));
+    m_connections.push_back (
+            backend.signal_found_new_device ().connect (sigc::mem_fun (*this, &UnavailableDevices::on_new_device)));
+    m_connections.push_back (backend.get_config ().signal_device_changed ().connect (
+            sigc::mem_fun (*this, &UnavailableDevices::update_for_device)));
 }
 
 Glib::RefPtr<UnavailableDevices>
@@ -50,12 +50,12 @@ UnavailableDevices::create ()
 void
 UnavailableDevices::on_new_device (const std::shared_ptr<Conecto::Device>& device)
 {
-    m_connections.push_back (device->signal_connected ().connect
-        (sigc::bind (sigc::mem_fun (*this, &UnavailableDevices::update_for_device), device)));
-    m_connections.push_back (device->signal_disconnected ().connect
-        (sigc::bind (sigc::mem_fun (*this, &UnavailableDevices::update_for_device), device)));
-    m_connections.push_back (device->signal_paired ().connect
-        (sigc::hide (sigc::bind<0> (sigc::mem_fun (*this, &UnavailableDevices::update_for_device), device))));
+    m_connections.push_back (device->signal_connected ().connect (
+            sigc::bind (sigc::mem_fun (*this, &UnavailableDevices::update_for_device), device)));
+    m_connections.push_back (device->signal_disconnected ().connect (
+            sigc::bind (sigc::mem_fun (*this, &UnavailableDevices::update_for_device), device)));
+    m_connections.push_back (device->signal_paired ().connect (
+            sigc::hide (sigc::bind<0> (sigc::mem_fun (*this, &UnavailableDevices::update_for_device), device))));
     update_for_device (device);
 }
 
@@ -89,9 +89,7 @@ UnavailableDevices::find_device (const std::shared_ptr<Conecto::Device>& dev) co
 {
     const Gtk::TreeNodeChildren& child_nodes = children ();
     for (auto it = child_nodes.begin (); it != child_nodes.end (); it++) {
-        if (it->get_value (column_device) == dev) {
-            return it;
-        }
+        if (it->get_value (column_device) == dev) { return it; }
     }
     return Gtk::TreeIter ();
 }
@@ -101,9 +99,7 @@ UnavailableDevices::find_device (const std::string& id) const
 {
     const Gtk::TreeNodeChildren& child_nodes = children ();
     for (auto it = child_nodes.begin (); it != child_nodes.end (); it++) {
-        if (it->get_value (column_id) == id) {
-            return it;
-        }
+        if (it->get_value (column_id) == id) { return it; }
     }
     return Gtk::TreeIter ();
 }
@@ -121,14 +117,12 @@ void
 UnavailableDevices::set_device_name (const Gtk::TreeIter& iter, const std::string& name)
 {
     auto dev = get_device (iter);
-    if (dev)
-        Conecto::Backend::get_instance ().get_config ().set_display_name (dev, name);
+    if (dev) Conecto::Backend::get_instance ().get_config ().set_display_name (dev, name);
 }
 
 void
 UnavailableDevices::set_device_starred (const Gtk::TreeIter& iter, bool starred)
 {
     auto dev = get_device (iter);
-    if (dev)
-        Conecto::Backend::get_instance ().get_config ().set_device_starred (dev, starred);
+    if (dev) Conecto::Backend::get_instance ().get_config ().set_device_starred (dev, starred);
 }

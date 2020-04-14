@@ -32,7 +32,8 @@ constexpr char REQUEST[] = "kdeconnect.mousepad.request";
 constexpr char PACKET_TYPE[] = "kdeconnect.mousepad";
 
 void
-move_cursor_relative (double dx, double dy) {
+move_cursor_relative (double dx, double dy)
+{
     GError* err = nullptr;
     atspi_generate_mouse_event (static_cast<long> (dx), static_cast<long> (dy), "rel", &err);
     if (err) {
@@ -41,7 +42,9 @@ move_cursor_relative (double dx, double dy) {
     }
 }
 
-void send_key (const std::string& key) {
+void
+send_key (const std::string& key)
+{
     GError* err = nullptr;
     atspi_generate_keyboard_event (0, key.c_str (), ATSPI_KEY_STRING, &err);
     if (err) {
@@ -50,7 +53,9 @@ void send_key (const std::string& key) {
     }
 }
 
-void send_keysym (uint key) {
+void
+send_keysym (uint key)
+{
     uint keyval = 0;
     if (key == 12)
         keyval = gdk_keyval_from_name ("Return");
@@ -64,8 +69,8 @@ void send_keysym (uint key) {
 
     g_debug ("Keyval %x", keyval);
     GError* err = nullptr;
-    atspi_generate_keyboard_event (keyval, nullptr, static_cast<AtspiKeySynthType>
-        (ATSPI_KEY_PRESSRELEASE | ATSPI_KEY_SYM), &err);
+    atspi_generate_keyboard_event (keyval, nullptr,
+                                   static_cast<AtspiKeySynthType> (ATSPI_KEY_PRESSRELEASE | ATSPI_KEY_SYM), &err);
     if (err) {
         g_warning ("Failed to generate keyboard event: %s", err->message);
         g_error_free (err);
@@ -78,11 +83,9 @@ Mouse::Mouse ()
     : AbstractPacketHandler ()
 {
     // Initialize atspi
-    if (atspi_init () > 0)
-        g_warning ("Couldn't initialize atspi2");
+    if (atspi_init () > 0) g_warning ("Couldn't initialize atspi2");
     m_display = Gdk::Display::get_default ();
-    if (!m_display)
-        g_warning ("Failed to get default display");
+    if (!m_display) g_warning ("Failed to get default display");
 }
 
 Mouse::~Mouse ()
@@ -170,11 +173,12 @@ Mouse::on_message (const NetworkPacket& message, const std::shared_ptr<Device>& 
 }
 
 void
-Mouse::send_click (int button, bool double_click) {
+Mouse::send_click (int button, bool double_click)
+{
     std::string etype = "b" + std::to_string (button) + "c";
-    gint x, y;
-    GdkSeat* seat = gdk_display_get_default_seat (m_display->gobj ());
-    GdkDevice* device = gdk_seat_get_pointer (seat);
+    gint        x, y;
+    GdkSeat*    seat = gdk_display_get_default_seat (m_display->gobj ());
+    GdkDevice*  device = gdk_seat_get_pointer (seat);
     gdk_device_get_position (device, nullptr, &x, &y);
     // TODO: Use scale factor from correct monitor
     x *= m_display->get_primary_monitor ()->get_scale_factor ();

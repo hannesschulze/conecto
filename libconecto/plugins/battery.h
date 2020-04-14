@@ -51,7 +51,8 @@ class Battery : public AbstractPacketHandler {
      * @param level The new battery level [0..100]
      * @param charging true if the battery is currently charging
      */
-    using type_signal_battery = sigc::signal<void, const std::shared_ptr<Device>& /* device */, int /* level */, bool /* charging */>;
+    using type_signal_battery =
+            sigc::signal<void, const std::shared_ptr<Device>& /* device */, int /* level */, bool /* charging */>;
     /**
      * Emitted after receiving a battery level update from a device
      */

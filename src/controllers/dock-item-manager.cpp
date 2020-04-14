@@ -32,7 +32,7 @@ DockItemManager::DockItemManager ()
 }
 
 void
-DockItemManager::set_models (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+DockItemManager::set_models (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                              const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices)
 {
     m_connected_devices = connected_devices;
@@ -46,27 +46,27 @@ DockItemManager::listen ()
 {
     if (m_is_listening) return;
 
-    schedule_action ([this]() {
+    schedule_action ([this] () {
         sync ();
-        m_connected_devices->signal_row_inserted ().connect (sigc::hide (sigc::hide
-            (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
-        m_unavailable_devices->signal_row_inserted ().connect (sigc::hide (sigc::hide
-            (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
-        m_connected_devices->signal_row_deleted ().connect (sigc::hide
-            (sigc::mem_fun (*this, &DockItemManager::update_timeout)));
-        m_unavailable_devices->signal_row_deleted ().connect (sigc::hide
-            (sigc::mem_fun (*this, &DockItemManager::update_timeout)));
-        m_connected_devices->signal_row_changed ().connect (sigc::hide (sigc::hide
-            (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
-        m_unavailable_devices->signal_row_changed ().connect (sigc::hide (sigc::hide
-            (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
+        m_connected_devices->signal_row_inserted ().connect (
+                sigc::hide (sigc::hide (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
+        m_unavailable_devices->signal_row_inserted ().connect (
+                sigc::hide (sigc::hide (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
+        m_connected_devices->signal_row_deleted ().connect (
+                sigc::hide (sigc::mem_fun (*this, &DockItemManager::update_timeout)));
+        m_unavailable_devices->signal_row_deleted ().connect (
+                sigc::hide (sigc::mem_fun (*this, &DockItemManager::update_timeout)));
+        m_connected_devices->signal_row_changed ().connect (
+                sigc::hide (sigc::hide (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
+        m_unavailable_devices->signal_row_changed ().connect (
+                sigc::hide (sigc::hide (sigc::mem_fun (*this, &DockItemManager::update_timeout))));
     });
 }
 
 void
-DockItemManager::update (std::function<void()>&& cb)
+DockItemManager::update (std::function<void ()>&& cb)
 {
-    schedule_action ([this, cb]() {
+    schedule_action ([this, cb] () {
         sync ();
         cb ();
     });
@@ -78,13 +78,13 @@ DockItemManager::sync ()
     PlankDBusClient* client = plank_dbus_client_get_instance ();
     g_assert (plank_dbus_client_get_is_connected (client));
 
-    int items_len;
+    int     items_len;
     gchar** array = plank_dbus_client_get_persistent_applications (client, &items_len);
     if (!array) return;
 
-    std::string launcher_location = Conecto::Backend::get_launcher_dir () + "/";
+    std::string            launcher_location = Conecto::Backend::get_launcher_dir () + "/";
     std::list<std::string> found;
-    const std::string prefix = "file://";
+    const std::string      prefix = "file://";
 
     for (int i = 0; i < items_len; i++) {
         std::string item (array[i]);
@@ -102,7 +102,7 @@ DockItemManager::sync ()
             auto dev = find_starred (item);
             if (dev) {
                 if (file.get_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME) != dev->name ||
-                        file.get_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON) != dev->icon_name) {
+                    file.get_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON) != dev->icon_name) {
                     file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, dev->name);
                     file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, dev->icon_name);
                     file.save_to_file (filename);
@@ -131,9 +131,11 @@ DockItemManager::sync ()
             g_debug ("Added %s to Plank", filename.c_str ());
             Glib::KeyFile file;
             file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, item->name);
-            file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_COMMENT, "Show the connected device: " + item->name);
+            file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_COMMENT,
+                             "Show the connected device: " + item->name);
             file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TYPE, "Application");
-            file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_EXEC, "com.github.hannesschulze.conecto --open-dev " + item->id);
+            file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_EXEC,
+                             "com.github.hannesschulze.conecto --open-dev " + item->id);
             file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, item->icon_name);
             file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TERMINAL, "false");
             file.set_string (G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ACTIONS, "Reload;CloseAll;CloseAllOther");
@@ -150,17 +152,17 @@ DockItemManager::find_starred (const std::string& id) const
 {
     for (const auto& item : m_connected_devices->children ()) {
         if (id == item.get_value (m_connected_devices->column_id) &&
-                item.get_value (m_connected_devices->column_starred)) {
-            std::string icon_name = Utils::Icons::get_icon_name_for_device_type
-                (item.get_value (m_connected_devices->column_type));
+            item.get_value (m_connected_devices->column_starred)) {
+            std::string icon_name =
+                    Utils::Icons::get_icon_name_for_device_type (item.get_value (m_connected_devices->column_type));
             return std::make_shared<DeviceInfo> (id, item.get_value (m_connected_devices->column_name), icon_name);
         }
     }
     for (const auto& item : m_unavailable_devices->children ()) {
         if (id == item.get_value (m_unavailable_devices->column_id) &&
-                item.get_value (m_unavailable_devices->column_starred)) {
-            std::string icon_name = Utils::Icons::get_icon_name_for_device_type
-                (item.get_value (m_unavailable_devices->column_type));
+            item.get_value (m_unavailable_devices->column_starred)) {
+            std::string icon_name =
+                    Utils::Icons::get_icon_name_for_device_type (item.get_value (m_unavailable_devices->column_type));
             return std::make_shared<DeviceInfo> (id, item.get_value (m_unavailable_devices->column_name), icon_name);
         }
     }
@@ -173,13 +175,15 @@ DockItemManager::get_starred () const
     std::list<std::shared_ptr<DockItemManager::DeviceInfo>> res;
     for (const auto& item : m_connected_devices->children ()) {
         if (!item.get_value (m_connected_devices->column_starred)) continue;
-        std::string icon_name = Utils::Icons::get_icon_name_for_device_type (item.get_value (m_connected_devices->column_type));
+        std::string icon_name =
+                Utils::Icons::get_icon_name_for_device_type (item.get_value (m_connected_devices->column_type));
         res.push_back (std::make_shared<DeviceInfo> (item.get_value (m_connected_devices->column_id),
                                                      item.get_value (m_connected_devices->column_name), icon_name));
     }
     for (const auto& item : m_unavailable_devices->children ()) {
         if (!item.get_value (m_unavailable_devices->column_starred)) continue;
-        std::string icon_name = Utils::Icons::get_icon_name_for_device_type (item.get_value (m_unavailable_devices->column_type));
+        std::string icon_name =
+                Utils::Icons::get_icon_name_for_device_type (item.get_value (m_unavailable_devices->column_type));
         res.push_back (std::make_shared<DeviceInfo> (item.get_value (m_unavailable_devices->column_id),
                                                      item.get_value (m_unavailable_devices->column_name), icon_name));
     }
@@ -193,15 +197,15 @@ DockItemManager::update_timeout ()
 }
 
 void
-DockItemManager::get_position_for_id (const std::string& id,
-                                      std::function<void(int /* x */, int /* y */, Gtk::PositionType /* pos */)>&& cb)
+DockItemManager::get_position_for_id (const std::string&                                                            id,
+                                      std::function<void (int /* x */, int /* y */, Gtk::PositionType /* pos */)>&& cb)
 {
     std::string uri = "file://" + Conecto::Backend::get_launcher_dir () + "/" + id + ".desktop";
-    schedule_action ([cb, uri]() {
+    schedule_action ([cb, uri] () {
         PlankDBusClient* client = plank_dbus_client_get_instance ();
-        gint x, y;
-        GtkPositionType pos;
-        bool ok = plank_dbus_client_get_hover_position (client, uri.c_str (), &x, &y, &pos);
+        gint             x, y;
+        GtkPositionType  pos;
+        bool             ok = plank_dbus_client_get_hover_position (client, uri.c_str (), &x, &y, &pos);
         if (!ok) return cb (0, 0, Gtk::POS_TOP);
 
         Gtk::PositionType wrapper_pos;
@@ -231,11 +235,12 @@ DockItemManager::schedule_action (const DockAction& action)
         action ();
     } else {
         auto tries = std::make_shared<int> (10);
-        Glib::signal_timeout ().connect ([this, action, client, tries]() {
-            if (!plank_dbus_client_get_is_connected (client))
-                return (*tries)-- > 0;
-            action ();
-            return false;
-        }, 50);
+        Glib::signal_timeout ().connect (
+                [this, action, client, tries] () {
+                    if (!plank_dbus_client_get_is_connected (client)) return (*tries)-- > 0;
+                    action ();
+                    return false;
+                },
+                50);
     }
 }

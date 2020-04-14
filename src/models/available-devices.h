@@ -35,9 +35,9 @@ class AvailableDevices : public Gtk::ListStore {
     /**
      * Create a new AvailableDevices-model using data from the @p Conecto::Backend
      */
-    ~AvailableDevices () {
-        for (auto& conn : m_connections)
-            conn.disconnect ();
+    ~AvailableDevices ()
+    {
+        for (auto& conn : m_connections) conn.disconnect ();
     }
 
     /** @brief The device's user-specified name */
@@ -57,19 +57,19 @@ class AvailableDevices : public Gtk::ListStore {
 
     /**
      * @brief Find a device in the model
-     * 
+     *
      * This may return an invalid iterator
      */
     Gtk::TreeIter find_device (const std::shared_ptr<Conecto::Device>& device) const;
     /**
      * @brief Find a device in the model
-     * 
+     *
      * This may return an invalid iterator
      */
     Gtk::TreeIter find_device (const std::string& id) const;
     /**
      * @brief Get the device for a tree iterator
-     * 
+     *
      * If the iterator is invalid, this will return an empty shared_ptr
      */
     std::shared_ptr<Conecto::Device> get_device (const Gtk::TreeIter& iter) const;

@@ -31,9 +31,9 @@ namespace Main {
 
 /**
  * @brief A list shown on the left-hand side of the main window
- * 
+ *
  * A list shown in the main window, listing all online, offline and available devices
- * 
+ *
  * Connected to the following models: @p App::Models::ConnectedDevices, @p App::Models::UnavailableDevices,
  * @p App::Models::AvailableDevices
  */
@@ -41,23 +41,23 @@ class DevicesList : public Gtk::ScrolledWindow {
   public:
     /**
      * @brief Create a list of devices, visualizing the specified models
-     * 
+     *
      * @param connected_devices The connected-devices model
      * @param unavailable_devices The unavailable-devices model
      * @param available_devices The available-devices model
      */
-    DevicesList (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+    DevicesList (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                  const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                 const Glib::RefPtr<Models::AvailableDevices>& available_devices);
+                 const Glib::RefPtr<Models::AvailableDevices>&   available_devices);
     ~DevicesList () {}
 
     DevicesList (const DevicesList&) = delete;
     DevicesList& operator= (const DevicesList&) = delete;
 
   private:
-    Glib::RefPtr<Models::ConnectedDevices> m_connected_devices;
+    Glib::RefPtr<Models::ConnectedDevices>   m_connected_devices;
     Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
-    Glib::RefPtr<Models::AvailableDevices> m_available_devices;
+    Glib::RefPtr<Models::AvailableDevices>   m_available_devices;
 
     Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>>        m_column_icon;
     Gtk::TreeModelColumn<Glib::ustring>                    m_column_text;
@@ -89,7 +89,8 @@ class DevicesList : public Gtk::ScrolledWindow {
 
     void on_insert_row (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it, Gtk::TreeRow parent);
     void on_delete_row (const Gtk::TreeModel::Path& path, Gtk::TreeRow parent);
-    void on_rows_reordered (const Gtk::TreeModel::Path& path, const Gtk::TreeIter& it, int* new_order, Gtk::TreeRow parent);
+    void on_rows_reordered (const Gtk::TreeModel::Path& path, const Gtk::TreeIter& it, int* new_order,
+                            Gtk::TreeRow parent);
     void on_update_row_connected (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it);
     void on_update_row_unavailable (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it);
     void on_update_row_available (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it);

@@ -26,8 +26,7 @@ using namespace App::Utils;
 std::string
 Icons::get_icon_name_for_device_type (const std::string& type)
 {
-    if (type == "tablet")
-        return "computer-apple-ipad";
+    if (type == "tablet") return "computer-apple-ipad";
     return type;
 }
 

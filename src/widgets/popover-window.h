@@ -28,7 +28,7 @@ namespace Widgets {
 
 /**
  * @brief A popover-like application window
- * 
+ *
  * Modified version of Messenger's ApplicationPopOver class:
  * https://github.com/aprilis/messenger/blob/master/src/ApplicationPopOver.vala
  */
@@ -44,7 +44,7 @@ class PopoverWindow : public Gtk::ApplicationWindow {
 
     /**
      * Set the position this popover is pointing to on the screen and the arrow position
-     * 
+     *
      * @param x The horizontal position
      * @param y The vertical position
      * @param position The arrow's position
@@ -76,9 +76,9 @@ class PopoverWindow : public Gtk::ApplicationWindow {
   private:
     std::shared_ptr<GraniteDrawingBufferSurface> m_main_buffer;
 
-    int m_arrow_offset;
+    int               m_arrow_offset;
     Gtk::PositionType m_arrow_position;
-    int m_old_width, m_old_height;
+    int               m_old_width, m_old_height;
     bool m_do_not_close; // prevents closing for the first 200ms because events are emitted during this time
 };
 

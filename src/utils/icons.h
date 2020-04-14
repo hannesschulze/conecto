@@ -32,14 +32,14 @@ class Icons {
   public:
     /**
      * @brief Get the name of an icon representing a device type
-     * 
+     *
      * @param type The device type
      */
     static std::string get_icon_name_for_device_type (const std::string& type);
 
     /**
      * @brief Get an icon representing a device
-     * 
+     *
      * @param type The device type
      */
     static Glib::RefPtr<Gdk::Pixbuf> get_icon_for_device_type (const std::string& type, int size);

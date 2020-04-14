@@ -62,7 +62,7 @@ Battery::on_message (const NetworkPacket& message, const std::shared_ptr<Device>
 {
     if (message.get_type () != PACKET_TYPE) return;
 
-    int level = std::min (std::max (message.get_body ()["currentCharge"].asInt (), 0), 100);
+    int  level = std::min (std::max (message.get_body ()["currentCharge"].asInt (), 0), 100);
     bool charging = message.get_body ()["isCharging"].asBool ();
     m_values[device->to_unique_string ()] = std::make_tuple (level, charging);
     m_signal_battery.emit (device, level, charging);
@@ -71,7 +71,6 @@ Battery::on_message (const NetworkPacket& message, const std::shared_ptr<Device>
 std::tuple<int, bool>
 Battery::get_last_value (const std::shared_ptr<Device>& device) const
 {
-    if (m_values.find (device->to_unique_string ()) == m_values.end ())
-        return std::make_tuple (0, false);
+    if (m_values.find (device->to_unique_string ()) == m_values.end ()) return std::make_tuple (0, false);
     return m_values.at (device->to_unique_string ());
 }

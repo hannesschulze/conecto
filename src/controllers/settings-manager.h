@@ -33,8 +33,7 @@ class SettingsManager : public Gio::Settings {
     /**
      * @brief Return a single instance of this class
      */
-    static SettingsManager&
-    get_instance ()
+    static SettingsManager& get_instance ()
     {
         static SettingsManager instance;
         return instance;

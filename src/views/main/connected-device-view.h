@@ -31,7 +31,7 @@ namespace Main {
 
 /**
  * @brief A view shown if the active device is currently paired and available
- * 
+ *
  * This screen is made up of three sections: Notifications and device info, SMS and File Transfer
  */
 class ConnectedDeviceView : public Gtk::Stack {
@@ -39,7 +39,8 @@ class ConnectedDeviceView : public Gtk::Stack {
     /**
      * @brief Construct the view
      */
-    static std::shared_ptr<ConnectedDeviceView> create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices);
+    static std::shared_ptr<ConnectedDeviceView>
+    create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices);
     ~ConnectedDeviceView () {}
 
     ConnectedDeviceView (const ConnectedDeviceView&) = delete;

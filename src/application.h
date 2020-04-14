@@ -28,11 +28,15 @@
 namespace App {
 
 // forward declarations
-namespace Models { class ConnectedDevices; class UnavailableDevices; class AvailableDevices; }
+namespace Models {
+class ConnectedDevices;
+class UnavailableDevices;
+class AvailableDevices;
+} // namespace Models
 
 /**
  * @brief The app's main application class
- * 
+ *
  * The @p Application manages the lifetime of the application by providing a mainloop and managing
  * the app's windows
  */
@@ -52,7 +56,7 @@ class Application : public Gtk::Application {
 
     void on_startup () override;
     void on_activate () override;
-    int on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line) override;
+    int  on_command_line (const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line) override;
 
   private:
     std::shared_ptr<Window>                  m_window;

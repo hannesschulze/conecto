@@ -30,7 +30,7 @@ namespace App {
 
 /**
  * @brief Conecto's device dock-popover
- * 
+ *
  * Class responsible for creating a popover representing a device opened when clicking on a
  * dock item. Because it is a toplevel window, it is managed using a std::shared_ptr
  */
@@ -38,12 +38,13 @@ class DevicePopover : public Widgets::PopoverWindow {
   public:
     /**
      * @brief Create a new device popover and display it at the dock item's position
-     * 
+     *
      * @param app The application this window should be attached to using @p Gtk::Application::add_window
      * @param id The selected device's id
      */
-    static std::shared_ptr<DevicePopover> create (Gtk::Application& app, const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
-                                                  const Glib::ustring& id);
+    static std::shared_ptr<DevicePopover> create (Gtk::Application&                             app,
+                                                  const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+                                                  const Glib::ustring&                          id);
     ~DevicePopover () {}
 
     DevicePopover (const DevicePopover&) = delete;

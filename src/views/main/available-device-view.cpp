@@ -39,22 +39,22 @@ AvailableDeviceView::AvailableDeviceView (BaseObjectType* cobject, const Glib::R
     m_builder->get_widget ("btn_send_request", m_btn_send_request);
 
     // Connect to button signals
-    m_btn_send_request->signal_clicked ().connect
-        (sigc::mem_fun (*this, &AvailableDeviceView::on_send_request_clicked));
-    m_btn_accept_request->signal_clicked ().connect
-        (sigc::mem_fun (*this, &AvailableDeviceView::on_accept_request_clicked));
-    m_btn_reject_request->signal_clicked ().connect
-        (sigc::mem_fun (*this, &AvailableDeviceView::on_reject_request_clicked));
+    m_btn_send_request->signal_clicked ().connect (
+            sigc::mem_fun (*this, &AvailableDeviceView::on_send_request_clicked));
+    m_btn_accept_request->signal_clicked ().connect (
+            sigc::mem_fun (*this, &AvailableDeviceView::on_accept_request_clicked));
+    m_btn_reject_request->signal_clicked ().connect (
+            sigc::mem_fun (*this, &AvailableDeviceView::on_reject_request_clicked));
 
-    ACTIVE_DEVICE.signal_available_device_update ().connect
-        (sigc::mem_fun (*this, &AvailableDeviceView::on_update));
+    ACTIVE_DEVICE.signal_available_device_update ().connect (sigc::mem_fun (*this, &AvailableDeviceView::on_update));
 }
 
 std::shared_ptr<AvailableDeviceView>
 AvailableDeviceView::create (const Glib::RefPtr<Models::AvailableDevices>& available_devices)
 {
     AvailableDeviceView* res = nullptr;
-    auto builder = Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/views/main/available-device-view.ui");
+    auto                 builder = Gtk::Builder::create_from_resource (
+            "/com/github/hannesschulze/conecto/ui/views/main/available-device-view.ui");
     builder->get_widget_derived ("ConectoViewsMainAvailableDeviceView", res);
     res->m_available_devices = available_devices;
     return std::shared_ptr<AvailableDeviceView> (res);
@@ -70,8 +70,7 @@ AvailableDeviceView::on_update (const Gtk::TreeIter& iter, bool new_device)
                                   " has sent a pair request. Do you want to accept it or reject it?");
         set_visible_child ("incoming_request");
     } else {
-        m_lbl_available->set_label ("Do you want to pair " + iter->get_value (m_available_devices->column_name) +
-                                    "?");
+        m_lbl_available->set_label ("Do you want to pair " + iter->get_value (m_available_devices->column_name) + "?");
         set_visible_child ("send_request");
     }
 }

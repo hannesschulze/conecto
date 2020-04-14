@@ -28,7 +28,7 @@ namespace Views {
 
 /**
  * @brief A list showing a list of most recent notifications
- * 
+ *
  * Connected to the following model: @p App::Models::NotificationsList
  */
 class NotificationsView : public Gtk::ListBox {
@@ -46,8 +46,8 @@ class NotificationsView : public Gtk::ListBox {
     NotificationsView& operator= (const NotificationsView&) = delete;
 
   private:
-    Glib::RefPtr<Models::NotificationsList> m_model;
-    std::list<sigc::connection> m_model_connections;
+    Glib::RefPtr<Models::NotificationsList>     m_model;
+    std::list<sigc::connection>                 m_model_connections;
     std::list<std::shared_ptr<Gtk::ListBoxRow>> m_row_refs;
 
     void on_row_inserted (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it);

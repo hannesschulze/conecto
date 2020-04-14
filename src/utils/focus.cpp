@@ -31,29 +31,31 @@ Focus::grab (const Glib::RefPtr<Gdk::Window>& window, bool keyboard, bool pointe
     window->raise ();
     window->focus (GDK_CURRENT_TIME);
 
-    if (!try_grab_window(window, keyboard, pointer, owner_events)) {
+    if (!try_grab_window (window, keyboard, pointer, owner_events)) {
         auto i = std::make_shared<int> (0);
-        Glib::signal_timeout ().connect ([i, window, keyboard, pointer, owner_events]() {
-            if (++(*i) >= 100) {
-                g_warning ("Grab failed");
-                return false;
-            }
-            return !try_grab_window (window, keyboard, pointer, owner_events);
-        }, 100);
+        Glib::signal_timeout ().connect (
+                [i, window, keyboard, pointer, owner_events] () {
+                    if (++(*i) >= 100) {
+                        g_warning ("Grab failed");
+                        return false;
+                    }
+                    return !try_grab_window (window, keyboard, pointer, owner_events);
+                },
+                100);
     }
 }
 
 void
 Focus::ungrab (bool keyboard, bool pointer)
 {
-    auto display = Gdk::Display::get_default();
+    auto display = Gdk::Display::get_default ();
     auto manager = display->get_device_manager ();
 
     auto list = manager->list_devices (Gdk::DEVICE_TYPE_MASTER);
 
     for (auto& device : list) {
         if ((device->property_input_source ().get_value () == Gdk::SOURCE_KEYBOARD && keyboard) ||
-                (device->property_input_source ().get_value () != Gdk::SOURCE_KEYBOARD && pointer))
+            (device->property_input_source ().get_value () != Gdk::SOURCE_KEYBOARD && pointer))
             device->ungrab (GDK_CURRENT_TIME);
     }
 }
@@ -61,7 +63,7 @@ Focus::ungrab (bool keyboard, bool pointer)
 bool
 Focus::try_grab_window (const Glib::RefPtr<Gdk::Window>& window, bool keyboard, bool pointer, bool owner_events)
 {
-    auto display = Gdk::Display::get_default();
+    auto display = Gdk::Display::get_default ();
     auto manager = display->get_device_manager ();
 
     bool grabbed_all = true;
@@ -69,17 +71,15 @@ Focus::try_grab_window (const Glib::RefPtr<Gdk::Window>& window, bool keyboard, 
     auto list = manager->list_devices (Gdk::DEVICE_TYPE_MASTER);
     for (auto& device : list) {
         if ((device->property_input_source ().get_value () == Gdk::SOURCE_KEYBOARD && keyboard) ||
-                (device->property_input_source ().get_value () != Gdk::SOURCE_KEYBOARD && pointer)) {
+            (device->property_input_source ().get_value () != Gdk::SOURCE_KEYBOARD && pointer)) {
             Gdk::GrabStatus status = device->grab (window, Gdk::OWNERSHIP_APPLICATION, owner_events,
                                                    Gdk::ALL_EVENTS_MASK, GDK_CURRENT_TIME);
 
-            if (status != Gdk::GRAB_SUCCESS)
-                grabbed_all = false;
+            if (status != Gdk::GRAB_SUCCESS) grabbed_all = false;
         }
     }
 
-    if (grabbed_all)
-        return true;
+    if (grabbed_all) return true;
 
     ungrab (keyboard, pointer);
 

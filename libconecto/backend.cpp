@@ -187,9 +187,8 @@ Backend::activate_device (const std::shared_ptr<DeviceEntry>& device)
     g_info ("Activating device %s", device->device->to_string ().c_str ());
 
     if (!device->device->get_is_active ()) {
-        device->paired_conn = device->device->signal_paired ().connect ([this, device] (bool success) {
-            update_cache ();
-        });
+        device->paired_conn =
+                device->device->signal_paired ().connect ([this, device] (bool success) { update_cache (); });
         device->disconnected_conn = device->device->signal_disconnected ().connect ([device] () {
             g_debug ("Device %s got disconnected", device->device->to_string ().c_str ());
 

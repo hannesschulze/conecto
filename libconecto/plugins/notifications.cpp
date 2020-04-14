@@ -74,9 +74,8 @@ Notifications::on_message (const NetworkPacket& message, const std::shared_ptr<D
         return;
     }
 
-    if (!json["appName"].isString () || !json["ticker"].isString ())
-        return;
-    
+    if (!json["appName"].isString () || !json["ticker"].isString ()) return;
+
     Glib::DateTime time = Glib::DateTime::create_now_local ();
     if (json["time"].isString ()) {
         long timestamp = atol (json["time"].asCString ());
@@ -86,13 +85,11 @@ Notifications::on_message (const NetworkPacket& message, const std::shared_ptr<D
 
     std::string body = json["text"].isString () ? json["text"].asString () : std::string ();
 
-    NotificationInfo notification = {
-        .id = id,
-        .app_name = json["appName"].asString (),
-        .title = json["ticker"].asString (),
-        .body = json["text"].asString (),
-        .time = time
-    };
+    NotificationInfo notification = { .id = id,
+                                      .app_name = json["appName"].asString (),
+                                      .title = json["ticker"].asString (),
+                                      .body = json["text"].asString (),
+                                      .time = time };
 
     m_signal_new_notification.emit (device, notification);
 }
@@ -100,11 +97,12 @@ Notifications::on_message (const NetworkPacket& message, const std::shared_ptr<D
 void
 Notifications::on_new_notification (const std::shared_ptr<Device>& device, const NotificationInfo& notification)
 {
-    if (m_desktop_notifications.find (notification.id) != m_desktop_notifications.end ())
-        return;
+    if (m_desktop_notifications.find (notification.id) != m_desktop_notifications.end ()) return;
 
-    std::shared_ptr<NotifyNotification> desktop_notification (
-        notify_notification_new (notification.app_name.c_str (), notification.title.c_str (), "phone"), g_object_unref);
+    std::shared_ptr<NotifyNotification> desktop_notification (notify_notification_new (notification.app_name.c_str (),
+                                                                                       notification.title.c_str (),
+                                                                                       "phone"),
+                                                              g_object_unref);
 
     g_signal_connect (desktop_notification.get (), "closed", G_CALLBACK (on_notification_closed), this);
     GError* err = nullptr;

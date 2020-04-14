@@ -26,9 +26,9 @@
 
 using namespace App;
 
-Window::Window (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+Window::Window (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                 const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                const Glib::RefPtr<Models::AvailableDevices>& available_devices)
+                const Glib::RefPtr<Models::AvailableDevices>&   available_devices)
     : Gtk::ApplicationWindow ()
     , m_paned (Gtk::ORIENTATION_HORIZONTAL)
     , m_devices_list (connected_devices, unavailable_devices, available_devices)
@@ -73,9 +73,9 @@ Window::Window (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
 }
 
 std::shared_ptr<Window>
-Window::create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+Window::create (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                 const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                const Glib::RefPtr<Models::AvailableDevices>& available_devices)
+                const Glib::RefPtr<Models::AvailableDevices>&   available_devices)
 {
     return std::shared_ptr<Window> (new Window (connected_devices, unavailable_devices, available_devices));
 }
@@ -100,8 +100,6 @@ Window::on_show ()
 {
     Gtk::ApplicationWindow::on_show ();
 #ifdef ENABLE_PLANK_SUPPORT
-    Glib::signal_idle ().connect_once ([this]() {
-        DOCK_ITEMS.listen ();
-    });
+    Glib::signal_idle ().connect_once ([this] () { DOCK_ITEMS.listen (); });
 #endif
 }

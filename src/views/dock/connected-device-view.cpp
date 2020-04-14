@@ -51,15 +51,15 @@ ConnectedDeviceView::ConnectedDeviceView (BaseObjectType* cobject, const Glib::R
     m_main_stack_switcher->set_homogeneous (true);
 
     // Listen for changes
-    ACTIVE_DEVICE.signal_connected_device_update ().connect
-        (sigc::mem_fun (*this, &ConnectedDeviceView::on_update));
+    ACTIVE_DEVICE.signal_connected_device_update ().connect (sigc::mem_fun (*this, &ConnectedDeviceView::on_update));
 }
 
 std::shared_ptr<ConnectedDeviceView>
 ConnectedDeviceView::create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices)
 {
     ConnectedDeviceView* res = nullptr;
-    auto builder = Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/views/dock/connected-device-view.ui");
+    auto                 builder = Gtk::Builder::create_from_resource (
+            "/com/github/hannesschulze/conecto/ui/views/dock/connected-device-view.ui");
     builder->get_widget_derived ("ConectoViewsDockConnectedDeviceView", res);
     res->m_connected_devices = connected_devices;
     return std::shared_ptr<ConnectedDeviceView> (res);
@@ -68,10 +68,12 @@ ConnectedDeviceView::create (const Glib::RefPtr<Models::ConnectedDevices>& conne
 void
 ConnectedDeviceView::on_update (const Gtk::TreeIter& iter, bool new_device)
 {
-    m_battery_level_widget.set_progress (static_cast<double> (iter->get_value (m_connected_devices->column_battery)) / 100.0);
-    m_battery_level_widget.set_icon (Utils::Icons::get_icon_for_device_type (iter->get_value (m_connected_devices->column_type), 48));
+    m_battery_level_widget.set_progress (static_cast<double> (iter->get_value (m_connected_devices->column_battery)) /
+                                         100.0);
+    m_battery_level_widget.set_icon (
+            Utils::Icons::get_icon_for_device_type (iter->get_value (m_connected_devices->column_type), 48));
     m_lbl_device_name->set_label (iter->get_value (m_connected_devices->column_name));
-    m_lbl_battery_level->set_label (std::to_string(iter->get_value (m_connected_devices->column_battery)) + " %");
+    m_lbl_battery_level->set_label (std::to_string (iter->get_value (m_connected_devices->column_battery)) + " %");
 
     m_notifications.update (iter->get_value (m_connected_devices->column_notifications));
 }

@@ -40,27 +40,26 @@ ConnectedDevices::ConnectedDevices ()
     auto& backend = Conecto::Backend::get_instance ();
 
     // Register battery plugin
-    m_battery_plugin = std::dynamic_pointer_cast<Conecto::Plugins::Battery>
-        (backend.get_plugin ("kdeconnect.battery"));
+    m_battery_plugin = std::dynamic_pointer_cast<Conecto::Plugins::Battery> (backend.get_plugin ("kdeconnect.battery"));
     if (!m_battery_plugin) {
         m_battery_plugin = std::make_shared<Conecto::Plugins::Battery> ();
         backend.register_plugin (m_battery_plugin);
     }
     // Register notification plugin
-    auto notifications_plugin = std::dynamic_pointer_cast<Conecto::Plugins::Notifications>
-        (backend.get_plugin ("kdeconnect.notification"));
+    auto notifications_plugin =
+            std::dynamic_pointer_cast<Conecto::Plugins::Notifications> (backend.get_plugin ("kdeconnect.notification"));
     if (!notifications_plugin) {
         notifications_plugin = std::make_shared<Conecto::Plugins::Notifications> ();
         backend.register_plugin (notifications_plugin);
     }
 
     // Register signals devices
-    m_connections.push_back (backend.signal_found_new_device ().connect
-        (sigc::mem_fun (*this, &ConnectedDevices::on_new_device)));
-    m_connections.push_back (m_battery_plugin->signal_battery ().connect
-        (sigc::hide (sigc::hide (sigc::mem_fun (*this, &ConnectedDevices::update_for_device)))));
-    m_connections.push_back (backend.get_config ().signal_device_changed ().connect
-        (sigc::mem_fun (*this, &ConnectedDevices::update_for_device)));
+    m_connections.push_back (
+            backend.signal_found_new_device ().connect (sigc::mem_fun (*this, &ConnectedDevices::on_new_device)));
+    m_connections.push_back (m_battery_plugin->signal_battery ().connect (
+            sigc::hide (sigc::hide (sigc::mem_fun (*this, &ConnectedDevices::update_for_device)))));
+    m_connections.push_back (backend.get_config ().signal_device_changed ().connect (
+            sigc::mem_fun (*this, &ConnectedDevices::update_for_device)));
 }
 
 Glib::RefPtr<ConnectedDevices>
@@ -72,12 +71,12 @@ ConnectedDevices::create ()
 void
 ConnectedDevices::on_new_device (const std::shared_ptr<Conecto::Device>& device)
 {
-    m_connections.push_back (device->signal_connected ().connect
-        (sigc::bind (sigc::mem_fun (*this, &ConnectedDevices::update_for_device), device)));
-    m_connections.push_back (device->signal_disconnected ().connect
-        (sigc::bind (sigc::mem_fun (*this, &ConnectedDevices::update_for_device), device)));
-    m_connections.push_back (device->signal_paired ().connect
-        (sigc::hide (sigc::bind<0> (sigc::mem_fun (*this, &ConnectedDevices::update_for_device), device))));
+    m_connections.push_back (device->signal_connected ().connect (
+            sigc::bind (sigc::mem_fun (*this, &ConnectedDevices::update_for_device), device)));
+    m_connections.push_back (device->signal_disconnected ().connect (
+            sigc::bind (sigc::mem_fun (*this, &ConnectedDevices::update_for_device), device)));
+    m_connections.push_back (device->signal_paired ().connect (
+            sigc::hide (sigc::bind<0> (sigc::mem_fun (*this, &ConnectedDevices::update_for_device), device))));
     update_for_device (device);
 }
 
@@ -90,7 +89,7 @@ ConnectedDevices::update_for_device (const std::shared_ptr<Conecto::Device>& dev
     if (iter && !is_valid) {
         erase (iter);
     } else if (is_valid && !iter) {
-        auto battery = m_battery_plugin->get_last_value (device);
+        auto        battery = m_battery_plugin->get_last_value (device);
         const auto& config = Conecto::Backend::get_instance ().get_config ();
         iter = append ();
         iter->set_value (column_device, device);
@@ -112,7 +111,7 @@ ConnectedDevices::update_for_device (const std::shared_ptr<Conecto::Device>& dev
             iter->set_value (column_notifications, m_notification_models.at (device->get_device_id ()));
         }
     } else if (is_valid && iter) {
-        auto battery = m_battery_plugin->get_last_value (device);
+        auto        battery = m_battery_plugin->get_last_value (device);
         const auto& config = Conecto::Backend::get_instance ().get_config ();
         iter->set_value (column_name, config.get_display_name (*device));
         iter->set_value (column_id, Glib::ustring (device->get_device_id ()));
@@ -130,9 +129,7 @@ ConnectedDevices::find_device (const std::shared_ptr<Conecto::Device>& dev) cons
 {
     const Gtk::TreeNodeChildren& child_nodes = children ();
     for (auto it = child_nodes.begin (); it != child_nodes.end (); it++) {
-        if (it->get_value (column_device) == dev) {
-            return it;
-        }
+        if (it->get_value (column_device) == dev) { return it; }
     }
     return Gtk::TreeIter ();
 }
@@ -142,9 +139,7 @@ ConnectedDevices::find_device (const std::string& id) const
 {
     const Gtk::TreeNodeChildren& child_nodes = children ();
     for (auto it = child_nodes.begin (); it != child_nodes.end (); it++) {
-        if (it->get_value (column_id) == id) {
-            return it;
-        }
+        if (it->get_value (column_id) == id) { return it; }
     }
     return Gtk::TreeIter ();
 }
@@ -162,14 +157,12 @@ void
 ConnectedDevices::set_device_name (const Gtk::TreeIter& iter, const std::string& name)
 {
     auto dev = get_device (iter);
-    if (dev)
-        Conecto::Backend::get_instance ().get_config ().set_display_name (dev, name);
+    if (dev) Conecto::Backend::get_instance ().get_config ().set_display_name (dev, name);
 }
 
 void
 ConnectedDevices::set_device_starred (const Gtk::TreeIter& iter, bool starred)
 {
     auto dev = get_device (iter);
-    if (dev)
-        Conecto::Backend::get_instance ().get_config ().set_device_starred (dev, starred);
+    if (dev) Conecto::Backend::get_instance ().get_config ().set_device_starred (dev, starred);
 }

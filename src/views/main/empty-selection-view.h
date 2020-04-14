@@ -28,7 +28,7 @@ namespace Main {
 
 /**
  * @brief A view shown if no device is selected
- * 
+ *
  * This is just a simple screen set up using Glade
  */
 class EmptySelectionView : public Gtk::Grid {

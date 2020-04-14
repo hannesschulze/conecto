@@ -63,18 +63,16 @@ bool
 PopoverWindow::on_draw (const Cairo::RefPtr<Cairo::Context>& cr)
 {
     auto style_context = get_style_context ();
-    
+
     cr->begin_new_path ();
     cairo_append_path (cr->cobj (),
                        cairo_copy_path (granite_drawing_buffer_surface_get_context (m_main_buffer.get ())));
     cr->clip ();
-    style_context->render_background (cr, 0, 0,
-                                      granite_drawing_buffer_surface_get_width (m_main_buffer.get ()),
+    style_context->render_background (cr, 0, 0, granite_drawing_buffer_surface_get_width (m_main_buffer.get ()),
                                       granite_drawing_buffer_surface_get_height (m_main_buffer.get ()));
     bool ret = ApplicationWindow::on_draw (cr);
     cr->reset_clip ();
-    cairo_set_source_surface (cr->cobj (),
-                              granite_drawing_buffer_surface_get_surface (m_main_buffer.get ()), 0, 0);
+    cairo_set_source_surface (cr->cobj (), granite_drawing_buffer_surface_get_surface (m_main_buffer.get ()), 0, 0);
     cr->paint ();
 
     return ret;
@@ -84,10 +82,9 @@ void
 PopoverWindow::on_size_allocate (Gtk::Allocation& allocation)
 {
     Gtk::ApplicationWindow::on_size_allocate (allocation);
-    int w = get_allocated_width();
-    int h = get_allocated_height();
-    if(m_old_width == w && m_old_height == h)
-        return;
+    int w = get_allocated_width ();
+    int h = get_allocated_height ();
+    if (m_old_width == w && m_old_height == h) return;
 
     compute_shadow (w, h);
 
@@ -96,19 +93,18 @@ PopoverWindow::on_size_allocate (Gtk::Allocation& allocation)
 }
 
 void
-PopoverWindow::set_path (cairo_t* cr, double x, double y, double width, double height, double border_radius) {
+PopoverWindow::set_path (cairo_t* cr, double x, double y, double width, double height, double border_radius)
+{
     double arrow_offset;
-    int arrow_side_offset = ARROW_HEIGHT - SHADOW_SIZE;
+    int    arrow_side_offset = ARROW_HEIGHT - SHADOW_SIZE;
     if (m_arrow_position == Gtk::POS_TOP || m_arrow_position == Gtk::POS_BOTTOM) {
         arrow_offset = (width - ARROW_WIDTH) / 2 + m_arrow_offset + x;
         height -= arrow_side_offset;
-        if (m_arrow_position == Gtk::POS_TOP)
-            y += arrow_side_offset;
+        if (m_arrow_position == Gtk::POS_TOP) y += arrow_side_offset;
     } else {
         arrow_offset = (height - ARROW_WIDTH) / 2 + m_arrow_offset + y;
         width -= arrow_side_offset;
-        if (m_arrow_position == Gtk::POS_LEFT)
-            x += arrow_side_offset;
+        if (m_arrow_position == Gtk::POS_LEFT) x += arrow_side_offset;
     }
 
     cairo_arc (cr, x + border_radius, y + border_radius, border_radius, M_PI, M_PI * 1.5);
@@ -139,15 +135,14 @@ PopoverWindow::set_path (cairo_t* cr, double x, double y, double width, double h
 }
 
 void
-PopoverWindow::compute_shadow (int width, int height) {
-    m_main_buffer.reset (granite_drawing_buffer_surface_new (width, height),
-                         g_object_unref);
+PopoverWindow::compute_shadow (int width, int height)
+{
+    m_main_buffer.reset (granite_drawing_buffer_surface_new (width, height), g_object_unref);
 
     // Shadow first
-    set_path (granite_drawing_buffer_surface_get_context (m_main_buffer.get ()),
-              SHADOW_SIZE + BORDER_WIDTH / 2.0, SHADOW_SIZE + BORDER_WIDTH / 2.0,
-              width - SHADOW_SIZE * 2 - BORDER_WIDTH, height - SHADOW_SIZE * 2 - BORDER_WIDTH,
-              BORDER_RADIUS);
+    set_path (granite_drawing_buffer_surface_get_context (m_main_buffer.get ()), SHADOW_SIZE + BORDER_WIDTH / 2.0,
+              SHADOW_SIZE + BORDER_WIDTH / 2.0, width - SHADOW_SIZE * 2 - BORDER_WIDTH,
+              height - SHADOW_SIZE * 2 - BORDER_WIDTH, BORDER_RADIUS);
     cairo_t* cr = granite_drawing_buffer_surface_get_context (m_main_buffer.get ());
     cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 0.4);
     cairo_fill_preserve (cr);
@@ -171,8 +166,7 @@ void
 PopoverWindow::update_child_margin ()
 {
     Gtk::Widget* child = get_child ();
-    if (!child)
-        return;
+    if (!child) return;
 
     child->set_margin_start (SHADOW_SIZE);
     child->set_margin_end (SHADOW_SIZE);
@@ -215,8 +209,8 @@ PopoverWindow::set_pointing_to (int x, int y, Gtk::PositionType position)
     x -= width / 2;
     y -= height;
     y += SHADOW_SIZE;
-    int cx = x + width / 2;
-    int cy = y + height / 2;
+    int            cx = x + width / 2;
+    int            cy = y + height / 2;
     Gdk::Rectangle rect;
     get_screen ()->get_monitor_geometry (get_screen ()->get_monitor_at_point (cx, cy), rect);
     int offset_x = std::max (0, std::min (rect.get_x () - x, rect.get_x () + rect.get_width () - x - width));
@@ -232,8 +226,7 @@ bool
 PopoverWindow::on_button_release_event (GdkEventButton* event)
 {
     Gtk::ApplicationWindow::on_button_release_event (event);
-    if (event->x < 0 || event->y < 0 ||
-            event->x >= get_allocated_width () || event->y >= get_allocated_height ())
+    if (event->x < 0 || event->y < 0 || event->x >= get_allocated_width () || event->y >= get_allocated_height ())
         close_popover ();
     return false;
 }
@@ -260,9 +253,7 @@ PopoverWindow::on_show ()
     m_do_not_close = true;
     Gtk::ApplicationWindow::on_show ();
     Utils::Focus::grab (get_window (), false, true);
-    Glib::signal_timeout ().connect_once ([this]() {
-        m_do_not_close = false;
-    }, 200);
+    Glib::signal_timeout ().connect_once ([this] () { m_do_not_close = false; }, 200);
 }
 
 void

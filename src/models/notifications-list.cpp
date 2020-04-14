@@ -25,8 +25,8 @@ using namespace App::Models;
 NotificationsList::NotificationsList (const std::shared_ptr<Conecto::Device>& device)
     : Gtk::ListStore ()
     , m_device (device)
-    , m_plugin (std::dynamic_pointer_cast<Conecto::Plugins::Notifications>
-        (Conecto::Backend::get_instance ().get_plugin ("kdeconnect.notification")))
+    , m_plugin (std::dynamic_pointer_cast<Conecto::Plugins::Notifications> (
+              Conecto::Backend::get_instance ().get_plugin ("kdeconnect.notification")))
 {
     m_columns.add (column_app_name);
     m_columns.add (column_id);
@@ -36,10 +36,10 @@ NotificationsList::NotificationsList (const std::shared_ptr<Conecto::Device>& de
     set_column_types (m_columns);
 
     // Connect to signals
-    m_connections.push_back (m_plugin->signal_new_notification ().connect
-        (sigc::mem_fun (*this, &NotificationsList::on_new_notification)));
-    m_connections.push_back (m_plugin->signal_notification_dismissed ().connect
-        (sigc::mem_fun (*this, &NotificationsList::on_notification_dismissed)));
+    m_connections.push_back (m_plugin->signal_new_notification ().connect (
+            sigc::mem_fun (*this, &NotificationsList::on_new_notification)));
+    m_connections.push_back (m_plugin->signal_notification_dismissed ().connect (
+            sigc::mem_fun (*this, &NotificationsList::on_notification_dismissed)));
 }
 
 Glib::RefPtr<NotificationsList>
@@ -49,7 +49,7 @@ NotificationsList::create (const std::shared_ptr<Conecto::Device>& device)
 }
 
 void
-NotificationsList::on_new_notification (const std::shared_ptr<Conecto::Device>& device,
+NotificationsList::on_new_notification (const std::shared_ptr<Conecto::Device>&                  device,
                                         const Conecto::Plugins::Notifications::NotificationInfo& notification)
 {
     if (device != m_device) return;
@@ -68,9 +68,7 @@ NotificationsList::on_notification_dismissed (const std::shared_ptr<Conecto::Dev
     if (device != m_device) return;
 
     for (auto& row : children ()) {
-        if (row.get_value (column_id) == id) {
-            erase (row);
-        }
+        if (row.get_value (column_id) == id) { erase (row); }
     }
 }
 

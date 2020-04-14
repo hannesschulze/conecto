@@ -28,9 +28,9 @@ ActiveDeviceManager::ActiveDeviceManager ()
 }
 
 void
-ActiveDeviceManager::set_models (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+ActiveDeviceManager::set_models (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                                  const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                                 const Glib::RefPtr<Models::AvailableDevices>& available_devices)
+                                 const Glib::RefPtr<Models::AvailableDevices>&   available_devices)
 {
     m_connected_devices = connected_devices;
     m_unavailable_devices = unavailable_devices;

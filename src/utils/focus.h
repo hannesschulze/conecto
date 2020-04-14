@@ -33,7 +33,8 @@ class Focus {
     /**
      * @brief Utility for grabbing focus
      */
-    static void grab (const Glib::RefPtr<Gdk::Window>& window, bool keyboard = true, bool pointer = true, bool owner_events = true);
+    static void grab (const Glib::RefPtr<Gdk::Window>& window, bool keyboard = true, bool pointer = true,
+                      bool owner_events = true);
 
     /**
      * @brief Utility for grabbing focus
@@ -41,7 +42,8 @@ class Focus {
     static void ungrab (bool keyboard = true, bool pointer = true);
 
   private:
-    static bool try_grab_window (const Glib::RefPtr<Gdk::Window>& window, bool keyboard, bool pointer, bool owner_events);
+    static bool try_grab_window (const Glib::RefPtr<Gdk::Window>& window, bool keyboard, bool pointer,
+                                 bool owner_events);
 };
 
 } // namespace Utils

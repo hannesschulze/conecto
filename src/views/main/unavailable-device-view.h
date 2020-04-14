@@ -29,7 +29,7 @@ namespace Main {
 
 /**
  * @brief A view shown if the selected device is paired but currently unavailable
- * 
+ *
  * This is just a simple screen set up using Glade, providing just the ability to unpair a device
  */
 class UnavailableDeviceView : public Gtk::Grid {
@@ -37,7 +37,8 @@ class UnavailableDeviceView : public Gtk::Grid {
     /**
      * @brief Construct the view
      */
-    static std::shared_ptr<UnavailableDeviceView> create (const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices);
+    static std::shared_ptr<UnavailableDeviceView>
+    create (const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices);
     ~UnavailableDeviceView () {}
 
     UnavailableDeviceView (const UnavailableDeviceView&) = delete;

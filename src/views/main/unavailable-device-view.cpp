@@ -33,17 +33,18 @@ UnavailableDeviceView::UnavailableDeviceView (BaseObjectType* cobject, const Gli
     m_builder->get_widget ("lbl_title", m_lbl_title);
 
     // Connect to signals
-    m_btn_disconnect->signal_clicked ().connect
-        (sigc::mem_fun (*this, &UnavailableDeviceView::on_btn_disconnect_clicked));
-    ACTIVE_DEVICE.signal_unavailable_device_update ().connect
-        (sigc::mem_fun (*this, &UnavailableDeviceView::on_update));
+    m_btn_disconnect->signal_clicked ().connect (
+            sigc::mem_fun (*this, &UnavailableDeviceView::on_btn_disconnect_clicked));
+    ACTIVE_DEVICE.signal_unavailable_device_update ().connect (
+            sigc::mem_fun (*this, &UnavailableDeviceView::on_update));
 }
 
 std::shared_ptr<UnavailableDeviceView>
 UnavailableDeviceView::create (const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices)
 {
     UnavailableDeviceView* res = nullptr;
-    auto builder = Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/views/main/unavailable-device-view.ui");
+    auto                   builder = Gtk::Builder::create_from_resource (
+            "/com/github/hannesschulze/conecto/ui/views/main/unavailable-device-view.ui");
     builder->get_widget_derived ("ConectoViewsMainUnavailableDeviceView", res);
     res->m_unavailable_devices = unavailable_devices;
     return std::shared_ptr<UnavailableDeviceView> (res);

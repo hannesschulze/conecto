@@ -35,9 +35,9 @@ class NotificationsList : public Gtk::ListStore {
      * Create a new NotificationsList-model for a device using cached data
      */
     static Glib::RefPtr<NotificationsList> create (const std::shared_ptr<Conecto::Device>& device);
-    ~NotificationsList () {
-        for (auto& conn : m_connections)
-            conn.disconnect ();
+    ~NotificationsList ()
+    {
+        for (auto& conn : m_connections) conn.disconnect ();
     }
 
     /** @brief The app's name */
@@ -60,15 +60,15 @@ class NotificationsList : public Gtk::ListStore {
   private:
     NotificationsList (const std::shared_ptr<Conecto::Device>& device);
 
-    void on_new_notification (const std::shared_ptr<Conecto::Device>& device,
+    void on_new_notification (const std::shared_ptr<Conecto::Device>&                  device,
                               const Conecto::Plugins::Notifications::NotificationInfo& notification);
     void on_notification_dismissed (const std::shared_ptr<Conecto::Device>& device, const std::string& id);
 
     /** @brief The device used */
-    std::shared_ptr<Conecto::Device> m_device;
+    std::shared_ptr<Conecto::Device>                 m_device;
     std::shared_ptr<Conecto::Plugins::Notifications> m_plugin;
-    Gtk::TreeModel::ColumnRecord m_columns;
-    std::list<sigc::connection>                m_connections;
+    Gtk::TreeModel::ColumnRecord                     m_columns;
+    std::list<sigc::connection>                      m_connections;
 };
 
 } // namespace Models

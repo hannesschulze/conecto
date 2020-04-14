@@ -29,7 +29,7 @@ namespace Main {
 
 /**
  * @brief A view offering the user the option to pair a device
- * 
+ *
  * This screen consists of three pages: A "send a pair request" screen, a "accept pair request?" screen
  * and a screen used if pairing is in progress
  */
@@ -38,7 +38,8 @@ class AvailableDeviceView : public Gtk::Stack {
     /**
      * @brief Construct the view
      */
-    static std::shared_ptr<AvailableDeviceView> create (const Glib::RefPtr<Models::AvailableDevices>& available_devices);
+    static std::shared_ptr<AvailableDeviceView>
+    create (const Glib::RefPtr<Models::AvailableDevices>& available_devices);
     ~AvailableDeviceView () {}
 
     AvailableDeviceView (const AvailableDeviceView&) = delete;

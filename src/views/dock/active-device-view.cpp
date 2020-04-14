@@ -23,7 +23,7 @@
 
 using namespace App::Views::Dock;
 
-ActiveDeviceView::ActiveDeviceView (const Glib::ustring& id,
+ActiveDeviceView::ActiveDeviceView (const Glib::ustring&                          id,
                                     const Glib::RefPtr<Models::ConnectedDevices>& connected_devices)
     : Gtk::Stack ()
     , m_warning_view (WarningView::create (id))
@@ -35,21 +35,19 @@ ActiveDeviceView::ActiveDeviceView (const Glib::ustring& id,
 
     m_warning_view->signal_close_popover ().connect (m_signal_close_popover);
 
-    ACTIVE_DEVICE.signal_connected_device_update ().connect
-        (sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "connected"));
-    ACTIVE_DEVICE.signal_unavailable_device_update ().connect
-        (sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "warning"));
-    ACTIVE_DEVICE.signal_available_device_update ().connect
-        (sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "warning"));
-    ACTIVE_DEVICE.signal_no_device_selected ().connect
-        (sigc::mem_fun (*this, &ActiveDeviceView::on_show_empty));
+    ACTIVE_DEVICE.signal_connected_device_update ().connect (
+            sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "connected"));
+    ACTIVE_DEVICE.signal_unavailable_device_update ().connect (
+            sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "warning"));
+    ACTIVE_DEVICE.signal_available_device_update ().connect (
+            sigc::bind (sigc::mem_fun (*this, &ActiveDeviceView::on_update_device), "warning"));
+    ACTIVE_DEVICE.signal_no_device_selected ().connect (sigc::mem_fun (*this, &ActiveDeviceView::on_show_empty));
 }
 
 void
 ActiveDeviceView::on_update_device (const Gtk::TreeIter& it, bool new_device, const std::string& child_name)
 {
-    if (new_device)
-        set_visible_child (child_name);
+    if (new_device) set_visible_child (child_name);
 }
 
 void

@@ -33,21 +33,23 @@ class CellRendererExpander : public Gtk::CellRenderer {
     ~CellRendererExpander () {}
 
   protected:
-    Gtk::SizeRequestMode get_request_mode_vfunc () const override {
-        return Gtk::SIZE_REQUEST_HEIGHT_FOR_WIDTH;
-    }
-    void get_preferred_width_vfunc (Gtk::Widget& widget, int& minimum_size, int& natural_size) const override {
+    Gtk::SizeRequestMode get_request_mode_vfunc () const override { return Gtk::SIZE_REQUEST_HEIGHT_FOR_WIDTH; }
+    void get_preferred_width_vfunc (Gtk::Widget& widget, int& minimum_size, int& natural_size) const override
+    {
         apply_style_changes (widget);
         minimum_size = natural_size = get_arrow_size (widget) + 2 * (int) property_xpad ().get_value ();
         revert_style_changes (widget);
     }
-    void get_preferred_height_for_width_vfunc (Gtk::Widget& widget, int width, int& minimum_size, int& natural_size) const override {
+    void get_preferred_height_for_width_vfunc (Gtk::Widget& widget, int width, int& minimum_size,
+                                               int& natural_size) const override
+    {
         apply_style_changes (widget);
         minimum_size = natural_size = get_arrow_size (widget) + 2 * (int) property_ypad ().get_value ();
         revert_style_changes (widget);
     }
     void render_vfunc (const Cairo::RefPtr<Cairo::Context>& cr, Gtk::Widget& widget, const Gdk::Rectangle& bg_area,
-                       const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) override {
+                       const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) override
+    {
         if (!property_is_expander ().get_value ()) return;
         auto ctx = apply_style_changes (widget);
 
@@ -60,20 +62,24 @@ class CellRendererExpander : public Gtk::CellRenderer {
         int y = aligned_area.get_y () + aligned_area.get_height () / 2 - offset;
 
         auto state = ctx->get_state ();
-        ctx->set_state (property_is_expanded ().get_value () ? state | Gtk::STATE_FLAG_CHECKED : state & ~Gtk::STATE_FLAG_CHECKED);
+        ctx->set_state (property_is_expanded ().get_value () ? state | Gtk::STATE_FLAG_CHECKED
+                                                             : state & ~Gtk::STATE_FLAG_CHECKED);
         ctx->render_expander (cr, x, y, arrow_size, arrow_size);
         revert_style_changes (widget);
     }
-    Glib::RefPtr<Gtk::StyleContext> apply_style_changes (Gtk::Widget& widget) const {
+    Glib::RefPtr<Gtk::StyleContext> apply_style_changes (Gtk::Widget& widget) const
+    {
         auto ctx = widget.get_style_context ();
         gtk_style_context_save (ctx->gobj ());
         ctx->add_class ("category-expander");
         return ctx;
     }
-    void revert_style_changes (Gtk::Widget& widget) const {
+    void revert_style_changes (Gtk::Widget& widget) const
+    {
         gtk_style_context_restore (widget.get_style_context ()->gobj ());
     }
-    int get_arrow_size (Gtk::Widget& widget) const {
+    int get_arrow_size (Gtk::Widget& widget) const
+    {
         int arrow_size;
         gtk_widget_style_get (widget.gobj (), "expander-size", &arrow_size, nullptr);
         return arrow_size;
@@ -82,7 +88,8 @@ class CellRendererExpander : public Gtk::CellRenderer {
 
 class CellRendererIcon : public Gtk::CellRendererPixbuf {
   public:
-    CellRendererIcon () {
+    CellRendererIcon ()
+    {
         property_mode ().set_value (Gtk::CELL_RENDERER_MODE_ACTIVATABLE);
         property_xpad ().set_value (2);
         property_stock_size ().set_value (Gtk::ICON_SIZE_MENU);
@@ -92,7 +99,8 @@ class CellRendererIcon : public Gtk::CellRendererPixbuf {
 
 class CellRendererStarred : public Gtk::CellRenderer {
   public:
-    CellRendererStarred () {
+    CellRendererStarred ()
+    {
         m_starred_icon = Gtk::IconTheme::get_default ()->load_icon ("starred", 16);
         m_non_starred_icon = Gtk::IconTheme::get_default ()->load_icon ("non-starred", 16);
         property_mode ().set_value (Gtk::CELL_RENDERER_MODE_ACTIVATABLE);
@@ -104,17 +112,19 @@ class CellRendererStarred : public Gtk::CellRenderer {
     sigc::signal<void, const Gtk::TreePath&> signal_toggle_starred;
 
   protected:
-    Gtk::SizeRequestMode get_request_mode_vfunc () const override {
-        return Gtk::SIZE_REQUEST_HEIGHT_FOR_WIDTH;
-    }
-    void get_preferred_width_vfunc (Gtk::Widget& widget, int& minimum_size, int& natural_size) const override {
+    Gtk::SizeRequestMode get_request_mode_vfunc () const override { return Gtk::SIZE_REQUEST_HEIGHT_FOR_WIDTH; }
+    void get_preferred_width_vfunc (Gtk::Widget& widget, int& minimum_size, int& natural_size) const override
+    {
         minimum_size = natural_size = 16 + 2 * (int) property_xpad ().get_value ();
     }
-    void get_preferred_height_for_width_vfunc (Gtk::Widget& widget, int width, int& minimum_size, int& natural_size) const override {
+    void get_preferred_height_for_width_vfunc (Gtk::Widget& widget, int width, int& minimum_size,
+                                               int& natural_size) const override
+    {
         minimum_size = natural_size = 16 + 2 * (int) property_ypad ().get_value ();
     }
     void render_vfunc (const Cairo::RefPtr<Cairo::Context>& cr, Gtk::Widget& widget, const Gdk::Rectangle& bg_area,
-                       const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) override {
+                       const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) override
+    {
         auto ctx = widget.get_style_context ();
         bool is_hovering = (ctx->get_state () & Gtk::STATE_FLAG_PRELIGHT) == Gtk::STATE_FLAG_PRELIGHT;
 
@@ -130,11 +140,12 @@ class CellRendererStarred : public Gtk::CellRenderer {
         }
     }
     bool activate_vfunc (GdkEvent* event, Gtk::Widget& widget, const Glib::ustring& path, const Gdk::Rectangle& bg_area,
-                         const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) override {
+                         const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) override
+    {
         signal_toggle_starred.emit (Gtk::TreePath (path));
         return true;
     }
-    
+
     Glib::RefPtr<Gdk::Pixbuf> m_starred_icon;
     Glib::RefPtr<Gdk::Pixbuf> m_non_starred_icon;
 
@@ -143,9 +154,9 @@ class CellRendererStarred : public Gtk::CellRenderer {
 
 } // namespace
 
-DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_devices,
+DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>&   connected_devices,
                           const Glib::RefPtr<UnavailableDevices>& unavailable_devices,
-                          const Glib::RefPtr<AvailableDevices>& available_devices)
+                          const Glib::RefPtr<AvailableDevices>&   available_devices)
     : Gtk::ScrolledWindow ()
     , m_connected_devices (connected_devices)
     , m_unavailable_devices (unavailable_devices)
@@ -179,34 +190,32 @@ DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_device
     m_row_available.set_value (m_column_can_star, false);
 
     // Update connected devices
-    m_connected_devices->signal_row_inserted ().connect
-        (sigc::bind (sigc::mem_fun (*this, &DevicesList::on_insert_row), m_row_connected));
-    m_connected_devices->signal_row_changed ().connect
-        (sigc::mem_fun (*this, &DevicesList::on_update_row_connected));
-    m_connected_devices->signal_row_deleted ().connect
-        (sigc::bind (sigc::mem_fun (*this, &DevicesList::on_delete_row), m_row_connected));
-    m_connected_devices->signal_rows_reordered ().connect
-        (sigc::bind (sigc::mem_fun (*this, &DevicesList::on_rows_reordered), m_row_connected));
+    m_connected_devices->signal_row_inserted ().connect (
+            sigc::bind (sigc::mem_fun (*this, &DevicesList::on_insert_row), m_row_connected));
+    m_connected_devices->signal_row_changed ().connect (sigc::mem_fun (*this, &DevicesList::on_update_row_connected));
+    m_connected_devices->signal_row_deleted ().connect (
+            sigc::bind (sigc::mem_fun (*this, &DevicesList::on_delete_row), m_row_connected));
+    m_connected_devices->signal_rows_reordered ().connect (
+            sigc::bind (sigc::mem_fun (*this, &DevicesList::on_rows_reordered), m_row_connected));
 
     // Update unavailable devices
-    m_unavailable_devices->signal_row_inserted ().connect
-        (sigc::bind (sigc::mem_fun (*this, &DevicesList::on_insert_row), m_row_unavailable));
-    m_unavailable_devices->signal_row_changed ().connect
-        (sigc::mem_fun (*this, &DevicesList::on_update_row_unavailable));
-    m_unavailable_devices->signal_row_deleted ().connect
-        (sigc::bind (sigc::mem_fun (*this, &DevicesList::on_delete_row), m_row_unavailable));
-    m_unavailable_devices->signal_rows_reordered ().connect
-        (sigc::bind (sigc::mem_fun (*this, &DevicesList::on_rows_reordered), m_row_unavailable));
+    m_unavailable_devices->signal_row_inserted ().connect (
+            sigc::bind (sigc::mem_fun (*this, &DevicesList::on_insert_row), m_row_unavailable));
+    m_unavailable_devices->signal_row_changed ().connect (
+            sigc::mem_fun (*this, &DevicesList::on_update_row_unavailable));
+    m_unavailable_devices->signal_row_deleted ().connect (
+            sigc::bind (sigc::mem_fun (*this, &DevicesList::on_delete_row), m_row_unavailable));
+    m_unavailable_devices->signal_rows_reordered ().connect (
+            sigc::bind (sigc::mem_fun (*this, &DevicesList::on_rows_reordered), m_row_unavailable));
 
     // Update available devices
-    m_available_devices->signal_row_inserted ().connect
-        (sigc::bind (sigc::mem_fun (*this, &DevicesList::on_insert_row), m_row_available));
-    m_available_devices->signal_row_changed ().connect
-        (sigc::mem_fun (*this, &DevicesList::on_update_row_available));
-    m_available_devices->signal_row_deleted ().connect
-        (sigc::bind (sigc::mem_fun (*this, &DevicesList::on_delete_row), m_row_available));
-    m_available_devices->signal_rows_reordered ().connect
-        (sigc::bind (sigc::mem_fun (*this, &DevicesList::on_rows_reordered), m_row_available));
+    m_available_devices->signal_row_inserted ().connect (
+            sigc::bind (sigc::mem_fun (*this, &DevicesList::on_insert_row), m_row_available));
+    m_available_devices->signal_row_changed ().connect (sigc::mem_fun (*this, &DevicesList::on_update_row_available));
+    m_available_devices->signal_row_deleted ().connect (
+            sigc::bind (sigc::mem_fun (*this, &DevicesList::on_delete_row), m_row_available));
+    m_available_devices->signal_rows_reordered ().connect (
+            sigc::bind (sigc::mem_fun (*this, &DevicesList::on_rows_reordered), m_row_available));
 
     // Add already existing devices
     for (auto& child : m_connected_devices->children ()) {
@@ -223,8 +232,7 @@ DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_device
     }
 
     // Activated event
-    m_tree_view.signal_row_activated ().connect
-        (sigc::mem_fun (*this, &DevicesList::on_activated));
+    m_tree_view.signal_row_activated ().connect (sigc::mem_fun (*this, &DevicesList::on_activated));
     m_tree_view.set_activate_on_single_click (true);
 
     m_tree_view.set_halign (Gtk::ALIGN_FILL);
@@ -247,8 +255,8 @@ DevicesList::DevicesList (const Glib::RefPtr<ConnectedDevices>& connected_device
     m_item_column.set_cell_data_func (*m_cell_expander, sigc::mem_fun (*this, &DevicesList::cell_data_func_expander));
 
     m_cell_starred = std::unique_ptr<Gtk::CellRenderer> (new CellRendererStarred);
-    static_cast<CellRendererStarred&>(*m_cell_starred).signal_toggle_starred.connect
-        (sigc::mem_fun (*this, &DevicesList::on_toggle_starred));
+    static_cast<CellRendererStarred&> (*m_cell_starred)
+            .signal_toggle_starred.connect (sigc::mem_fun (*this, &DevicesList::on_toggle_starred));
     m_item_column.pack_end (*m_cell_starred, false);
     m_item_column.set_cell_data_func (*m_cell_starred, sigc::mem_fun (*this, &DevicesList::cell_data_func_starred));
 
@@ -274,7 +282,7 @@ DevicesList::cell_data_func_name (Gtk::CellRenderer* renderer, const Gtk::TreeMo
 {
     Gtk::CellRendererText& text_renderer = dynamic_cast<Gtk::CellRendererText&> (*renderer);
 
-    std::string text = it->get_value (m_column_text);
+    std::string   text = it->get_value (m_column_text);
     Pango::Weight weight = Pango::WEIGHT_NORMAL;
     if (!it->parent ()) weight = Pango::WEIGHT_BOLD;
 
@@ -289,8 +297,7 @@ DevicesList::cell_data_func_icon (Gtk::CellRenderer* renderer, const Gtk::TreeMo
 
     auto pixbuf = it->get_value (m_column_icon);
     icon_renderer.set_visible (pixbuf.operator bool ());
-    if (pixbuf)
-        icon_renderer.property_pixbuf ().set_value (pixbuf);
+    if (pixbuf) icon_renderer.property_pixbuf ().set_value (pixbuf);
 }
 
 void
@@ -312,16 +319,15 @@ void
 DevicesList::on_activated (const Gtk::TreePath& path, Gtk::TreeViewColumn* column)
 {
     bool selectable = m_tree_store->get_iter (path)->parent ();
-    if (selectable)
-        ACTIVE_DEVICE.activate_device (m_tree_store->get_iter (path)->get_value (m_column_device));
+    if (selectable) ACTIVE_DEVICE.activate_device (m_tree_store->get_iter (path)->get_value (m_column_device));
 }
 
 bool
 DevicesList::on_button_release (GdkEventButton* event)
 {
     Gtk::TreePath path;
-    int x = (int) event->x;
-    int y = (int) event->y;
+    int           x = (int) event->x;
+    int           y = (int) event->y;
     if (m_tree_view.get_path_at_pos (x, y, path)) {
         if (m_tree_view.row_expanded (path))
             m_tree_view.collapse_row (path);
@@ -356,7 +362,7 @@ DevicesList::get_color_pixbuf (Gdk::RGBA color)
     pixbuf->fill (0x00000000);
     uint8_t* data = image->get_data ();
     uint8_t* pixels = pixbuf->get_pixels ();
-    int length = image->get_width () * image->get_height ();
+    int      length = image->get_width () * image->get_height ();
     for (int i = 0; i < length; i++) {
         if (data[3] > 0) {
             pixels[0] = (uint8_t) (data[2] * 255 / data[3]);
@@ -381,10 +387,9 @@ DevicesList::on_insert_row (const Gtk::TreeModel::Path& path, const Gtk::TreeMod
 void
 DevicesList::on_delete_row (const Gtk::TreeModel::Path& path, Gtk::TreeRow parent)
 {
-    int pos = path[0];
+    int  pos = path[0];
     auto item = parent.children ()[pos];
-    if (item)
-        m_tree_store->erase (item);
+    if (item) m_tree_store->erase (item);
 }
 
 void
@@ -392,8 +397,8 @@ DevicesList::on_update_row_connected (const Gtk::TreeModel::Path& path, const Gt
 {
     auto item = m_row_connected.children ()[path[0]];
     if (!item) return;
-    item->set_value (m_column_icon, Utils::Icons::get_icon_for_device_type
-        (it->get_value (m_connected_devices->column_type), 16));
+    item->set_value (m_column_icon,
+                     Utils::Icons::get_icon_for_device_type (it->get_value (m_connected_devices->column_type), 16));
     item->set_value (m_column_text, it->get_value (m_connected_devices->column_name));
     item->set_value (m_column_device, m_connected_devices->get_device (it));
     item->set_value (m_column_starred, it->get_value (m_connected_devices->column_starred));
@@ -405,8 +410,8 @@ DevicesList::on_update_row_unavailable (const Gtk::TreeModel::Path& path, const 
 {
     auto item = m_row_unavailable.children ()[path[0]];
     if (!item) return;
-    item->set_value (m_column_icon, Utils::Icons::get_icon_for_device_type
-        (it->get_value (m_unavailable_devices->column_type), 16));
+    item->set_value (m_column_icon,
+                     Utils::Icons::get_icon_for_device_type (it->get_value (m_unavailable_devices->column_type), 16));
     item->set_value (m_column_text, it->get_value (m_unavailable_devices->column_name));
     item->set_value (m_column_device, m_unavailable_devices->get_device (it));
     item->set_value (m_column_starred, it->get_value (m_unavailable_devices->column_starred));
@@ -418,8 +423,8 @@ DevicesList::on_update_row_available (const Gtk::TreeModel::Path& path, const Gt
 {
     auto item = m_row_available.children ()[path[0]];
     if (!item) return;
-    item->set_value (m_column_icon, Utils::Icons::get_icon_for_device_type
-        (it->get_value (m_available_devices->column_type), 16));
+    item->set_value (m_column_icon,
+                     Utils::Icons::get_icon_for_device_type (it->get_value (m_available_devices->column_type), 16));
     item->set_value (m_column_text, it->get_value (m_available_devices->column_name));
     item->set_value (m_column_device, m_available_devices->get_device (it));
     item->set_value (m_column_starred, false);
@@ -427,7 +432,8 @@ DevicesList::on_update_row_available (const Gtk::TreeModel::Path& path, const Gt
 }
 
 void
-DevicesList::on_rows_reordered (const Gtk::TreeModel::Path& path, const Gtk::TreeIter& it, int* new_order, Gtk::TreeRow parent)
+DevicesList::on_rows_reordered (const Gtk::TreeModel::Path& path, const Gtk::TreeIter& it, int* new_order,
+                                Gtk::TreeRow parent)
 {
     std::vector<int> order (new_order, new_order + parent.children ().size ());
     m_tree_store->reorder (parent.children (), order);
@@ -438,7 +444,7 @@ DevicesList::on_toggle_starred (const Gtk::TreePath& path)
 {
     Gtk::TreeIter iter = m_tree_store->get_iter (path);
     if (iter && iter->get_value (m_column_device) && iter->get_value (m_column_can_star)) {
-        Conecto::Backend::get_instance ().get_config ().set_device_starred
-            (iter->get_value (m_column_device), !iter->get_value (m_column_starred));
+        Conecto::Backend::get_instance ().get_config ().set_device_starred (iter->get_value (m_column_device),
+                                                                            !iter->get_value (m_column_starred));
     }
 }

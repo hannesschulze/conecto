@@ -33,16 +33,15 @@ NotificationsView::NotificationsView ()
 void
 NotificationsView::update (const Glib::RefPtr<NotificationsList>& model)
 {
-    for (auto& connection : m_model_connections)
-        connection.disconnect ();
+    for (auto& connection : m_model_connections) connection.disconnect ();
     m_model = model;
     m_row_refs.clear ();
-    m_model_connections.push_back (model->signal_row_inserted ().connect
-        (sigc::mem_fun (*this, &NotificationsView::on_row_inserted)));
-    m_model_connections.push_back (model->signal_row_changed ().connect
-        (sigc::mem_fun (*this, &NotificationsView::on_row_changed)));
-    m_model_connections.push_back (model->signal_row_deleted ().connect
-        (sigc::mem_fun (*this, &NotificationsView::on_row_deleted)));
+    m_model_connections.push_back (
+            model->signal_row_inserted ().connect (sigc::mem_fun (*this, &NotificationsView::on_row_inserted)));
+    m_model_connections.push_back (
+            model->signal_row_changed ().connect (sigc::mem_fun (*this, &NotificationsView::on_row_changed)));
+    m_model_connections.push_back (
+            model->signal_row_deleted ().connect (sigc::mem_fun (*this, &NotificationsView::on_row_deleted)));
 }
 
 void

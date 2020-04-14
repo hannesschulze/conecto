@@ -36,8 +36,7 @@ class ActiveDeviceManager {
     /**
      * @brief Return a single instance of this class
      */
-    static ActiveDeviceManager&
-    get_instance ()
+    static ActiveDeviceManager& get_instance ()
     {
         static ActiveDeviceManager instance;
         return instance;
@@ -45,23 +44,23 @@ class ActiveDeviceManager {
     ~ActiveDeviceManager () {}
 
     /** @brief Update the models to look in */
-    void set_models (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+    void set_models (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                      const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                     const Glib::RefPtr<Models::AvailableDevices>& available_devices);
+                     const Glib::RefPtr<Models::AvailableDevices>&   available_devices);
 
     /**
      * @brief Activate a new device and find it in one of the models
-     * 
+     *
      * If not found, the currently active device will be deselected
-     * 
+     *
      * @param device The new device
      */
     void activate_device (const std::shared_ptr<Conecto::Device>& device);
     /**
      * @brief Activate a new device and find it in one of the models
-     * 
+     *
      * If not found, the currently active device will be deselected
-     * 
+     *
      * @param id The new device's id
      */
     void activate_device (const std::string& id);
@@ -99,7 +98,10 @@ class ActiveDeviceManager {
     /**
      * Emitted when the active device has been updated to an entry from the unavailable_devices model
      */
-    type_signal_unavailable_device_update signal_unavailable_device_update () { return m_signal_unavailable_device_update; }
+    type_signal_unavailable_device_update signal_unavailable_device_update ()
+    {
+        return m_signal_unavailable_device_update;
+    }
     /**
      * Emitted when the active device has been reset
      */
@@ -115,35 +117,35 @@ class ActiveDeviceManager {
     sigc::connection                 m_connection_changed;
     sigc::connection                 m_connection_removed;
 
-    Glib::RefPtr<Models::ConnectedDevices> m_connected_devices;
+    Glib::RefPtr<Models::ConnectedDevices>   m_connected_devices;
     Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
-    Glib::RefPtr<Models::AvailableDevices> m_available_devices;
+    Glib::RefPtr<Models::AvailableDevices>   m_available_devices;
 
-    type_signal_connected_device_update m_signal_connected_device_update;
-    type_signal_available_device_update m_signal_available_device_update;
+    type_signal_connected_device_update   m_signal_connected_device_update;
+    type_signal_available_device_update   m_signal_available_device_update;
     type_signal_unavailable_device_update m_signal_unavailable_device_update;
-    type_signal_no_device_selected m_signal_no_device_selected;
+    type_signal_no_device_selected        m_signal_no_device_selected;
 
-    template<class T>
-    void connect_signals (const T& model, type_signal_device_update& signal)
+    template<class T> void connect_signals (const T& model, type_signal_device_update& signal)
     {
-        m_connection_changed = model->signal_row_changed ().connect
-            ([this, &signal, model](const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it) {
-            if (model->get_device (it) == m_device)
-                signal.emit (it, false);
-        });
-        m_connection_removed = model->signal_row_deleted ().connect ([this, model](const Gtk::TreeModel::Path& path) {
+        m_connection_changed = model->signal_row_changed ().connect (
+                [this, &signal, model] (const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it) {
+                    if (model->get_device (it) == m_device) signal.emit (it, false);
+                });
+        m_connection_removed = model->signal_row_deleted ().connect ([this, model] (const Gtk::TreeModel::Path& path) {
             // Dirty hack to prevent removal if moved between the two models
-            Glib::signal_timeout ().connect_once ([model, this]() {
-                if (!model->find_device (m_device))
-                    // Try to find the device somewhere else
-                    activate_device (m_device);
-            }, 50);
+            Glib::signal_timeout ().connect_once (
+                    [model, this] () {
+                        if (!model->find_device (m_device))
+                            // Try to find the device somewhere else
+                            activate_device (m_device);
+                    },
+                    50);
         });
     }
 
-    template<class T>
-    void activate_device_priv (const T& property) {
+    template<class T> void activate_device_priv (const T& property)
+    {
         m_connection_changed.disconnect ();
         m_connection_removed.disconnect ();
         auto cached = m_device;

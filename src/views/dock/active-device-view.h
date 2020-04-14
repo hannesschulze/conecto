@@ -32,7 +32,7 @@ namespace Dock {
 
 /**
  * @brief The main view for the popover-styled window
- * 
+ *
  * This view automatically switches between two widgets, depending on the currently activated device:
  * - WarningView
  * - ConnectedDeviceView
@@ -41,7 +41,7 @@ class ActiveDeviceView : public Gtk::Stack {
   public:
     /**
      * @brief Create the widget
-     * 
+     *
      * @param connected_devices The connected-devices model
      */
     ActiveDeviceView (const Glib::ustring& id, const Glib::RefPtr<Models::ConnectedDevices>& connected_devices);
@@ -68,6 +68,6 @@ class ActiveDeviceView : public Gtk::Stack {
     type_signal_close_popover m_signal_close_popover;
 };
 
-} // namespace Main
+} // namespace Dock
 } // namespace Views
 } // namespace App

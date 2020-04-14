@@ -35,7 +35,7 @@ namespace Main {
 
 /**
  * @brief The main view for the windowed app
- * 
+ *
  * This view automatically switches between four widgets, depending on the currently activated device:
  * - EmptySelectionView
  * - AvailableDeviceView
@@ -46,14 +46,14 @@ class ActiveDeviceView : public Gtk::Stack {
   public:
     /**
      * @brief Create the widget
-     * 
+     *
      * @param connected_devices The connected-devices model
      * @param unavailable_devices The unavailable-devices model
      * @param available_devices The available-devices model
      */
-    ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+    ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                       const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                      const Glib::RefPtr<Models::AvailableDevices>& available_devices);
+                      const Glib::RefPtr<Models::AvailableDevices>&   available_devices);
     ~ActiveDeviceView () {}
 
     /** @brief Get a stack containing all available views for connected devices (typically a @p ConnectedDeviceView) */
@@ -63,9 +63,9 @@ class ActiveDeviceView : public Gtk::Stack {
     ActiveDeviceView& operator= (const ActiveDeviceView&) = delete;
 
   private:
-    Glib::RefPtr<Models::ConnectedDevices> m_connected_devices;
+    Glib::RefPtr<Models::ConnectedDevices>   m_connected_devices;
     Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
-    Glib::RefPtr<Models::AvailableDevices> m_available_devices;
+    Glib::RefPtr<Models::AvailableDevices>   m_available_devices;
 
     void on_update_device (const Gtk::TreeIter& it, bool new_device, const std::string& child_name);
     void on_show_empty ();

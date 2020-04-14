@@ -44,10 +44,10 @@ class Notifications : public AbstractPacketHandler {
     ~Notifications () {}
 
     struct NotificationInfo {
-        std::string id;
-        std::string app_name;
-        std::string title;
-        std::string body;
+        std::string    id;
+        std::string    app_name;
+        std::string    title;
+        std::string    body;
         Glib::DateTime time;
     };
 
@@ -55,14 +55,14 @@ class Notifications : public AbstractPacketHandler {
      * @param device The device which sent the notification
      * @param notification The notification
      */
-    using type_signal_new_notification = sigc::signal<void, const std::shared_ptr<Device>& /* device */,
-                                                      const NotificationInfo& /* notification */>;
+    using type_signal_new_notification =
+            sigc::signal<void, const std::shared_ptr<Device>& /* device */, const NotificationInfo& /* notification */>;
     /**
      * @param device The device
      * @param id The dismissed notification's id
      */
-    using type_signal_notification_dismissed = sigc::signal<void, const std::shared_ptr<Device>& /* device */,
-                                                            const std::string& /* id */>;
+    using type_signal_notification_dismissed =
+            sigc::signal<void, const std::shared_ptr<Device>& /* device */, const std::string& /* id */>;
     /**
      * Emitted after receiving a new notification from a device
      */
@@ -94,12 +94,12 @@ class Notifications : public AbstractPacketHandler {
   private:
     std::map<std::shared_ptr<Device>, sigc::connection> m_devices;
 
-    type_signal_new_notification m_signal_new_notification;
+    type_signal_new_notification       m_signal_new_notification;
     type_signal_notification_dismissed m_signal_notification_dismissed;
 
     static void on_notification_closed (NotifyNotification* notification, Notifications* self);
 
-    std::map<std::string /* id */, std::shared_ptr<NotifyNotification> /* notification */> m_desktop_notifications; 
+    std::map<std::string /* id */, std::shared_ptr<NotifyNotification> /* notification */> m_desktop_notifications;
 };
 
 } // namespace Plugins

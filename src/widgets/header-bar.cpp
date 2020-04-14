@@ -49,27 +49,24 @@ HeaderBar::HeaderBar (BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> 
     glade_ref->get_widget ("img_toggle_starred", m_img_toggle_starred);
 
     // Connect to button events
-    m_btn_disconnect->signal_clicked ().connect
-        (sigc::mem_fun (*this, &HeaderBar::on_btn_disconnect_clicked));
-    m_btn_toggle_favorite->signal_clicked ().connect
-        (sigc::mem_fun (*this, &HeaderBar::on_btn_toggle_favorite_clicked));
+    m_btn_disconnect->signal_clicked ().connect (sigc::mem_fun (*this, &HeaderBar::on_btn_disconnect_clicked));
+    m_btn_toggle_favorite->signal_clicked ().connect (
+            sigc::mem_fun (*this, &HeaderBar::on_btn_toggle_favorite_clicked));
 
     // Connect to active-device changes
-    ACTIVE_DEVICE.signal_connected_device_update ().connect
-        (sigc::mem_fun (*this, &HeaderBar::on_update_connected_device));
-    ACTIVE_DEVICE.signal_unavailable_device_update ().connect
-        (sigc::mem_fun (*this, &HeaderBar::on_update_unavailable_device));
-    ACTIVE_DEVICE.signal_available_device_update ().connect
-        (sigc::mem_fun (*this, &HeaderBar::on_update_available_device));
-    ACTIVE_DEVICE.signal_no_device_selected ().connect
-        (sigc::mem_fun (*this, &HeaderBar::on_reset));
+    ACTIVE_DEVICE.signal_connected_device_update ().connect (
+            sigc::mem_fun (*this, &HeaderBar::on_update_connected_device));
+    ACTIVE_DEVICE.signal_unavailable_device_update ().connect (
+            sigc::mem_fun (*this, &HeaderBar::on_update_unavailable_device));
+    ACTIVE_DEVICE.signal_available_device_update ().connect (
+            sigc::mem_fun (*this, &HeaderBar::on_update_available_device));
+    ACTIVE_DEVICE.signal_no_device_selected ().connect (sigc::mem_fun (*this, &HeaderBar::on_reset));
 }
 
 std::shared_ptr<HeaderBar>
-HeaderBar::create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+HeaderBar::create (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                    const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                   const Glib::RefPtr<Models::AvailableDevices>& available_devices,
-                   Gtk::Stack& connected_stack)
+                   const Glib::RefPtr<Models::AvailableDevices>& available_devices, Gtk::Stack& connected_stack)
 {
     HeaderBar* res = nullptr;
     auto builder = Gtk::Builder::create_from_resource ("/com/github/hannesschulze/conecto/ui/widgets/header-bar.ui");
@@ -86,8 +83,9 @@ void
 HeaderBar::on_update_connected_device (const Gtk::TreeIter& it, bool new_device)
 {
     m_title_stack->set_visible_child ("connected");
-    m_img_toggle_starred->set_from_icon_name (get_icon_name_for_starred (it->get_value
-        (m_connected_devices->column_starred)), Gtk::ICON_SIZE_LARGE_TOOLBAR);
+    m_img_toggle_starred->set_from_icon_name (get_icon_name_for_starred (
+                                                      it->get_value (m_connected_devices->column_starred)),
+                                              Gtk::ICON_SIZE_LARGE_TOOLBAR);
     m_device_options_revealer->set_reveal_child (true);
 }
 
@@ -97,8 +95,9 @@ HeaderBar::on_update_unavailable_device (const Gtk::TreeIter& it, bool new_devic
     m_title_stack->set_visible_child ("title");
     m_lbl_subtitle->set_label (it->get_value (m_unavailable_devices->column_name) + " (Offline)");
     m_lbl_subtitle->set_visible (true);
-    m_img_toggle_starred->set_from_icon_name (get_icon_name_for_starred (it->get_value
-        (m_unavailable_devices->column_starred)), Gtk::ICON_SIZE_LARGE_TOOLBAR);
+    m_img_toggle_starred->set_from_icon_name (get_icon_name_for_starred (
+                                                      it->get_value (m_unavailable_devices->column_starred)),
+                                              Gtk::ICON_SIZE_LARGE_TOOLBAR);
     m_device_options_revealer->set_reveal_child (true);
 }
 

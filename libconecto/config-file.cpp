@@ -52,8 +52,7 @@ ConfigFile::ConfigFile (const std::string& base_config_dir)
     }
 
     // Write configuration to user config file if not present
-    if (m_path != base_config_dir)
-        dump_to_file (base_config_dir + "/" + CONFIG_FILE);
+    if (m_path != base_config_dir) dump_to_file (base_config_dir + "/" + CONFIG_FILE);
 
     // Create a simple config file if the current one is not valid
     if (!m_keyfile.has_group ("main") || !m_keyfile.has_key ("main", "devices")) {
@@ -122,8 +121,7 @@ ConfigFile::set_display_name (const std::shared_ptr<Device>& device, const Glib:
                 g_critical ("No group in keyfile: %s", dev.c_str ());
                 continue;
             }
-            if (m_keyfile.get_string (dev, "name") != name || m_keyfile.get_string (dev, "type") != type)
-                continue;
+            if (m_keyfile.get_string (dev, "name") != name || m_keyfile.get_string (dev, "type") != type) continue;
 
             m_keyfile.set_string (dev, "display", display);
             dump_to_file (m_path);
@@ -180,8 +178,7 @@ ConfigFile::set_device_starred (const std::shared_ptr<Device>& device, bool star
                 g_critical ("No group in keyfile: %s", dev.c_str ());
                 continue;
             }
-            if (m_keyfile.get_string (dev, "name") != name || m_keyfile.get_string (dev, "type") != type)
-                continue;
+            if (m_keyfile.get_string (dev, "name") != name || m_keyfile.get_string (dev, "type") != type) continue;
 
             m_keyfile.set_boolean (dev, "starred", starred);
             dump_to_file (m_path);

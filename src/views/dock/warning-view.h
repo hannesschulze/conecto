@@ -28,7 +28,7 @@ namespace Dock {
 
 /**
  * @brief A view shown if the connected device is unavailable or has been removed
- * 
+ *
  * It offers the user the option to remove the dock item
  */
 class WarningView : public Gtk::Grid {

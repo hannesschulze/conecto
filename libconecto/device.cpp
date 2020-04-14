@@ -315,8 +315,7 @@ Device::unpair () noexcept
     g_debug ("Unpairing");
 
     // Send request
-    if (m_channel)
-        m_channel->send (*NetworkPacket::create_pair (false));
+    if (m_channel) m_channel->send (*NetworkPacket::create_pair (false));
     handle_pair (false);
 }
 

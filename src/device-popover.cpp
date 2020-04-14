@@ -35,9 +35,7 @@ DevicePopover::DevicePopover (const Glib::RefPtr<Models::ConnectedDevices>& conn
     add (m_active_view);
     m_active_view.show_all ();
 
-    m_active_view.signal_close_popover ().connect
-        (sigc::mem_fun (*this, &DevicePopover::close_popover));
-
+    m_active_view.signal_close_popover ().connect (sigc::mem_fun (*this, &DevicePopover::close_popover));
 
     // Set up CSS
     auto main_provider = Gtk::CssProvider::create ();
@@ -53,12 +51,13 @@ DevicePopover::DevicePopover (const Glib::RefPtr<Models::ConnectedDevices>& conn
 }
 
 std::shared_ptr<DevicePopover>
-DevicePopover::create (Gtk::Application& app, const Glib::RefPtr<Models::ConnectedDevices>& connected_devices, const Glib::ustring& id)
+DevicePopover::create (Gtk::Application& app, const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+                       const Glib::ustring& id)
 {
     std::shared_ptr<DevicePopover> res (new DevicePopover (connected_devices, id));
     app.add_window (*res);
 #ifdef ENABLE_PLANK_SUPPORT
-    DOCK_ITEMS.get_position_for_id (id, [res](int x, int y, Gtk::PositionType pos) {
+    DOCK_ITEMS.get_position_for_id (id, [res] (int x, int y, Gtk::PositionType pos) {
         res->set_pointing_to (x, y, pos);
         res->show_all ();
     });

@@ -29,7 +29,7 @@ namespace Controllers {
 
 /**
  * @brief The @p DockItemManager is responsible for managing the starred items in Plank (if installed)
- * 
+ *
  * This class listens for both dock changes and model changes and updates both of them respectively
  */
 class DockItemManager {
@@ -37,8 +37,7 @@ class DockItemManager {
     /**
      * @brief Return a single instance of this class
      */
-    static DockItemManager&
-    get_instance ()
+    static DockItemManager& get_instance ()
     {
         static DockItemManager instance;
         return instance;
@@ -46,17 +45,18 @@ class DockItemManager {
     ~DockItemManager () {}
 
     /** @brief Update the models to look in */
-    void set_models (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+    void set_models (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                      const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices);
 
     /** @brief Start listening for changes (if not done already) */
     void listen ();
 
     /** @brief Manually update dock items (usually not necessary when using listen) */
-    void update (std::function<void()>&& cb);
+    void update (std::function<void ()>&& cb);
 
     /** @brief Get the item position for a device selected from the dock */
-    void get_position_for_id (const std::string& id, std::function<void(int /* x */, int /* y */, Gtk::PositionType /* pos */)>&& cb);
+    void get_position_for_id (const std::string&                                                            id,
+                              std::function<void (int /* x */, int /* y */, Gtk::PositionType /* pos */)>&& cb);
 
     DockItemManager (const DockItemManager&) = delete;
     DockItemManager& operator= (const DockItemManager&) = delete;
@@ -66,7 +66,11 @@ class DockItemManager {
 
     struct DeviceInfo {
         DeviceInfo (const Glib::ustring& id, const Glib::ustring& name, const Glib::ustring& icon_name)
-            : id (id), name (name), icon_name (icon_name) {}
+            : id (id)
+            , name (name)
+            , icon_name (icon_name)
+        {
+        }
         Glib::ustring id, name, icon_name;
     };
 

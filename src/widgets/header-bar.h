@@ -30,7 +30,7 @@ namespace Widgets {
 
 /**
  * @brief The header bar is responsible for rendering a window decoration for Conecto's main window
- * 
+ *
  * This view automatically updates the title and disconnect-button, depending on the currently active
  * device
  */
@@ -38,17 +38,17 @@ class HeaderBar : public Gtk::HeaderBar {
   public:
     /**
      * @brief Construct the header bar
-     * 
+     *
      * @param connected_devices The connected-devices model
      * @param unavailable_devices The unavailable-devices model
      * @param available_devices The available-devices model
      * @param connected_stack A @p Gtk::Stack containing pages to switch between if a connected device is active
      * (typically a @p ConnectedDeviceView)
      */
-    static std::shared_ptr<HeaderBar> create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+    static std::shared_ptr<HeaderBar> create (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                                               const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                                              const Glib::RefPtr<Models::AvailableDevices>& available_devices,
-                                              Gtk::Stack& connected_stack);
+                                              const Glib::RefPtr<Models::AvailableDevices>&   available_devices,
+                                              Gtk::Stack&                                     connected_stack);
     ~HeaderBar () {}
 
     HeaderBar (const HeaderBar&) = delete;
@@ -59,9 +59,9 @@ class HeaderBar : public Gtk::HeaderBar {
   private:
     HeaderBar (BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> glade_ref);
 
-    Glib::RefPtr<Models::ConnectedDevices> m_connected_devices;
+    Glib::RefPtr<Models::ConnectedDevices>   m_connected_devices;
     Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
-    Glib::RefPtr<Models::AvailableDevices> m_available_devices;
+    Glib::RefPtr<Models::AvailableDevices>   m_available_devices;
 
     Glib::RefPtr<Gtk::Builder> m_builder;
 

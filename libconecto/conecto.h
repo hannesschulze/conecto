@@ -35,3 +35,4 @@
 #include "ping.h"
 #include "battery.h"
 #include "notifications.h"
+#include "mouse.h"

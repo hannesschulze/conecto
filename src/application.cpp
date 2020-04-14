@@ -49,6 +49,9 @@ Application::on_startup ()
 {
     Gtk::Application::on_startup ();
 
+    // Register non-interactive plugins
+    Conecto::Backend::get_instance ().register_plugin (std::make_shared<Conecto::Plugins::Mouse> ());
+
     Conecto::Backend::get_instance ().load_from_cache ();
     Conecto::Backend::get_instance ().listen ();
     ACTIVE_DEVICE.set_models (m_connected_devices, m_unavailable_devices, m_available_devices);

@@ -22,6 +22,7 @@
 #include <conecto.h>
 #include "models/connected-devices.h"
 #include "models/unavailable-devices.h"
+#include "models/sms-storage.h"
 #include "controllers/active-device-manager.h"
 #include "device-popover.h"
 #ifdef ENABLE_PLANK_SUPPORT
@@ -35,6 +36,7 @@ Application::Application ()
     , m_connected_devices (Models::ConnectedDevices::create ())
     , m_unavailable_devices (Models::UnavailableDevices::create ())
     , m_available_devices (Models::AvailableDevices::create ())
+    , m_sms_storage (std::make_shared<Models::SMSStorage> ())
 {
 }
 

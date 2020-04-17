@@ -14,7 +14,7 @@ jobs:
     - name: Install Dependencies
       run: |
         apt-get update &&
-        apt-get install -y build-essential git meson ninja-build libjsoncpp-dev libsigc++-2.0-dev ca-certificates libgtkmm-3.0-dev libghc-gnutls-dev gettext desktop-file-utils libgranite-dev libnotify-dev
+        apt-get install -y build-essential git meson ninja-build libjsoncpp-dev libsigc++-2.0-dev ca-certificates libgtkmm-3.0-dev libghc-gnutls-dev gettext desktop-file-utils libgranite-dev libnotify-dev libsqlite3-dev
       env:
         TZ: America/New_York
         DEBIAN_FRONTEND: noninteractive

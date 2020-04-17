@@ -32,6 +32,7 @@ namespace Models {
 class ConnectedDevices;
 class UnavailableDevices;
 class AvailableDevices;
+class SMSStorage;
 } // namespace Models
 
 /**
@@ -63,6 +64,7 @@ class Application : public Gtk::Application {
     Glib::RefPtr<Models::ConnectedDevices>   m_connected_devices;
     Glib::RefPtr<Models::UnavailableDevices> m_unavailable_devices;
     Glib::RefPtr<Models::AvailableDevices>   m_available_devices;
+    std::shared_ptr<Models::SMSStorage>      m_sms_storage;
     Glib::ustring                            m_open_dev_id;
 
     std::list<std::shared_ptr<Widgets::PopoverWindow>> m_popovers;

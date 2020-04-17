@@ -11,6 +11,7 @@ conecto_sources = files(
   'models/unavailable-devices.cpp',
   'models/available-devices.cpp',
   'models/notifications-list.cpp',
+  'models/sms-storage.cpp',
 
   'views/main/devices-list.cpp',
   'views/main/active-device-view.cpp',

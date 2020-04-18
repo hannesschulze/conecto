@@ -23,6 +23,11 @@
 #include <gtkmm.h>
 #include <sqlite3.h>
 
+// forward declarations
+namespace Conecto {
+class Device;
+}
+
 namespace App {
 namespace Models {
 
@@ -32,10 +37,43 @@ namespace Models {
 class SMSStorage {
   public:
     /**
-     * Create a new SMSStorage-model
+     * @brief Create a new SMSStorage-model
      */
     SMSStorage ();
     ~SMSStorage ();
+
+    struct SMS {
+        enum FromType : int { FROM_ME = 0, FROM_CONTACT = 1 };
+
+        SMS (const std::string& message, const std::string& phone_number, FromType from, const Glib::DateTime& date_time)
+            : message (message), phone_number (phone_number), from (from), date_time (date_time) {}
+
+        std::string message;
+        std::string phone_number;
+        FromType from;
+        Glib::DateTime date_time;
+    };
+
+    /**
+     * @brief Add a new SMS message to the database
+     */
+    void add_sms (const Conecto::Device& device, const SMS& sms);
+
+    /**
+     * @brief Get the latest 20 SMS messages received/sent by @param device from/to @param phone_number
+     */
+    std::list<SMS> get_latest_sms_messages (const Conecto::Device& device, const std::string& phone_number);
+
+    /**
+     * @brief Get the 10 most recent SMS messages received/sent by @param device from/to @param phone_number before @param datetime
+     */
+    std::list<SMS> get_sms_messages_before (const Conecto::Device& device, const std::string& phone_number,
+                                            const Glib::DateTime& datetime);
+
+    /**
+     * @brief Get a list of phone numbers for which conversations exist through @param device
+     */
+    std::list<std::string> get_phone_numbers (const Conecto::Device& device);
 
     SMSStorage (const SMSStorage&) = delete;
     SMSStorage& operator= (const SMSStorage&) = delete;

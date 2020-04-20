@@ -22,6 +22,7 @@
 
 #include <gtkmm.h>
 #include <sqlite3.h>
+#include <folks/folks.h>
 
 // forward declarations
 namespace Conecto {
@@ -54,6 +55,14 @@ class SMSStorage {
         Glib::DateTime date_time;
     };
 
+    struct Contact {
+        Contact (const std::string& display_name, std::vector<std::string>&& phone_numbers)
+            : display_name (display_name), phone_numbers (std::move (phone_numbers)) {}
+
+        std::string              display_name;
+        std::vector<std::string> phone_numbers;
+    };
+
     /**
      * @brief Add a new SMS message to the database
      */
@@ -71,15 +80,41 @@ class SMSStorage {
                                             const Glib::DateTime& datetime);
 
     /**
-     * @brief Get a list of phone numbers for which conversations exist through @param device
+     * @brief Get a list of conversation contacts (their display names may be empty if not found using libfolks)
+     * 
+     * @note The vecotor's item's phone_numbers fields always contain only one element
      */
-    std::list<std::string> get_phone_numbers (const Conecto::Device& device);
+    std::vector<Contact> get_conversation_contacts (const Conecto::Device& device);
+    /**
+     * @brief Get a list of available contacts using libfolks (not including unknown contacts)
+     */
+    const std::vector<Contact>& get_available_contacts ();
+
+    using type_signal_available_contacts_changed = sigc::signal<void>;
+    type_signal_available_contacts_changed signal_available_contacts_changed () { return m_signal_available_contacts_changed; }
 
     SMSStorage (const SMSStorage&) = delete;
     SMSStorage& operator= (const SMSStorage&) = delete;
 
   private:
     std::shared_ptr<sqlite3> m_conn;
+
+    /**
+     * @brief Get a list of phone numbers for which conversations exist through @param device
+     */
+    std::list<std::string> get_phone_numbers (const Conecto::Device& device);
+    /**
+     * @brief Fetch the contact list using libfolks
+     */
+    void fetch_available_contacts ();
+    static void on_individuals_changed (FolksIndividualAggregator* _sender, GeeMultiMap* changes, SMSStorage* self);
+    static void on_prepare_cb (GObject *source_object, GAsyncResult *res, SMSStorage* self);
+
+    std::shared_ptr<FolksIndividualAggregator> m_aggregator;
+    type_signal_available_contacts_changed     m_signal_available_contacts_changed;
+
+    std::vector<Contact>       m_available_contacts;
+    std::map<std::string, int> m_phone_numbers_map;
 
     bool exec_query (const std::string& query, std::function<void(const std::vector<std::string>& /* values */, const std::vector<std::string>& /* column_names */)>&& cb = [] (const std::vector<std::string>&, const std::vector<std::string>&) {});
 };

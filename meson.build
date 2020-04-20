@@ -14,6 +14,7 @@ libconecto_deps = [
   dependency('atspi-2'),
   dependency('gdkmm-3.0'),
   dependency('sqlite3'),
+  dependency('folks'),
 ]
 
 pkgconfig = import('pkgconfig')

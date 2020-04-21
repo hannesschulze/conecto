@@ -44,6 +44,7 @@ class DevicePopover : public Widgets::PopoverWindow {
      */
     static std::shared_ptr<DevicePopover> create (Gtk::Application&                             app,
                                                   const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+                                                  const std::shared_ptr<Models::SMSStorage>&    sms_storage,
                                                   const Glib::ustring&                          id);
     ~DevicePopover () {}
 
@@ -51,7 +52,9 @@ class DevicePopover : public Widgets::PopoverWindow {
     DevicePopover& operator= (const DevicePopover&) = delete;
 
   protected:
-    DevicePopover (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices, const Glib::ustring& id);
+    DevicePopover (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+                   const std::shared_ptr<Models::SMSStorage>&    sms_storage,
+                   const Glib::ustring& id);
 
   private:
     Views::Dock::ActiveDeviceView m_active_view;

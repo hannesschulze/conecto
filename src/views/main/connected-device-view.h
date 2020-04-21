@@ -23,7 +23,9 @@
 #include <gtkmm.h>
 #include "../../widgets/circular-progress-bar.h"
 #include "../../models/connected-devices.h"
+#include "../../models/sms-storage.h"
 #include "../notifications-view.h"
+#include "../sms-view.h"
 
 namespace App {
 namespace Views {
@@ -40,7 +42,8 @@ class ConnectedDeviceView : public Gtk::Stack {
      * @brief Construct the view
      */
     static std::shared_ptr<ConnectedDeviceView>
-    create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices);
+    create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+            const std::shared_ptr<Models::SMSStorage>&    sms_storage);
     ~ConnectedDeviceView () {}
 
     ConnectedDeviceView (const ConnectedDeviceView&) = delete;
@@ -61,8 +64,10 @@ class ConnectedDeviceView : public Gtk::Stack {
     // Custom widgets
     Widgets::CircularProgressBar m_battery_level_widget;
     NotificationsView            m_notifications;
+    std::shared_ptr<SMSView>     m_sms_view;
 
     Glib::RefPtr<Models::ConnectedDevices> m_connected_devices;
+    std::shared_ptr<Models::SMSStorage>    m_sms_storage;
 
     void on_update (const Gtk::TreeIter& iter, bool new_device);
 };

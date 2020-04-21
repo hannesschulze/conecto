@@ -44,13 +44,20 @@ ConnectedDeviceView::ConnectedDeviceView (BaseObjectType* cobject, const Glib::R
 }
 
 std::shared_ptr<ConnectedDeviceView>
-ConnectedDeviceView::create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices)
+ConnectedDeviceView::create (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+                             const std::shared_ptr<Models::SMSStorage>&    sms_storage)
 {
     ConnectedDeviceView* res = nullptr;
     auto                 builder = Gtk::Builder::create_from_resource (
             "/com/github/hannesschulze/conecto/ui/views/main/connected-device-view.ui");
     builder->get_widget_derived ("ConectoViewsMainConnectedDeviceView", res);
     res->m_connected_devices = connected_devices;
+    res->m_sms_storage = sms_storage;
+
+    // Add the SMS view
+    res->m_sms_view = SMSView::create (sms_storage);
+    res->add (*res->m_sms_view, "sms", "SMS");
+
     return std::shared_ptr<ConnectedDeviceView> (res);
 }
 

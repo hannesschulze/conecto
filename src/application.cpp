@@ -70,7 +70,7 @@ Application::on_activate ()
         Gtk::Window* window = get_active_window ();
 
         if (!window) {
-            m_window = Window::create (m_connected_devices, m_unavailable_devices, m_available_devices);
+            m_window = Window::create (m_connected_devices, m_unavailable_devices, m_available_devices, m_sms_storage);
             add_window (*m_window);
             window = m_window.get ();
         }
@@ -78,7 +78,7 @@ Application::on_activate ()
         window->present ();
     } else {
         // Open a new popover-like window
-        auto popover = DevicePopover::create (*this, m_connected_devices, m_open_dev_id);
+        auto popover = DevicePopover::create (*this, m_connected_devices, m_sms_storage, m_open_dev_id);
         m_popovers.push_back (popover);
     }
 }

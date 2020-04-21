@@ -24,6 +24,7 @@
 #include "../../models/connected-devices.h"
 #include "../../models/unavailable-devices.h"
 #include "../../models/available-devices.h"
+#include "../../models/sms-storage.h"
 #include "empty-selection-view.h"
 #include "available-device-view.h"
 #include "unavailable-device-view.h"
@@ -50,10 +51,12 @@ class ActiveDeviceView : public Gtk::Stack {
      * @param connected_devices The connected-devices model
      * @param unavailable_devices The unavailable-devices model
      * @param available_devices The available-devices model
+     * @param sms_storage The SMS-storage model
      */
     ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                       const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                      const Glib::RefPtr<Models::AvailableDevices>&   available_devices);
+                      const Glib::RefPtr<Models::AvailableDevices>&   available_devices,
+                      const std::shared_ptr<Models::SMSStorage>&      sms_storage);
     ~ActiveDeviceView () {}
 
     /** @brief Get a stack containing all available views for connected devices (typically a @p ConnectedDeviceView) */

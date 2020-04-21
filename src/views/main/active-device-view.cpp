@@ -25,7 +25,8 @@ using namespace App::Views::Main;
 
 ActiveDeviceView::ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                                     const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                                    const Glib::RefPtr<Models::AvailableDevices>&   available_devices)
+                                    const Glib::RefPtr<Models::AvailableDevices>&   available_devices,
+                                    const std::shared_ptr<Models::SMSStorage>&      sms_storage)
     : Gtk::Stack ()
     , m_connected_devices (connected_devices)
     , m_unavailable_devices (unavailable_devices)
@@ -33,7 +34,7 @@ ActiveDeviceView::ActiveDeviceView (const Glib::RefPtr<Models::ConnectedDevices>
     , m_empty_view (EmptySelectionView::create ())
     , m_available_device_view (AvailableDeviceView::create (available_devices))
     , m_unavailable_device_view (UnavailableDeviceView::create (unavailable_devices))
-    , m_connected_device_view (ConnectedDeviceView::create (connected_devices))
+    , m_connected_device_view (ConnectedDeviceView::create (connected_devices, sms_storage))
 {
     add (*m_empty_view, "empty");
     add (*m_connected_device_view, "connected");

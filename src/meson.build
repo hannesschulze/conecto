@@ -25,6 +25,7 @@ conecto_sources = files(
   'views/dock/connected-device-view.cpp',
 
   'views/notifications-view.cpp',
+  'views/sms-view.cpp',
 
   'widgets/header-bar.cpp',
   'widgets/circular-progress-bar.cpp',

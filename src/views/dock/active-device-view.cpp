@@ -24,10 +24,11 @@
 using namespace App::Views::Dock;
 
 ActiveDeviceView::ActiveDeviceView (const Glib::ustring&                          id,
-                                    const Glib::RefPtr<Models::ConnectedDevices>& connected_devices)
+                                    const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+                                    const std::shared_ptr<Models::SMSStorage>&    sms_storage)
     : Gtk::Stack ()
     , m_warning_view (WarningView::create (id))
-    , m_connected_device_view (ConnectedDeviceView::create (connected_devices))
+    , m_connected_device_view (ConnectedDeviceView::create (connected_devices, sms_storage))
 {
     add (*m_warning_view, "warning");
     add (*m_connected_device_view, "connected");

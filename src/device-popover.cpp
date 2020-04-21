@@ -26,9 +26,11 @@
 
 using namespace App;
 
-DevicePopover::DevicePopover (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices, const Glib::ustring& id)
+DevicePopover::DevicePopover (const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+                              const std::shared_ptr<Models::SMSStorage>&    sms_storage,
+                              const Glib::ustring& id)
     : Widgets::PopoverWindow ()
-    , m_active_view (id, connected_devices)
+    , m_active_view (id, connected_devices, sms_storage)
 {
     set_size_request (600, 430);
     set_default_size (600, 430);
@@ -52,9 +54,10 @@ DevicePopover::DevicePopover (const Glib::RefPtr<Models::ConnectedDevices>& conn
 
 std::shared_ptr<DevicePopover>
 DevicePopover::create (Gtk::Application& app, const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+                       const std::shared_ptr<Models::SMSStorage>& sms_storage,
                        const Glib::ustring& id)
 {
-    std::shared_ptr<DevicePopover> res (new DevicePopover (connected_devices, id));
+    std::shared_ptr<DevicePopover> res (new DevicePopover (connected_devices, sms_storage, id));
     app.add_window (*res);
 #ifdef ENABLE_PLANK_SUPPORT
     DOCK_ITEMS.get_position_for_id (id, [res] (int x, int y, Gtk::PositionType pos) {

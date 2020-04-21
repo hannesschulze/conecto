@@ -28,11 +28,12 @@ using namespace App;
 
 Window::Window (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                 const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                const Glib::RefPtr<Models::AvailableDevices>&   available_devices)
+                const Glib::RefPtr<Models::AvailableDevices>&   available_devices,
+                const std::shared_ptr<Models::SMSStorage>&      sms_storage)
     : Gtk::ApplicationWindow ()
     , m_paned (Gtk::ORIENTATION_HORIZONTAL)
     , m_devices_list (connected_devices, unavailable_devices, available_devices)
-    , m_active_device (connected_devices, unavailable_devices, available_devices)
+    , m_active_device (connected_devices, unavailable_devices, available_devices, sms_storage)
     , m_header_bar (Widgets::HeaderBar::create (connected_devices, unavailable_devices, available_devices,
                                                 *m_active_device.get_connected_device_stack ()))
 {
@@ -75,9 +76,10 @@ Window::Window (const Glib::RefPtr<Models::ConnectedDevices>&   connected_device
 std::shared_ptr<Window>
 Window::create (const Glib::RefPtr<Models::ConnectedDevices>&   connected_devices,
                 const Glib::RefPtr<Models::UnavailableDevices>& unavailable_devices,
-                const Glib::RefPtr<Models::AvailableDevices>&   available_devices)
+                const Glib::RefPtr<Models::AvailableDevices>&   available_devices,
+                const std::shared_ptr<Models::SMSStorage>&      sms_storage)
 {
-    return std::shared_ptr<Window> (new Window (connected_devices, unavailable_devices, available_devices));
+    return std::shared_ptr<Window> (new Window (connected_devices, unavailable_devices, available_devices, sms_storage));
 }
 
 bool

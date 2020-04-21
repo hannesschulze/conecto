@@ -23,6 +23,7 @@
 #include <gtkmm.h>
 #include "../../models/connected-devices.h"
 #include "../../models/unavailable-devices.h"
+#include "../../models/sms-storage.h"
 #include "warning-view.h"
 #include "connected-device-view.h"
 
@@ -44,7 +45,8 @@ class ActiveDeviceView : public Gtk::Stack {
      *
      * @param connected_devices The connected-devices model
      */
-    ActiveDeviceView (const Glib::ustring& id, const Glib::RefPtr<Models::ConnectedDevices>& connected_devices);
+    ActiveDeviceView (const Glib::ustring& id, const Glib::RefPtr<Models::ConnectedDevices>& connected_devices,
+                      const std::shared_ptr<Models::SMSStorage>& sms_storage);
     ~ActiveDeviceView () {}
 
     ActiveDeviceView (const ActiveDeviceView&) = delete;

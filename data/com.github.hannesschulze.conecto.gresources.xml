@@ -21,8 +21,4 @@
     <file alias="warning-view.ui">ui/views/dock/warning-view.ui</file>
     <file alias="connected-device-view.ui">ui/views/dock/connected-device-view.ui</file>
   </gresource>
-
-  <gresource prefix="/com/github/hannesschulze/conecto/ui/views">
-    <file alias="sms-view.ui">ui/views/sms-view.ui</file>
-  </gresource>
 </gresources>

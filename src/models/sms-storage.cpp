@@ -178,6 +178,7 @@ SMSStorage::fetch_available_contacts ()
         std::vector<std::string> phone_numbers;
         GeeCollection* gee_phone_numbers = GEE_COLLECTION (
             folks_phone_details_get_phone_numbers ((FolksPhoneDetails*) individual.get ()));
+        if (gee_collection_get_size (gee_phone_numbers) < 1) continue;
         phone_numbers.reserve (gee_collection_get_size (gee_phone_numbers));
         std::shared_ptr<GeeIterator> phone_number_it (gee_iterable_iterator (GEE_ITERABLE (gee_phone_numbers)),
                                                       g_object_unref);
@@ -224,6 +225,7 @@ SMSStorage::on_individuals_changed (FolksIndividualAggregator* _sender, GeeMulti
         std::vector<std::string> phone_numbers;
         GeeCollection* gee_phone_numbers = GEE_COLLECTION (
             folks_phone_details_get_phone_numbers ((FolksPhoneDetails*) individual.get ()));
+        if (gee_collection_get_size (gee_phone_numbers) < 1) continue;
         phone_numbers.reserve (gee_collection_get_size (gee_phone_numbers));
         std::shared_ptr<GeeIterator> phone_number_it (gee_iterable_iterator (GEE_ITERABLE (gee_phone_numbers)),
                                                       g_object_unref);

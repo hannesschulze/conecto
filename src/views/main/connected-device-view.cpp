@@ -73,4 +73,5 @@ ConnectedDeviceView::on_update (const Gtk::TreeIter& iter, bool new_device)
             "Battery Level: " + std::to_string (iter->get_value (m_connected_devices->column_battery)) + " %");
 
     m_notifications.update (iter->get_value (m_connected_devices->column_notifications));
+    m_sms_view->set_device (m_connected_devices->get_device (iter));
 }

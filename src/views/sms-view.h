@@ -21,6 +21,7 @@
 #pragma once
 
 #include <gtkmm.h>
+#include <granite.h>
 #include "../models/sms-storage.h"
 
 namespace App {
@@ -31,7 +32,7 @@ namespace Views {
  *
  * Connected to the following model: @p App::Models::SMSStorage
  */
-class SMSView : public Gtk::Paned {
+class SMSView : public Gtk::Bin {
   public:
     /**
      * @brief Create an SMS view
@@ -39,16 +40,32 @@ class SMSView : public Gtk::Paned {
     static std::shared_ptr<SMSView> create (const std::shared_ptr<Models::SMSStorage>& model);
     ~SMSView () {}
 
+    /**
+     * @brief Set the current device
+     */
+    void set_device (const std::shared_ptr<Conecto::Device>& device);
+
     SMSView (const SMSView&) = delete;
     SMSView& operator= (const SMSView&) = delete;
 
-    friend Gtk::Builder;
-
   private:
-    SMSView (BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder> glade_ref);
+    SMSView (const std::shared_ptr<Models::SMSStorage>& model);
 
-    std::shared_ptr<Models::SMSStorage> m_model;
-    Glib::RefPtr<Gtk::Builder>          m_builder;
+    void create_placeholder_tab ();
+
+    void on_new_tab_requested ();
+    bool on_close_tab_requested (GraniteWidgetsTab* tab);
+    static void static_on_new_tab_requested (GraniteWidgetsDynamicNotebook* sender, SMSView* self);
+    static gboolean static_on_close_tab_requested (GraniteWidgetsDynamicNotebook* sender, GraniteWidgetsTab* tab,
+                                                   SMSView* self);
+
+    std::shared_ptr<Models::SMSStorage>            m_model;
+    std::shared_ptr<GraniteWidgetsDynamicNotebook> m_notebook;
+    std::shared_ptr<Gtk::Box>                      m_placeholder;
+    std::shared_ptr<GraniteWidgetsTab>             m_placeholder_tab;
+    std::shared_ptr<Conecto::Device>               m_device;
+
+    std::list<std::shared_ptr<Gtk::Widget>> m_widget_owners;
 };
 
 } // namespace Views

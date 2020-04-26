@@ -150,7 +150,7 @@ SMSView::on_new_tab_requested ()
     for (const auto& contact : m_model->get_available_contacts ())
         listbox->add (*Gtk::manage (new ContactRow (contact)));
     scrolled_window->add (*listbox);
-    scrolled_window->set_size_request (300, 450);
+    scrolled_window->set_size_request (300, 390);
     popover->add (*scrolled_window);
 
     popover->show_all_children ();

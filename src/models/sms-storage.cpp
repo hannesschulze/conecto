@@ -123,9 +123,10 @@ SMSStorage::get_latest_sms_messages (const Conecto::Device& device, const std::s
         << "' AND device_id = '" + Glib::strescape (device.get_device_id ()) << "' ORDER BY date_received DESC LIMIT 20) "
         << "ORDER BY date_received ASC;";
     exec_query (query_stream.str (), [&res] (const std::vector<std::string>& vals, const std::vector<std::string>& cols) {
+        GDateTime* datetime = g_date_time_new_from_iso8601 (vals.at (MessageColumns::DATETIME).c_str (), nullptr);
         res.emplace_back (vals.at (MessageColumns::MESSAGE), vals.at (MessageColumns::PHONE),
                           static_cast<SMS::FromType> (atoi (vals.at (MessageColumns::SENDER).c_str ())),
-                          Glib::DateTime::create_from_iso8601 (vals.at (MessageColumns::DATETIME)));
+                          Glib::wrap (datetime));
     });
     return res;
 }
@@ -140,9 +141,10 @@ SMSStorage::get_sms_messages_before (const Conecto::Device& device, const std::s
         << "' AND device_id = '" + Glib::strescape (device.get_device_id ()) << "' AND date_received < '"
         << datetime.format ("%FT%H:%M:%S%z") << "' ORDER BY date_received DESC LIMIT 10;";
     exec_query (query_stream.str (), [&res] (const std::vector<std::string>& vals, const std::vector<std::string>& cols) {
+        GDateTime* datetime = g_date_time_new_from_iso8601 (vals.at (MessageColumns::DATETIME).c_str (), nullptr);
         res.emplace_back (vals.at (MessageColumns::MESSAGE), vals.at (MessageColumns::PHONE),
                           static_cast<SMS::FromType> (atoi (vals.at (MessageColumns::SENDER).c_str ())),
-                          Glib::DateTime::create_from_iso8601 (vals.at (MessageColumns::DATETIME)));
+                          Glib::wrap (datetime));
     });
     return res;
 }

@@ -45,7 +45,7 @@ class ContactRow : public Gtk::Grid {
         attach (*Glib::wrap (GTK_WIDGET (m_avatar.get ())), 0, 0, 1, 2);
 
         if (contact.display_name == std::string ()) {
-            auto* display_name = Gtk::make_managed<Gtk::Label> ();
+            auto* display_name = Gtk::manage (new Gtk::Label ());
             display_name->set_markup ("<b>" + contact.phone_numbers.front () + "</b>");
             display_name->set_halign (Gtk::ALIGN_START);
             display_name->set_valign (Gtk::ALIGN_CENTER);
@@ -53,7 +53,7 @@ class ContactRow : public Gtk::Grid {
             display_name->set_hexpand (true);
             attach (*display_name, 1, 0, 1, 2);
         } else {
-            auto* display_name = Gtk::make_managed<Gtk::Label> ();
+            auto* display_name = Gtk::manage (new Gtk::Label ());
             display_name->set_markup ("<b>" + contact.display_name + "</b>");
             display_name->set_halign (Gtk::ALIGN_START);
             display_name->set_valign (Gtk::ALIGN_END);
@@ -61,7 +61,7 @@ class ContactRow : public Gtk::Grid {
             display_name->set_hexpand (true);
             attach (*display_name, 1, 0, 1, 1);
  
-            auto* phone_number = Gtk::make_managed<Gtk::Label> (contact.phone_numbers.front ());
+            auto* phone_number = Gtk::manage (new Gtk::Label (contact.phone_numbers.front ()));
             phone_number->get_style_context ()->add_class ("dim-label");
             phone_number->set_halign (Gtk::ALIGN_START);
             phone_number->set_valign (Gtk::ALIGN_START);
@@ -110,9 +110,9 @@ void
 SMSView::create_placeholder_tab ()
 {
     m_placeholder = std::make_shared <Gtk::Box> (Gtk::ORIENTATION_VERTICAL, 0);
-    Gtk::Label* placeholder_title = Gtk::make_managed<Gtk::Label> ("No open conversations");
-    Gtk::Label* placeholder_subtitle = Gtk::make_managed<Gtk::Label> ("Start a new conversation and send SMS messages "
-                                                                      "over your phone");
+    Gtk::Label* placeholder_title = Gtk::manage (new Gtk::Label ("No open conversations"));
+    Gtk::Label* placeholder_subtitle = Gtk::manage (new Gtk::Label ("Start a new conversation and send SMS messages "
+                                                                    "over your phone"));
     placeholder_title->get_style_context ()->add_class ("h1");
     placeholder_title->set_margin_bottom (12);
     placeholder_subtitle->get_style_context ()->add_class ("h2");
@@ -140,8 +140,8 @@ SMSView::on_new_tab_requested ()
     auto popover = std::make_shared<Gtk::Popover> (*btn);
     popover->set_position (Gtk::POS_BOTTOM);
 
-    auto* scrolled_window = Gtk::make_managed<Gtk::ScrolledWindow> ();
-    auto* listbox = Gtk::make_managed<Gtk::ListBox> ();
+    auto* scrolled_window = Gtk::manage (new Gtk::ScrolledWindow ());
+    auto* listbox = Gtk::manage (new Gtk::ListBox ());
     listbox->set_margin_top (12);
     listbox->set_margin_left (12);
     listbox->set_margin_right (12);

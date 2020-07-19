@@ -6,15 +6,15 @@ project(
 )
 
 libconecto_deps = [
-  dependency('jsoncpp'),
-  dependency('sigc++-2.0'),
-  dependency('giomm-2.4'),
-  dependency('gnutls'),
-  dependency('libnotify'),
-  dependency('atspi-2'),
-  dependency('gdkmm-3.0'),
-  dependency('sqlite3'),
-  dependency('folks'),
+  dependency('jsoncpp', version: '>=1.7.4'),
+  dependency('sigc++-2.0', version: '>=2.10.0'),
+  dependency('giomm-2.4', version: '>=2.56.0'),
+  dependency('gnutls', version: '>=3.5.18'),
+  dependency('libnotify', version: '>=0.7.7'),
+  dependency('atspi-2', version: '>=2.28.0'),
+  dependency('gdkmm-3.0', version: '>=3.22.2'),
+  dependency('sqlite3', version: '>=3.22.0'),
+  dependency('folks', version: '>=0.11.4'),
 ]
 
 pkgconfig = import('pkgconfig')

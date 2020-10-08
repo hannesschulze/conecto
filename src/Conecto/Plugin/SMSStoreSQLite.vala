@@ -158,7 +158,7 @@ namespace Conecto.Plugin {
             string query = "SELECT COUNT(*) AS tot FROM contact WHERE lower(name) = lower('" + _res (contact_name) + "') LIMIT 1";
             debug ("SQL: %s", query);
             _exec_query (query, (num_columns, values, column_names) => {
-                tot = values[0].to_int ();
+                tot = int.parse(values[0]);
                 return 0;
             });
 

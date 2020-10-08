@@ -29,7 +29,7 @@ class ShareHandlerProxy : Object {
     //      this.devices_map = devices_map;
     // }
 
-    public void files (string device_id, string pathnames) throws IOError {
+    public void files (string device_id, string pathnames) throws GLib.Error {
         try {
             foreach (var entry in Core.instance ().devices_map.entries) {
 

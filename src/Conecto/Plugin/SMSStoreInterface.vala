@@ -31,7 +31,7 @@ namespace Conecto.Plugin {
         public HashMap<string, SMSContact> sms_contact_map { protected set; get; }
         public HashMap<string, SMS> sms_map { protected set; get; }
 
-        public SMSStoreInterface () {
+        protected SMSStoreInterface () {
             sms_contact_map = new HashMap<string, SMSContact> ();
             sms_map = new HashMap<string, SMS> ();
         }

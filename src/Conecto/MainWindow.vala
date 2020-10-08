@@ -36,7 +36,7 @@ namespace Conecto {
         // private Gtk.Overlay overlay;
         // private Granite.Widgets.OverlayBar overlaybar;
 
-        public MainWindow (Granite.Application application, GLib.Settings main_settings, SMSHistory sms_history_view) {
+        public MainWindow (Gtk.Application application, GLib.Settings main_settings, SMSHistory sms_history_view) {
             Object (
                 application: application,
                 main_settings: main_settings,
@@ -107,7 +107,7 @@ namespace Conecto {
             main_grid.add(sub_grid);
 
             // Debug toolbar
-            if (Granite.Services.Logger.DisplayLevel == Granite.Services.Logger.DEBUG) {
+            if (Granite.Services.Logger.DisplayLevel == Granite.Services.LogLevel.DEBUG) {
                 var debug_toolbar = new DebugToolbar (devices_view);
                 main_grid.add(debug_toolbar);
             }

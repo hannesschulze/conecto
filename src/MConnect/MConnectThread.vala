@@ -29,11 +29,11 @@ namespace MConnect {
         private Discovery discovery = null;
         private DeviceManager manager = null;
         private TransferManager transfer = null;
-        public Granite.Application application;
+        public Gtk.Application application;
         public HashMap<string, Device> devices_map;
         GLib.Settings main_settings;
 
-        public MConnectThread (Granite.Application application,
+        public MConnectThread (Gtk.Application application,
                               HashMap<string, Device> devices_map,
                               GLib.Settings main_settings) {
             this.application = application;

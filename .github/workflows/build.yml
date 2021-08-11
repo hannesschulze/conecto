@@ -5,14 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        container:
-        - 'elementary/docker:stable'
-        - 'ubuntu:focal'
-
-    container:
-      image: ${{ matrix.container }}
+    container: ubuntu:focal
 
     steps:
     - uses: actions/checkout@v1

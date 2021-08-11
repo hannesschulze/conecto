@@ -10,7 +10,7 @@ The goal of this project was originally to update and maintain [EOSConnect](http
 
 The rewrite is currently able to manage device connections and display the battery level. There has been some work to support notifications and the mousepad-feature. However, because the new library is still WIP there are still many bugs, unimplemented features and missing tests.
 
-![data/screenshot.png](Current version of Conecto running on elementary OS 6)
+![Current version of Conecto running on elementary OS 6](data/screenshot.png)
 
 ## Installation instructions
 

@@ -1,56 +1,88 @@
-project('com.github.hannesschulze.conecto', ['c', 'vala'], version: '0.1.0',
-  meson_version: '>= 0.40.0',
+project(
+  'conecto',
+  ['c', 'cpp'],
+  version: '0.1.0',
+  meson_version: '>= 0.46.0',
 )
 
+libconecto_deps = [
+  dependency('jsoncpp', version: '>=1.7.4'),
+  dependency('sigc++-2.0', version: '>=2.10.0'),
+  dependency('giomm-2.4', version: '>=2.56.0'),
+  dependency('gnutls', version: '>=3.5.18'),
+  dependency('libnotify', version: '>=0.7.7'),
+  dependency('atspi-2', version: '>=2.28.0'),
+  dependency('gdkmm-3.0', version: '>=3.22.2'),
+  dependency('sqlite3', version: '>=3.22.0'),
+  dependency('folks', version: '>=0.11.4'),
+]
+
+pkgconfig = import('pkgconfig')
+gnome = import('gnome')
 i18n = import('i18n')
 
-conf = configuration_data()
-conf.set_quoted('GETTEXT_PACKAGE', meson.project_name())
-configure_file(output: 'config.h', configuration: conf)
-config_h_dir = include_directories('.')
-c_args = [
-  '-include', 'config.h'
-]
+subdir('libconecto')
 
+libconecto = shared_library(
+  meson.project_name(),
+  libconecto_sources,
+  dependencies: libconecto_deps,
+  include_directories: include_directories,
+  install: true,
+  install_dir: true
+)
 
-gnome = import('gnome')
+libconecto_dep = declare_dependency(
+  link_with: libconecto,
+  include_directories: include_directories,
+  dependencies: libconecto_deps
+)
+
+install_headers(libconecto_headers, subdir: 'conecto')
+
+libconecto_pc = pkgconfig.generate(
+  libconecto,
+  name: meson.project_name(),
+  requires: libconecto_deps,
+  subdirs: ['conecto'],
+  description: 'Library that serves as a client for KDE Connect',
+  version: meson.project_version(),
+  url: 'https://github.com/hannesschulze/conecto'
+)
+
+if get_option('docs')
+  subdir('docs')
+endif
+
+subdir('tests')
+subdir('data')
+subdir('po')
+subdir('src')
 
 conecto_deps = [
-  dependency('atspi-2'),
-  dependency('gdk-3.0'),
-  dependency('gee-0.8'),
-  dependency('gio-2.0'),
-  dependency('gio-unix-2.0'),
-  dependency('glib-2.0'),
-  dependency('granite', version: '>=0.4.2'),
-  dependency('gtk+-3.0', version: '>=3.18'),
-  dependency('gnutls'),
-  dependency('gobject-2.0'),
-  dependency('json-glib-1.0'),
-  dependency('libebook-1.2'),
-  dependency('libedataserver-1.2'),
-  dependency('libnotify'),
-  dependency('unity', version: '>=4.0.0'),
-  dependency('sqlite3'),
-  meson.get_compiler('vala').find_library('posix'),
+  libconecto_dep,
+  dependency('gtkmm-3.0'),
+  dependency('granite'),
 ]
 
-add_project_arguments(
-  [ '--vapidir', join_paths(meson.current_source_dir(), 'src/MConnect/vapi') ],
-  language: 'vala'
+if not get_option('disable_plank_support')
+  conecto_deps += dependency('plank')
+endif
+
+conecto_sources += gnome.compile_resources(
+  'conecto-resources',
+  'data/com.github.hannesschulze.conecto.gresources.xml',
+  source_dir: 'data',
+  c_name: 'conecto'
 )
 
-subdir('src')
-subdir('po')
-subdir('data')
-
-
-executable('com.github.hannesschulze.conecto',
+executable(
+  'com.github.hannesschulze.conecto',
   conecto_sources,
-  vala_args: '--target-glib=2.50',
   dependencies: conecto_deps,
-  install: true,
-  c_args: c_args
+  install: true
 )
 
-meson.add_install_script('build-aux/meson/postinstall.py')
+if not get_option('skip_postinstall')
+  meson.add_install_script('build-aux/meson/postinstall.py')
+endif

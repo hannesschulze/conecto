@@ -1,1 +1,3 @@
-src/Conecto.vala
+data/com.github.hannesschulze.conecto.desktop.in
+data/com.github.hannesschulze.conecto.appdata.xml.in
+data/com.github.hannesschulze.conecto.gschema.xml

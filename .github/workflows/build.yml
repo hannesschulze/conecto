@@ -1,0 +1,26 @@
+name: C/C++ CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ubuntu:focal
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Dependencies
+      run: |
+        apt-get update &&
+        apt-get install -y build-essential git meson ninja-build libjsoncpp-dev libsigc++-2.0-dev ca-certificates libgtkmm-3.0-dev libghc-gnutls-dev gettext desktop-file-utils libgranite-dev libnotify-dev libsqlite3-dev libfolks-dev
+      env:
+        TZ: America/New_York
+        DEBIAN_FRONTEND: noninteractive
+    - name: Configure
+      run: meson build --prefix=/usr -Dskip_postinstall=true -Ddisable_plank_support=true
+    - name: Build
+      run: ninja -C build
+    - name: Install
+      run: ninja -C build install
+    - name: Run tests
+      run: ninja -C build test

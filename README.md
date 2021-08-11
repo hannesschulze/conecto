@@ -1,43 +1,32 @@
-<div align="center">
-    <h1 align="center">Conecto</h1>
-    <h3 align="center">Integrate your Android-phone with your PC - a GTK client for KDEConnect.</h3>
-</div>
+# Conecto
 
-<br/>
+> Integrate your Android-phone with your PC - a GTK Client for KDEConnect.
 
-<p align="center">
-  <a href="https://github.com/hannesschulze/conecto/blob/master/COPYING">
-    <img src="https://img.shields.io/badge/License-GPL--2.0-blue.svg">
-  </a>
-  <a href="https://github.com/hannesschulze/conecto/releases">
-    <img src="https://img.shields.io/badge/Release-v%201.0.0-orange.svg">
-  </a>
-</p>
+## Current State Of The Project
 
-<p align="center">
-    <img  src="screenshots/devices.png" alt="Screenshot"><br>
-    <a href="https://github.com/hannesschulze/conecto/issues/new">Report a problem!</a>
-</p>
+> ⚠️ Unfortunately, this project is currently put on hold. It is still possible to install the C++ rewrite in its current state on elementary OS (tested on elementary OS 6.0). For more information, see [#30 (comment)](https://github.com/hannesschulze/conecto/issues/30).
 
-## Installation
+The goal of this project was originally to update and maintain [EOSConnect](https://github.com/gyan000/EOSConnect) by gyan000. However, that soon turned out to be difficult because the version of mconnect it was based on was too outdated, causing some issues and communication problems. Beacuse of this, and with the aim to provide a new user interface for the application (see [#3](https://github.com/hannesschulze/conecto/issues/3)), I decided to rewrite the application in C++.
+
+The rewrite is currently able to manage device connections and display the battery level. There has been some work to support notifications and the mousepad-feature. However, because the new library is still WIP there are still many bugs, unimplemented features and missing tests.
+
+![Current version of Conecto running on elementary OS 6](data/screenshot.png)
+
+## Installation instructions
 
 ### Dependencies
 These dependencies must be present before building:
- - `meson`
- - `valac`
- - `debhelper`
- - `libgranite-dev`
- - `libgtk-3-dev`
- - `libunity-dev`
- - `libnotify-dev`
+ - `elementary-sdk`
+ - `libjsoncpp-dev`
+ - `libgtkmm-3.0-dev`
  - `libghc-gnutls-dev`
+ - `libnotify-dev`
  - `libsqlite3-dev`
- - `libedataserver1.2-dev`
- - `libebook1.2-dev`
+ - `libfolks-dev`
 
 Use the following command to install the dependencies:
 ```shell
-sudo apt install elementary-sdk libunity-dev libnotify-dev libghc-gnutls-dev libsqlite3-dev libedataserver1.2-dev libebook1.2-dev
+sudo apt install elementary-sdk libjsoncpp-dev libgtkmm-3.0-dev libghc-gnutls-dev libnotify-dev libsqlite3-dev libfolks-dev
 ```
 
 ### Building
@@ -54,22 +43,13 @@ sudo ninja install
 com.github.hannesschulze.conecto
 ```
 
-## About this project
+### Generating documentation
 
-This project aims to provide a KDEConnect client designed for elementary OS, based on [mconnect](https://github.com/kevinselvaprasanna/mconnect).
+Documentation can be generated using doxygen. Once you have cloned the repository and are in the `build` directory, run:
 
-Conecto is based on [EOSConnect](https://github.com/gyan000/EOSConnect) by gyan000. Unfortunately he wasn't able to continue development because he didn't own an android device anymore.
+```
+meson configure -Ddocs=true
+ninja
+```
 
-This project is a work in progress, not intended for daily use.
-
-Current features include:
- - Connecting to the android device
- - Pinging the device
- - Sharing files through devices
- - Showing the battery level
- - Receiving notifications
- - Sending SMS
-
-## License
-
-This project is licensed under the GPL-2.0 License - see the [COPYING](COPYING) file for details.
+You will find the generated documentation in `build/docs/libconecto`

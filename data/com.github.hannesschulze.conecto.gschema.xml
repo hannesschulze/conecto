@@ -1,72 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist>
-  <schema id="com.github.hannesschulze.conecto" path="/com/github/hannesschulze/conecto/">
-    <key type="b" name="use-dark-theme">
-      <default>false</default>
-      <summary>Use dark theme.</summary>
-    </key>
-    <key type="b" name="kdeconnect-telephony-db-setup-done">
-      <default>false</default>
-      <summary>Will be set to false after the creation of all Sqlite tables.</summary>
-    </key>
-    <key type="b" name="kdeconnect-telephony-store-sms-globally-active">
-      <default>true</default>
-      <summary>Activate / Deactivate the storage of SMS for all devices.</summary>
-    </key>
-  </schema>
-  <schema id="com.github.hannesschulze.conecto.settings.device">
-    <key type="s" name="custom-name">
-      <default>""</default>
-      <summary>Custom name for the device.</summary>
-    </key>
-    <key type="b" name="kdeconnect-battery-active">
-      <default>true</default>
-      <summary>Receive battery information.</summary>
-    </key>
-    <key type="b" name="kdeconnect-battery-notify-low-level-active">
-      <default>true</default>
-      <summary>Notify user when battery level below a certain treshold.</summary>
-    </key>
-    <key type="d" name="kdeconnect-battery-low-level-treshold">
-      <default>5</default>
-      <summary>Battery level treshold to send a notification to user.</summary>
-    </key>
-    <key type="b" name="kdeconnect-notification-active">
-      <default>true</default>
-      <summary>Receive or send notifications between devices.</summary>
-    </key>
-    <key type="b" name="kdeconnect-notifications-send">
-      <default>true</default>
-      <summary>Send notifications between devices.</summary>
-    </key>
-    <key type="as" name="kdeconnect-notifications-send-banned">
-      <default>[]</default>
-      <summary>List of AppInfo IDs banned.</summary>
-      <description>A list of AppInfo IDs we won't send notification to remote device.</description>
-    </key>
-    <key type="b" name="kdeconnect-notifications-receive">
-      <default>true</default>
-      <summary>Receive notifications between devices.</summary>
-    </key>
-    <key type="b" name="kdeconnect-ping-active">
-      <default>true</default>
-      <summary>Receive or send ping message.</summary>
-    </key>
-    <key type="b" name="kdeconnect-share-active">
-      <default>true</default>
-      <summary>Share files trough devices.</summary>
-    </key>
-    <key type="s" name="kdeconnect-share-directory">
-      <default>""</default>
-      <summary>Default directory used to save downloaded files.</summary>
-    </key>
-    <key type="b" name="kdeconnect-telephony-active">
-      <default>true</default>
-      <summary>Calls notification and SMS.</summary>
-    </key>
-    <key type="b" name="kdeconnect-telephony-store-sms-active">
-      <default>true</default>
-      <summary>Store SMS.</summary>
-    </key>
-  </schema>
+<schemalist gettext-domain="conecto">
+	<schema id="com.github.hannesschulze.conecto" path="/com/github/hannesschulze/conecto/">
+	  <key name="window-x" type="i">
+	    <default>-1</default>
+	    <summary>Most recent x position of Conecto</summary>
+	    <description>Most recent x position of Conecto</description>
+	  </key>
+	  <key name="window-y" type="i">
+	    <default>-1</default>
+	    <summary>Most recent y position of Conecto</summary>
+	    <description>Most recent y position of Conecto</description>
+	  </key>
+	  <key name="window-width" type="i">
+	    <default>-1</default>
+	    <summary>Most recent width of Conecto</summary>
+	    <description>Most recent width of Conecto</description>
+	  </key>
+	  <key name="window-height" type="i">
+	    <default>-1</default>
+	    <summary>Most recent height of Conecto</summary>
+	    <description>Most recent height of Conecto</description>
+	  </key>
+	</schema>
 </schemalist>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/github/hannesschulze/conecto/css">
+    <file alias="style.css" compressed="true">css/style.css</file>
+    <file alias="fallback.css" compressed="true">css/fallback.css</file>
+  </gresource>
+
+  <gresource prefix="/com/github/hannesschulze/conecto/ui/widgets">
+    <file alias="header-bar.ui">ui/widgets/header-bar.ui</file>
+    <file alias="notification-row.ui">ui/widgets/notification-row.ui</file>
+  </gresource>
+
+  <gresource prefix="/com/github/hannesschulze/conecto/ui/views/main">
+    <file alias="empty-selection-view.ui">ui/views/main/empty-selection-view.ui</file>
+    <file alias="available-device-view.ui">ui/views/main/available-device-view.ui</file>
+    <file alias="unavailable-device-view.ui">ui/views/main/unavailable-device-view.ui</file>
+    <file alias="connected-device-view.ui">ui/views/main/connected-device-view.ui</file>
+  </gresource>
+
+  <gresource prefix="/com/github/hannesschulze/conecto/ui/views/dock">
+    <file alias="warning-view.ui">ui/views/dock/warning-view.ui</file>
+    <file alias="connected-device-view.ui">ui/views/dock/connected-device-view.ui</file>
+  </gresource>
+</gresources>
